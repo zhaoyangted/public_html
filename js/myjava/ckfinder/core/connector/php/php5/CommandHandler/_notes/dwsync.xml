@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="utf-8" ?>
+<dwsync>
+<file name="CommandHandlerBase.php" server="wedding1314.net//httpdocs/wedding/" local="130487645602674865" remote="130487638800000000" />
+<file name="CopyFiles.php" server="wedding1314.net//httpdocs/wedding/" local="130487645609845275" remote="130487638800000000" />
+<file name="CreateFolder.php" server="wedding1314.net//httpdocs/wedding/" local="130487645605435022" remote="130487638800000000" />
+<file name="DeleteFiles.php" server="wedding1314.net//httpdocs/wedding/" local="130487645597494568" remote="130487638800000000" />
+<file name="DeleteFolder.php" server="wedding1314.net//httpdocs/wedding/" local="130487645608235183" remote="130487638800000000" />
+<file name="DownloadFile.php" server="wedding1314.net//httpdocs/wedding/" local="130487645601064772" remote="130487638800000000" />
+<file name="FileUpload.php" server="wedding1314.net//httpdocs/wedding/" local="130487645604034942" remote="130487638800000000" />
+<file name="GetFiles.php" server="wedding1314.net//httpdocs/wedding/" local="130487645601274784" remote="130487638800000000" />
+<file name="GetFolders.php" server="wedding1314.net//httpdocs/wedding/" local="130487645606745097" remote="130487638800000000" />
+<file name="Init.php" server="wedding1314.net//httpdocs/wedding/" local="130487645605635034" remote="130487638800000000" />
+<file name="LoadCookies.php" server="wedding1314.net//httpdocs/wedding/" local="130487645604034942" remote="130487638800000000" />
+<file name="MoveFiles.php" server="wedding1314.net//httpdocs/wedding/" local="130487645599344674" remote="130487638800000000" />
+<file name="QuickUpload.php" server="wedding1314.net//httpdocs/wedding/" local="130487645608945223" remote="130487638800000000" />
+<file name="RenameFile.php" server="wedding1314.net//httpdocs/wedding/" local="130487645602914878" remote="130487638800000000" />
+<file name="RenameFolder.php" server="wedding1314.net//httpdocs/wedding/" local="130487645599044657" remote="130487638800000000" />
+<file name="Thumbnail.php" server="wedding1314.net//httpdocs/wedding/" local="130487645606995112" remote="130487638800000000" />
+<file name="XmlCommandHandlerBase.php" server="wedding1314.net//httpdocs/wedding/" local="130487645607825159" remote="130487638800000000" />
+</dwsync>

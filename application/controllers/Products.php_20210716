@@ -1,0 +1,758 @@
+<?php
+defined('BASEPATH') OR exit('No direct script access allowed');
+
+class Products extends CI_Controller {
+
+	public function __construct(){
+		parent::__construct();
+        // 前台共用
+        $this->autoful->FrontConfig();
+        // 網頁標題
+        $this->NetTitle='產品介紹';
+
+	}
+
+    public function Index($TID=''){
+        if(empty($TID)){
+            $this->useful->AlertPage('','操作錯誤');
+            exit();
+        }
+        $data=array();
+        // 分類撈取
+        $this->GetProductsType($TID);
+        // 各頁面的SEO
+        $this->NetTitle=(!empty($this->MenuData['d_stitle'])?$this->MenuData['d_stitle']:$this->NetTitle);
+        $this->Seokeywords=(!empty($this->MenuData['d_skeywords'])?$this->MenuData['d_skeywords']:'');
+        $this->Seodescription=(!empty($this->MenuData['d_sdescription'])?$this->MenuData['d_sdescription']:'');
+        // 產品撈取
+        $Pdata=$this->mymodel->FrontSelectPage('products','d_id,d_title,d_img1,d_price1,d_price2,d_price3,d_price4,d_dprice,d_sprice,concat(TID,",",TTID,",",TTTID) as TID,MTID','where d_enable="Y" and (TID like "%'.$TID.'@#%" or TID like "%@#'.$TID.'%" or TID like "%@#'.$TID.'@#%" or TID='.$TID.')','d_update_time desc','12');
+        // 根據會員等級顯示金額
+        $Pdata['dbdata']=$this->autoful->GetProductPrice($Pdata['dbdata']);
+        // print_r($Pdata);
+        $data['dbdata']=$Pdata;
+
+        $this->load->view('front/products',$data);
+    }
+    // 列表
+    public function products_list($TID=''){
+
+    	if(empty($TID)){
+    		$this->useful->AlertPage('','操作錯誤');
+    		exit();
+    	}
+        $data=array();
+        // 判斷此分類是第幾層
+        $data['TypeData']=$TypeData=$this->mymodel->OneSearchSql('products_type','d_id,d_title,TID,TTID,d_stitle,d_skeywords,d_sdescription',array('d_id'=>$TID,'d_enable' => "Y"));
+        $TID1=$TypeData['TID'];
+
+        // 各頁面的SEO
+        $this->NetTitle=(!empty($TypeData['d_stitle'])?$TypeData['d_stitle']:$this->NetTitle);
+        $this->Seokeywords=(!empty($TypeData['d_skeywords'])?$TypeData['d_skeywords']:'');
+        $this->Seodescription=(!empty($TypeData['d_sdescription'])?$TypeData['d_sdescription']:'');
+
+        // 分類撈取
+        $this->GetProductsType($TID1);
+        // 排序
+        $data['OrderArray']=$OrderArray=array('1'=>'依上架時間：新至舊','2'=>'依上架時間：舊至新','3'=>'依價格排序：低至高','4'=>'依價格排序：高至低','5'=>'瀏覽最多商品');
+        $data['Orderid']=$Orderid=(!empty($_POST['Orderby'])?$_POST['Orderby']:'1');
+        $Order='d_update_time desc';
+        if($Orderid==2){
+            $Order='d_update_time';
+        }elseif($Orderid==3){
+            $Order='d_price1 ';
+        }elseif($Orderid==4){
+            $Order='d_price1 desc';
+        }elseif($Orderid==5){
+            $Order='d_view desc';
+        }
+        // print_r($_POST);
+
+        // 產品撈取
+        if (!empty($TypeData['TID'])) {
+            if(!empty($TypeData['TTID'])){
+	            // 產品撈取
+	            $Pdata=$this->mymodel->FrontSelectPage('products','d_id,d_title,d_img1,d_price1,d_price2,d_price3,d_price4,d_dprice,d_sprice,concat(TID,",",TTID,",",TTTID) as TID,MTID','where d_enable="Y" and (TID like "'.$TypeData['TID'].'@#%" or TID like "%@#'.$TypeData['TID'].'" or TID like "%@#'.$TypeData['TID'].'@#%" or TID='.$TypeData['TID'].') and (TTID like "'.$TypeData['TTID'].'@#%" or TTID like "%@#'.$TypeData['TTID'].'" or TTID like "%@#'.$TypeData['TTID'].'@#%" or TTID='.$TypeData['TTID'].') and (TTTID like "'.$TID.'@#%" or TTTID like "%@#'.$TID.'" or TTTID like "%@#'.$TID.'@#%" or TTTID='.$TID.')',$Order,'12');
+	        }else{
+	            // 產品撈取
+	            $Pdata=$this->mymodel->FrontSelectPage('products','d_id,d_title,d_img1,d_price1,d_price2,d_price3,d_price4,d_dprice,d_sprice,concat(TID,",",TTID,",",TTTID) as TID,MTID','where d_enable="Y" and (TID like "'.$TypeData['TID'].'@#%" or TID like "%@#'.$TypeData['TID'].'" or TID like "%@#'.$TypeData['TID'].'@#%" or TID='.$TypeData['TID'].') and (TTID like "'.$TID.'@#%" or TTID like "%@#'.$TID.'" or TTID like "%@#'.$TID.'@#%" or TTID='.$TID.')',$Order,'12');
+	        }
+            // 根據會員等級顯示金額
+	        $Pdata['dbdata']=$this->autoful->GetProductPrice($Pdata['dbdata']);
+	        $data['dbdata']=$Pdata;
+		}
+        // print_r($Pdata);
+        $this->load->view('front/products_list',$data);
+    }
+    // 品牌列表
+    public function blist($BID=''){
+        if(empty($BID)){
+            $this->useful->AlertPage('','操作錯誤');
+            exit();
+        }
+        $data=array();
+
+        // 排序
+        $data['OrderArray']=$OrderArray=array('1'=>'依上架時間：新至舊','2'=>'依上架時間：舊至新','3'=>'依價格排序：低至高','4'=>'依價格排序：高至低');
+        $data['Orderid']=$Orderid=(!empty($_POST['Orderby'])?$_POST['Orderby']:'1');
+        $Order='d_update_time desc';
+        if($Orderid==2){
+            $Order='d_update_time';
+        }elseif($Orderid==3){
+            $Order='d_price1 ';
+        }elseif($Orderid==4){
+            $Order='d_price1 desc';
+        }
+
+        // 產品撈取
+        $Pdata=$this->mymodel->FrontSelectPage('products','d_id,d_title,d_img1,d_price1,d_price2,d_price3,d_price4,d_dprice,d_sprice,concat(TID,",",TTID,",",TTTID) as TID,MTID,TID as GTID,concat(TTID,",",TTTID) as GTTID','where d_enable="Y" and BID='.$BID,$Order,'12');
+
+        // print_r($Pdata);
+        // 品牌資料
+        $data['BrandData']=$BrandData=$this->mymodel->OneSearchSql('products_brand','d_title',array('d_id'=>$BID));
+
+        // 分類撈取
+				$this->db->query('SET SESSION group_concat_max_len = 1000000');	// 2020/04/15增加查詢長度
+
+        $Bdata=$this->mymodel->OneSearchSql('products','group_concat(TID) as TID,group_concat(TTID) as TTID,group_concat(TTTID) as TTTID',array('BID'=>$BID));
+				$tID = array_unique(array_filter(explode(',',str_replace('@#',',',$Bdata['TID']))));
+				$ttID = array_unique(array_filter(explode(',',str_replace('@#',',',$Bdata['TTID']))));
+				$tttID = array_unique(array_filter(explode(',',str_replace('@#',',',$Bdata['TTTID']))));
+				$TID=array_sum($tID)==0 ? '' : implode(',',$tID) ;
+				$TTID=array_sum($ttID)==0 ? '' : implode(',',$ttID) ;
+				$TTTID=array_sum($tttID)==0 ? '' : implode(',',$tttID) ;
+
+        $this->GetProductsType_PID($TID,$TTID,$TTTID);
+        // print_r($this->Menu);
+        // print_r($TID);
+
+        // print_r($Pdata['dbdata']);
+        // $this->GetProductsType($TID1,'1');
+
+
+        // 根據會員等級顯示金額
+        $Pdata['dbdata']=$this->autoful->GetProductPrice($Pdata['dbdata']);
+        $data['dbdata']=$Pdata;
+
+        $this->load->view('front/products_blist',$data);
+    }
+    // 內頁
+    public function info($d_id=''){
+    	if(empty($d_id)){
+    		$this->useful->AlertPage('','操作錯誤');
+    		exit();
+    	}
+        $data=array();
+        // 撈取產品
+        $dbdata=$this->mymodel->WriteSql('
+            select p.*,pb.d_id as pbid,pb.d_title as pbtitle,f.d_free,f.d_freight,f.d_title as ftitle,f.d_id as fid,concat(p.TID,",",p.TTID,",",p.TTTID) as TID1,p.MTID
+            from products p
+            left join products_brand pb on pb.d_id=p.BID
+            left join freight f on f.d_id=p.FID
+            where p.d_id='.$d_id.' and p.d_enable="Y"
+        ',1);
+        if(empty($dbdata)){
+            $this->useful->AlertPage('','此產品已下架');
+            exit();
+        }
+
+        // 根據會員等級顯示金額
+        // 是否夠資格
+        $Chked='Y';
+        $Mtype=explode(',',str_replace('@#',',',$this->autoful->Mtype));
+
+        $TID=implode(',',explode('@#',$dbdata['TID1']));
+        $TID=implode(',',array_filter(explode(',',$TID)));
+
+        $TypeData=$this->mymodel->WriteSql('select GROUP_CONCAT(MTID) as MTID from products_type where d_id in('.$TID.')','1');
+        $TypeData=array_unique(explode(',',str_replace('@#',',',$TypeData['MTID'].','.$dbdata['MTID'])));
+        $result = array_intersect ($TypeData, $Mtype);
+
+        $Lvcount=1;
+        // if($this->autoful->Mlv>=4){
+        //     $MlvData = $this->mymodel->WriteSql('select d_count from member_lv where d_id='.$this->autoful->Mlv.'', '1');
+        //     $Lvcount=(100-$MlvData['d_count'])/100;
+        // }
+
+        if(count($result)==0){
+            $dbdata['d_price']=$dbdata['d_price1'];
+            $Chked='N';
+        }else{
+            if($Lvcount!=1){
+                $dbdata['d_price']=$dbdata['d_price3']*$Lvcount;
+            }else{
+                $dbdata['d_price']=$dbdata['d_price'.$this->autoful->Mlv.''];
+            }
+        }
+
+		// 是否有活動
+		$SaleArr = array($dbdata['d_id'], 0,"");
+		$this->autoful->ChkSingleSale($SaleArr,$dbdata['d_price']);
+
+        $dbdata['Chked']=$Chked;
+        // print_r($dbdata);
+        // 各頁面的SEO
+        $this->NetTitle=(!empty($dbdata['d_stitle'])?$dbdata['d_stitle']:$this->NetTitle);
+        $this->Seokeywords=(!empty($dbdata['d_skeywords'])?$dbdata['d_skeywords']:'');
+        $this->Seodescription=(!empty($dbdata['d_sdescription'])?$dbdata['d_sdescription']:'');
+
+        $data['dbdata']=$dbdata;
+
+        // 撈取標題
+        $data['Menutitle']=$this->GetMenutitle($dbdata);
+        // 會員等級
+        $data['ChkType']=$this->autoful->Mlv;
+        // 撈取規格
+        $SpecData=$this->mymodel->WriteSql('select PID from products_allspec where (PID like "'.$d_id.'@#%" or PID like "%@#'.$d_id.'" or PID like "%@#'.$d_id.'@#%" or PID='.$d_id.')',1);
+        if(!empty($SpecData['PID'])){
+            $data['SpecData']=$this->mymodel->WriteSql('select d_id,d_spectitle from products where d_enable="Y" and d_id in ('.str_replace('@#',',',$SpecData['PID']).') and d_id!='.$d_id.'');
+        }
+        // 撈取試用品資料
+		if (!empty($_SESSION[CCODE::MEMBER]['IsLogin']) && $_SESSION[CCODE::MEMBER]['IsLogin'] == 'Y') {
+			$data['TrialData']=$this->mymodel->WriteSql('
+			select p.d_id,t.d_try,p.TID
+			from products_trial p
+			left join products_trial_type t on t.d_id=p.TID
+			where (p.PID like "'.$d_id.'@#%" or p.PID like "%@#'.$d_id.'" or p.PID like "%@#'.$d_id.'@#%" or p.PID='.$d_id.') and t.d_enable="Y" and p.d_enable="Y" and p.d_stock>0
+			','1');
+
+			// 檢查是否有領過
+			if (!empty($data['TrialData'])) {
+
+				if ($data['TrialData']['d_try'] == 1) { // 所有規格均可索取一次
+						$chkhad = $this->mymodel->WriteSQL('
+						select d_id
+						from orders_trial_detail
+						where d_enable = "Y" and d_deadline>CURDATE() and MID="' . $_SESSION[CCODE::MEMBER]['LID'] . '" and TID=' . $data['TrialData']['d_id'] . '
+						');
+				} else { // 選一種規格索取一次
+						$AllTrial = $this->mymodel->WriteSQL('select group_concat(d_id) as d_id from products_trial where TID = ' . $data['TrialData']['TID'].' group by TID');
+						if (!empty($AllTrial)) {
+							$chkhad = $this->mymodel->WriteSQL('
+							select d_id
+							from orders_trial_detail
+							where d_enable = "Y" and d_deadline>CURDATE() and MID="' . $_SESSION[CCODE::MEMBER]['LID'] . '" and TID in (' . $AllTrial[0]['d_id'] . ')
+							');
+						}else{
+							$chkhad = array();
+						}
+				}
+				// 檢查是否有被領過
+				if (!empty($chkhad)) {
+					unset($data['TrialData']);
+				}
+
+			}
+		}
+
+        // 商品加購
+        $data['AddData']=$this->mymodel->SelectSearch('products_optional','','d_id,d_title,d_price','where (PID like "'.$d_id.'@#%" or PID like "%@#'.$d_id.'" or PID like "%@#'.$d_id.'@#%" or PID='.$d_id.') and d_enable="Y" and d_stock>0');
+        // print_r($data['AddData']);
+        // 相關產品推薦
+        if(!empty($dbdata['d_push'])){
+            $PushData=$this->mymodel->WriteSql('select d_id,d_title,d_img1,d_price1,d_price2,d_price3,d_price4,concat(TID,",",TTID,",",TTTID) as TID,MTID from products where d_enable="Y" and d_id in ('.str_replace('@#',',',$dbdata['d_push']).')');
+            // 根據會員等級顯示金額
+            $PushData=$this->autoful->GetProductPrice($PushData);
+
+            $data['PushData']=$PushData;
+
+        }
+        // 看過此商品的人也看過下列商品
+        if(!empty($dbdata['d_watch'])){
+            $WatchData=$this->mymodel->WriteSql('select d_id,d_title,d_img1,d_price1,d_price2,d_price3,d_price4,d_dprice,d_sprice,concat(TID,",",TTID,",",TTTID) as TID,MTID from products where d_enable="Y" and d_id in ('.str_replace('@#',',',$dbdata['d_watch']).')');
+            // 根據會員等級顯示金額
+            $WatchData=$this->autoful->GetProductPrice($WatchData);
+            $data['WatchData']=$WatchData;
+        }
+
+        // 判斷是否還有庫存
+        $Qty=1;$Dis='';
+        if($dbdata['d_stock']<=0){
+            $Qty=0;
+            $Dis='disabled';
+        }
+        $data['Qty']=$Qty;
+        $data['Dis']=$Dis;
+
+
+        // 最近瀏覽商品紀錄
+        if(!empty($_SESSION[CCODE::MEMBER]['Watch'])){
+            $Watch=explode('@#',$_SESSION[CCODE::MEMBER]['Watch']);
+            $Is='N';
+            foreach ($Watch as $key => $value) {
+                if($value==$d_id){
+                    $Is='Y';
+                }
+            }
+            if($Is=='N')
+                $Watch[]=$d_id;
+            $_SESSION[CCODE::MEMBER]['Watch']=implode('@#',$Watch);
+
+            $TodayWatchData=$this->mymodel->WriteSql('select d_id,d_title,d_img1,d_price1,d_price2,d_price3,d_price4,d_dprice,d_sprice,concat(TID,",",TTID,",",TTTID) as TID,MTID from products where d_enable="Y" and d_id in ('.str_replace('@#',',',$_SESSION[CCODE::MEMBER]['Watch']).')');
+            // 根據會員等級顯示金額
+            $TodayWatchData=$this->autoful->GetProductPrice($TodayWatchData);
+            $data['TodayWatchData']=$TodayWatchData;
+
+        }else{
+            $_SESSION[CCODE::MEMBER]['Watch']=$d_id;
+        }
+
+        // 紀錄瀏覽人數
+        $this->AddVisit($d_id);
+
+        $this->load->view('front/products_info',$data);
+    }
+    // 人氣商品
+    public function hot($d_id=''){
+    	if(empty($d_id)){
+    			$this->useful->AlertPage('','操作錯誤');
+    			exit();
+    	}
+    	$data=array();
+    	$Htitle='';
+
+    	// 撈取產品
+    	$where ='
+    		inner join products p on p.d_id=h.PID
+    		inner join products_hot_type pt on pt.d_id=h.TID
+    		where p.d_enable="Y" and h.d_enable="Y" and pt.d_enable="Y" and pt.d_id="'.$d_id.'"
+    	';
+    	$data=$this->mymodel->FrontSelectPage('products_hot h','pt.d_title as pttitle,pt.d_id as PTID,p.d_id,p.d_title,p.d_img1,p.d_price1,p.d_price2,p.d_price3,p.d_price4,p.d_dprice,p.d_sprice,concat(p.TID,",",p.TTID,",",p.TTTID) as TID,p.MTID',$where,'pt.d_sort asc,h.d_sort asc','12');
+
+    	// 根據會員等級顯示金額
+    	$data['dbdata']=$this->autoful->GetProductPrice($data['dbdata']);
+
+    	$data['Htitle']=!empty($data['dbdata'][0])?$data['dbdata'][0]['pttitle']:'';
+    	$data['dbdata']=$data;
+
+    	$this->NetTitle='人氣商品';
+
+    	$this->load->view('front/products_hot',$data);
+    }
+    // 試用品內頁
+    // public function products_trial($d_id=''){
+    //     if(empty($d_id)){
+    //         $this->useful->AlertPage('','操作錯誤');
+    //         exit();
+    //     }
+    //     $data=array();
+    //     // 撈取產品
+		// 		$Tdata=$this->mymodel->WriteSql('
+		// 		select p.*,t.d_try
+		// 		from products_trial p
+		// 		left join products_trial_type t on t.d_id=p.TID
+		// 		where p.d_id='.$d_id.' and t.d_try!=1 and t.d_enable="Y" and p.d_enable="Y"
+		// 		','1');
+    //     if(empty($Tdata) && empty($Tdata['PID'])){
+    //         $this->useful->AlertPage('','操作錯誤');
+    //         exit();
+    //     }
+    //     // 試用品規則撈取
+    //     $data['TryRule']=$this->mymodel->GetConfig('7');
+		//
+    //     // 撈取產品
+    //     $dbdata=$this->mymodel->WriteSql('
+    //         select p.d_id,p.d_title,p.TID,p.TTID,p.TTTID,pb.d_title as pbtitle,concat(p.TID,",",p.TTID,",",p.TTTID) as TID1,p.MTID
+    //         from products p
+    //         left join products_brand pb on pb.d_id=p.BID
+    //         where p.d_id in ('.str_replace('@#',',',$Tdata['PID']).') and p.d_enable="Y"
+    //     ');
+		//
+    //     // print_r($dbdata);
+		//
+    //     // 撈取標題
+    //     $data['Menutitle']=$this->GetMenutitle($dbdata[0]);
+		//
+    //     $data['Tdata']=$Tdata;
+    //     $data['dbdata']=$dbdata;
+		//
+    //     $this->load->view('front/products_trial',$data);
+    // }
+    // 批量購買
+    public function products_more($d_id){
+        if(empty($d_id)){
+            $this->useful->AlertPage('','操作錯誤');
+            exit();
+        }
+        $data=array();
+        // print_r($_COOKIE['BeautyCart']);
+
+        // 撈取產品
+        $data['Pdata']=$this->mymodel->OneSearchSql('products','TID,TTID,TTTID,d_img1',array('d_id'=>$d_id));
+
+        // 撈取標題
+        // $data['Menutitle']=$this->GetMenutitle($Pdata);
+
+        // 撈取規格
+				$Spec=$this->mymodel->WriteSql('select PID from products_allspec where d_enable="Y" and (PID like "'.$d_id.'@#%" or PID like "%@#'.$d_id.'" or PID like "%@#'.$d_id.'@#%" or PID='.$d_id.')','1');
+				$Pro_spec = str_replace('@#',',',$Spec['PID']);
+				$Pro_spec = empty($Pro_spec)?$d_id:$d_id.','.$Pro_spec;
+        $data['dbdata']=$this->mymodel->WriteSql('select d_id,d_title,d_img1,d_stock,d_price1,d_price2,d_price3,d_price4,d_dprice,d_sprice,concat(TID,",",TTID,",",TTTID) as TID,MTID from products where d_enable="Y" and d_id in ('.$Pro_spec.')');
+				// 根據會員等級顯示金額
+				$data['dbdata']=$this->autoful->GetProductPrice($data['dbdata']);
+
+        $this->load->view('front/products_more',$data);
+    }
+    // 搜尋產品
+    public function search(){
+
+        $data=array();
+
+        if(empty($_POST['Pkeyword'])){	// 2020/05/06 可以不輸入文字搜尋
+            // $this->useful->AlertPage('','請輸入搜尋文字');
+            // exit();
+						if (!empty($_POST['Ptype'])) {
+							$data['TID']=$TID=$_POST['Ptype'];
+							$data['searchtext']='';
+							$Search='and (TID like "'.$_POST['Ptype'].'@#%" or TID like "%@#'.$_POST['Ptype'].'" or TID like "%@#'.$_POST['Ptype'].'@#%" or TID='.$_POST['Ptype'].')';
+							// 分類撈取
+	            $this->GetProductsType($TID);
+						}else{
+							$this->useful->AlertPage('','請選擇分類');
+	            exit();
+						}
+        }else{
+
+					$data['searchtext']=$keyword=$_POST['Pkeyword'];
+
+	        if(!empty($_POST['Ptype'])){
+	            $data['TID']=$TID=$_POST['Ptype'];
+	            $Search='and (TID like "'.$TID.'@#%" or TID like "%@#'.$TID.'" or TID like "%@#'.$TID.'@#%" or TID='.$TID.') and (d_title like "%'.$keyword.'%" or d_model like "%'.$keyword.'%")';
+	            // 分類撈取
+	            $this->GetProductsType($TID);
+	        }else{
+	            $Search='and (d_title like "%'.$keyword.'%" or d_model like "%'.$keyword.'%")';
+
+	        }
+					// 總碼
+					$Allspec=$this->mymodel->WriteSql('select PID from products_allspec where d_title like "%'.$keyword.'%" and PID !=""','');
+					if (!empty($Allspec)) {
+						$Search.=' or d_id in(';
+						foreach (array_column($Allspec,'PID') as $v) {
+							$Search.=implode(',',explode('@#',$v));
+						}
+						$Search.=')';
+					}
+
+				}
+
+        // 排序
+        $data['OrderArray']=$OrderArray=array('1'=>'依上架時間：新至舊','2'=>'依上架時間：舊至新','3'=>'依價格排序：低至高','4'=>'依價格排序：高至低');
+        $data['Orderid']=$Orderid=(!empty($_POST['Orderby'])?$_POST['Orderby']:'1');
+        $Order='d_update_time desc';
+        if($Orderid==2){
+            $Order='d_update_time';
+        }elseif($Orderid==3){
+            $Order='d_price1 ';
+        }elseif($Orderid==4){
+            $Order='d_price1 desc';
+        }
+
+        // 產品撈取
+        $Pdata=$this->mymodel->FrontSelectPage('products','d_id,d_title,d_img1,d_price1,d_price2,d_price3,d_price4,d_dprice,d_sprice,concat(TID,",",TTID,",",TTTID) as TID,MTID','where d_enable="Y" '.$Search.' and TID!=""',$Order,'12');
+        // if($this->autoful->Mtype!='1'){
+        $Mtype=explode(',',str_replace('@#',',',$this->autoful->Mtype));
+
+        foreach ($Pdata['dbdata'] as $key => $value) {
+
+            $TID=implode(',',explode('@#',$value['TID']));
+            $TID=implode(',',array_filter(explode(',',$TID)));
+
+						$this->db->query('SET SESSION group_concat_max_len = 1000000');	// 2020/04/15增加查詢長度
+
+            $TypeData=$this->mymodel->WriteSql('select GROUP_CONCAT(MTID) as MTID from products_type where d_id in('.$TID.')','1');
+            $TypeData=array_unique(explode(',',str_replace('@#',',',$TypeData['MTID'].$value['MTID'])));
+            // print_r($TypeData);
+            $result = array_intersect ($TypeData, $Mtype);
+            if(count($result)==0){
+            	$Pdata['dbdata'][$key]['d_price']=$value['d_price1'];
+            }else{
+                $Pdata['dbdata'][$key]['d_price']=$value['d_price'.$this->autoful->Mlv.''];
+            }
+
+        }
+
+        // }
+
+				// 根據會員等級顯示金額
+				$Pdata['dbdata']=$this->autoful->GetProductPrice($Pdata['dbdata']);
+				$data['dbdata']=$Pdata;
+        // print_r($Pdata);
+
+        $this->load->view('front/products_search',$data);
+    }
+    // 活動內頁
+    public function sales($SID=''){
+        if(empty($SID)){
+            $this->useful->AlertPage('','操作錯誤');
+            exit();
+        }
+        $data=array();
+
+        // 活動撈取
+				$data['Adata']=$Adata=$this->mymodel->WriteSql('
+					select s.d_title,s.PID
+					from products_sale s
+					left join products_sale_type t on t.d_id=s.TID
+					left join products_sale_detail d on d.SID=s.d_id
+					where s.d_id='.$SID.' and s.d_enable="Y" and t.d_start<="' . date('Y-m-d') . '" and t.d_end>="' . date('Y-m-d') . '" and t.d_start!="" and t.d_end!="" and t.d_enable="Y" and d.d_enable="Y"
+				','1');
+
+				if (empty($Adata)) {
+					$this->useful->AlertPage('','操作錯誤');
+					exit();
+				}
+
+        // 排序
+        $data['OrderArray']=$OrderArray=array('1'=>'依上架時間：新至舊','2'=>'依上架時間：舊至新','3'=>'依價格排序：低至高','4'=>'依價格排序：高至低');
+        $data['Orderid']=$Orderid=(!empty($_POST['Orderby'])?$_POST['Orderby']:'1');
+        $Order='d_update_time desc';
+        if($Orderid==2){
+            $Order='d_update_time';
+        }elseif($Orderid==3){
+            $Order='d_price1 ';
+        }elseif($Orderid==4){
+            $Order='d_price1 desc';
+        }
+
+        // 產品撈取
+        $Pdata=$this->mymodel->FrontSelectPage('products','d_id,d_title,d_img1,d_price1,d_price2,d_price3,d_price4,concat(TID,",",TTID,",",TTTID) as TID,MTID','where d_enable="Y" and d_id in ('.str_replace('@#',',',$Adata['PID']).')',$Order,'12');
+
+        // 根據會員等級顯示金額
+        $Pdata['dbdata']=$this->autoful->GetProductPrice($Pdata['dbdata']);
+        $data['dbdata']=$Pdata;
+
+        // print_r($Pdata);
+        $this->load->view('front/products_sales',$data);
+    }
+    //AJAX 加入最愛
+    public function AddFavourite(){
+        $Pid=$_POST['PID'];
+        if(empty($Pid)){
+            exit();
+        }
+        if(empty($_SESSION[CCODE::MEMBER]['LID'])){
+            echo 'NoLogin';
+            exit();
+        }
+        $Mid=$_SESSION[CCODE::MEMBER]['LID'];
+        $dbdata=$this->mymodel->OneSearchSql('member_favorite','d_id',array('MID'=>$Mid,'PID'=>$Pid));
+				$AID=(!empty($_POST['AID'])?$_POST['AID']:0);
+        if(!empty($dbdata)){
+						$idata=array(
+								'AID'=>$AID,
+								'd_create_time'=>$this->useful->get_now_time()
+						);
+						$this->mymodel->UpdateData('member_favorite', $idata, 'where d_id =' . $dbdata['d_id']);
+            echo 'IsHave';
+            exit();
+        }else{
+            $idata=array(
+                'MID'=>$Mid,
+                'PID'=>$Pid,
+                'AID'=>$AID,
+                'd_create_time'=>$this->useful->get_now_time()
+            );
+            $this->mymodel->InsertData('member_favorite',$idata);
+            echo 'Success';
+						exit();
+        }
+    }
+    // AJAX 加入購物車(批次上傳)
+    public function Addcartmore(){
+        // $did=$_POST['did'];
+        // $num=$_POST['num'];
+
+        $did=array(35,36);
+        $num=array(1,1);
+        // print_r($_COOKIE['BeautyCart']);
+        foreach ($did as $key1 => $value) {
+            $Pdata=$this->mymodel->OneSearchSql('products','d_stock',array('d_id'=>$value));
+            $Stock=$Pdata['d_stock'];
+            if($Stock<=0){
+                echo '此貨物已無庫存';
+                exit();
+            }
+            $did=$value;
+            $num=$num[$key1];
+
+            $session=$did.'@#'.$num.'@#';
+            if(!empty($_COOKIE['BeautyCart'])){
+                $cart=$_COOKIE['BeautyCart'];
+                setcookie("BeautyCart","",time()-43200,'/');
+                $cart2=array();
+
+                $cartarray=explode(';', $cart);
+                $Is='N';
+
+                foreach ($cartarray as $key => $value) {
+                    $cart1=explode('@#', $value);
+
+                    if($did==$cart1[0]){
+                        $num=$cart1[1]+$num;
+                        $cart2[$key]=$did.'@#'.$num;
+                        $Is='Y';
+                    }else{
+                        $cart2[$key]=$cartarray[$key];
+                    }
+                }
+                if($Is=='N'){
+                   array_push($cart2,$session);
+                }
+                $cart=implode(';',$cart2);
+                $BeautyCart=$cart;
+            }else{
+                $BeautyCart=$session;
+            }
+            setcookie("BeautyCart",$BeautyCart,time()+43200,'/');
+
+
+        }
+            // $BackStr=$this->Addcart($value,$num[$key],1);
+    }
+    // AJAX 加入購物車
+    public function Addcart($mdid='',$mnum='',$fun=''){
+
+        $did=(!empty($mdid)?$mdid:$_POST['did']);
+        $Pdata=$this->mymodel->OneSearchSql('products','d_stock',array('d_id'=>$did));
+        $Stock=$Pdata['d_stock'];
+        $num=(!empty($mnum)?$mnum:$_POST['num']);
+        $AID=(!empty($_POST['AID'])?$_POST['AID']:'');
+
+        // if(!empty($spec)){
+        //     $Modeldata=$this->mymodel->OneSearchSql('products_stock','d_stock',array('d_id'=>$spec));
+        //     $Stock=$Modeldata['d_stock'];
+        // }
+
+        if($Stock<=0){
+            echo '此貨物已無庫存';
+            exit();
+        }
+        $session=$did.'@#'.$num.'@#'.$AID;
+        if(!empty($_COOKIE['BeautyCart'])){
+            setcookie("BeautyCart","",time()-43200,'/');
+            $cart=$_COOKIE['BeautyCart'];
+            $cart2=array();
+
+            $cartarray=explode(';', $cart);
+            $Is='N';
+
+            foreach ($cartarray as $key => $value) {
+                $cart1=explode('@#', $value);
+
+                if($did==$cart1[0] and $AID==$cart1[2]){
+                    $num=$cart1[1]+$num;
+                    $cart2[$key]=$did.'@#'.$num.'@#'.$AID;
+                    $Is='Y';
+                }else{
+                    $cart2[$key]=$cartarray[$key];
+                }
+            }
+            if($Is=='N'){
+               array_push($cart2,$session);
+            }
+            $cart=implode(';',$cart2);
+            $BeautyCart=$cart;
+        }else{
+            $BeautyCart=$session;
+        }
+        setcookie("BeautyCart",$BeautyCart,time()+43200,'/');
+        echo 'ok';
+        exit();
+    }
+    // AJAX-加入購物車-試用品
+    public function AddTrialCart(){
+        $id=$_POST['did'];
+        $TryCart=(!empty($_SESSION[CCODE::MEMBER]['TrialData'])?$_SESSION[CCODE::MEMBER]['TrialData']:'');
+
+				$Pdata=$this->mymodel->OneSearchSql('products_trial','d_stock',array('d_id'=>$id));
+        $Stock=$Pdata['d_stock'];
+				if($Stock<=0){
+            echo '此試用品已無庫存';
+            exit();
+        }
+
+        if(!empty($AddCart)){
+            $TryCart=$TryCart.','.$id;
+        }else{
+            $TryCart=$id;
+        }
+        $_SESSION[CCODE::MEMBER]['TrialData']=$TryCart;
+        echo 'OK';
+    }
+    // 分類撈取
+    private function GetProductsType($TID=''){
+        $Menu=array();
+        $Pdata=$this->mymodel->OneSearchSql('products_type','d_title,d_img1,d_img2,d_img3,d_img4,d_img5,d_stitle,d_skeywords,d_sdescription',array('d_id'=>$TID,'d_enable'=>'Y'));
+
+        $Sdata=$this->mymodel->SelectSearch('products_type','','d_id,d_title','where TID="'.$TID.'" and TTID=0 and d_enable="Y"','d_sort');
+        if(!empty($Sdata)){
+            foreach ($Sdata as $key=> $svalue) {
+                $Subdata=$this->mymodel->SelectSearch('products_type','','d_id,d_title','where TTID="'.$svalue['d_id'].'" and d_enable="Y"','d_sort');
+                // if(!empty($Subdata)){
+                    $Sdata[$key]['Subdata']=$Subdata;
+                // }
+            }
+        }
+        $this->MenuData=$Pdata;
+        $this->Menu=$Sdata;
+    }
+    // 分類撈取(已分類ID篩選)
+    private function GetProductsType_PID($TID='',$TTID='',$TTTID=''){
+        $Menu=$Pdata=array();
+				if (!empty($TID)) {
+					$Pdata=$this->mymodel->WriteSql('
+	            select d_id,d_title from products_type where d_id in ('.$TID.')
+	        ');
+				}
+        if (!empty($TTID)) {
+					foreach ($Pdata as $key => $value) {
+	            $Sdata=$this->mymodel->SelectSearch('products_type','','d_id,d_title','where TID="'.$value['d_id'].'" and TTID=0 and d_id in ('.$TTID.')','d_sort');
+	            if(!empty($Sdata) && !empty($TTTID)){
+	                foreach ($Sdata as $key=> $svalue) {
+	                    $Subdata=$this->mymodel->SelectSearch('products_type','','d_id,d_title','where TTID="'.$svalue['d_id'].'" and d_id in ('.$TTTID.')','d_sort');
+	                    $Sdata[$key]['Subdata']=$Subdata;
+	                }
+	            }
+	            $Menu[$value['d_title']]=$Sdata;
+	        }
+        }
+
+        $this->Menu=$Menu;
+
+    }
+    // 撈取標題
+    private function GetMenutitle($dbdata){
+        $TID=explode('@#',$dbdata['TID']);
+        $TTID=explode('@#',$dbdata['TTID']);
+        if(!empty($dbdata['TTTID'])){
+            $TTTID=explode('@#',$dbdata['TTTID']);
+            $TypeTitle=$this->mymodel->WriteSql('select d_id,d_title from products_type where d_id in ('.$TID[0].','.$TTID[0].','.$TTTID[0].')');
+        }else{
+            $TypeTitle=$this->mymodel->WriteSql('select d_id,d_title from products_type where d_id in ('.$TID[0].','.$TTID[0].')');
+        }
+        $Menutitle='';
+        foreach ($TypeTitle as $key => $value) {
+            if(!empty($value['d_title'])){
+                if($key==0)
+                    $Menutitle.='<li><a href="'.site_url('products/index/'.$value['d_id'].'').'">'.$value['d_title'].'</a></li>';
+                else
+                    $Menutitle.='<li><a href="'.site_url('products/products_list/'.$value['d_id'].'').'">'.$value['d_title'].'</a></li>';
+            }
+        }
+        return $Menutitle;
+    }
+    // 紀錄瀏覽人數
+    private function AddVisit($id=''){
+        if(empty($_SESSION[CCODE::MEMBER]['VisitProduct_'.$id])){
+            $this->mymodel->SimpleWriteSQL('update products set d_view=d_view+1 where d_id='.$id.'');
+            if (!empty($_SERVER['HTTP_CLIENT_IP'])){
+              $ip=$_SERVER['HTTP_CLIENT_IP'];
+            }else if (!empty($_SERVER['HTTP_X_FORWARDED_FOR'])){
+              $ip=$_SERVER['HTTP_X_FORWARDED_FOR'];
+            }else{
+              $ip=$_SERVER['REMOTE_ADDR'];
+            }
+            $_SESSION[CCODE::MEMBER]['VisitProduct_'.$id]=$ip;
+        }
+    }
+}

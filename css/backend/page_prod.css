@@ -1,0 +1,85 @@
+    .toolbar{
+        padding: 15px 5px 5px;
+        margin-left: 16px;
+    }
+  a:focus{
+        color: #fff;
+    }
+    .toolbar a:hover{
+        transition: 0.4s;
+-moz-transition: 0.4s;
+-ms-transition: 0.4s;
+-o-transition: 0.4s;
+        color: #fff;
+        box-shadow: 0px 2px 3.88px 0.12px rgba(0, 0, 0, 0.35);
+    }
+    .toolbar_enable{
+        transition: 0.4s;
+-moz-transition: 0.4s;
+-ms-transition: 0.4s;
+-o-transition: 0.4s;
+    display: inline-block;
+    background-color: #22ac38;
+    color: #fff;
+    padding: 5px 19px;
+    font-size: 1.8rem;
+    letter-spacing: 1px;
+    border-radius: 49px;
+    margin-right: 5px;
+    }
+    .toolbar_disable{
+        transition: 0.4s;
+-moz-transition: 0.4s;
+-ms-transition: 0.4s;
+-o-transition: 0.4s;
+        display: inline-block;
+        background-color: #d44740;
+        color: #fff;
+        padding: 5px 19px;
+        font-size: 1.8rem;
+        letter-spacing: 1px;
+        border-radius: 49px;
+        }
+.toolbar_add{
+    transition: 0.4s;
+-moz-transition: 0.4s;
+-ms-transition: 0.4s;
+-o-transition: 0.4s;
+   display: inline-block;
+   background-color: #31a1ae;
+   color: #fff;
+   padding: 5px 19px;
+   font-size: 1.8rem;
+    letter-spacing: 1px;
+   border-radius: 49px;
+   float: right;
+	
+    margin-top: 8px;
+}
+.indexView_block_search form{
+    margin-bottom: 0;
+}
+
+@media screen and (max-width: 768px) {
+    .toolbar{
+        padding: 0 5px 5px;
+       
+    }
+
+	.toolbar a:nth-child(2n+1) {
+       margin-right: 5px;
+}
+	.toolbar_add{
+   
+   float: none;
+	
+}
+}
+
+
+@media screen and (max-width: 567px) {
+.toolbar a{
+	    text-align: center;
+	width: 48%;
+}
+}

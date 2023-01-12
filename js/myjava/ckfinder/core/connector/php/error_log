@@ -1,0 +1,19 @@
+[14-Aug-2020 14:15:50 Asia/Taipei] PHP Fatal error:  Allowed memory size of 66060288 bytes exhausted (tried to allocate 3156 bytes) in /home/beautygarage/public_html/js/myjava/ckfinder/core/connector/php/php5/CommandHandler/Thumbnail.php on line 240
+[17-Aug-2020 10:34:41 Asia/Taipei] PHP Fatal error:  Allowed memory size of 66060288 bytes exhausted (tried to allocate 3116 bytes) in /home/beautygarage/public_html/js/myjava/ckfinder/core/connector/php/php5/CommandHandler/Thumbnail.php on line 240
+[17-Aug-2020 11:36:40 Asia/Taipei] PHP Fatal error:  Allowed memory size of 67108864 bytes exhausted (tried to allocate 3076 bytes) in /home/beautygarage/public_html/js/myjava/ckfinder/core/connector/php/php5/CommandHandler/Thumbnail.php on line 240
+[04-Nov-2020 15:42:58 Asia/Taipei] PHP Fatal error:  Allowed memory size of 106954752 bytes exhausted (tried to allocate 4032 bytes) in /home/beautygarage/public_html/js/myjava/ckfinder/core/connector/php/php5/CommandHandler/Thumbnail.php on line 240
+[05-Oct-2021 15:39:01 Asia/Taipei] PHP Notice:  Undefined index: ckeditor_url in /home/beautygarage/public_html/js/myjava/ckfinder/config.php on line 74
+[05-Oct-2021 15:39:01 Asia/Taipei] PHP Notice:  Undefined index: ckeditor_url in /home/beautygarage/public_html/js/myjava/ckfinder/config.php on line 74
+[05-Oct-2021 15:39:01 Asia/Taipei] PHP Notice:  Undefined index: ckeditor_url in /home/beautygarage/public_html/js/myjava/ckfinder/config.php on line 74
+[05-Oct-2021 15:39:01 Asia/Taipei] PHP Notice:  Undefined index: ckeditor_url in /home/beautygarage/public_html/js/myjava/ckfinder/config.php on line 74
+[05-Oct-2021 15:39:01 Asia/Taipei] PHP Notice:  Undefined index: ckeditor_url in /home/beautygarage/public_html/js/myjava/ckfinder/config.php on line 74
+[05-Oct-2021 15:39:01 Asia/Taipei] PHP Notice:  Undefined index: ckeditor_url in /home/beautygarage/public_html/js/myjava/ckfinder/config.php on line 74
+[09-Nov-2021 14:34:05 Asia/Taipei] PHP Notice:  Undefined index: ckeditor_url in /home/beautygarage/public_html/js/myjava/ckfinder/config.php on line 74
+[09-Nov-2021 14:34:05 Asia/Taipei] PHP Notice:  Undefined index: ckeditor_url in /home/beautygarage/public_html/js/myjava/ckfinder/config.php on line 74
+[09-Nov-2021 14:34:05 Asia/Taipei] PHP Notice:  Undefined index: ckeditor_url in /home/beautygarage/public_html/js/myjava/ckfinder/config.php on line 74
+[09-Nov-2021 14:34:05 Asia/Taipei] PHP Notice:  Undefined index: ckeditor_url in /home/beautygarage/public_html/js/myjava/ckfinder/config.php on line 74
+[09-Nov-2021 14:34:05 Asia/Taipei] PHP Notice:  Undefined index: ckeditor_url in /home/beautygarage/public_html/js/myjava/ckfinder/config.php on line 74
+[09-Nov-2021 14:34:05 Asia/Taipei] PHP Notice:  Undefined index: ckeditor_url in /home/beautygarage/public_html/js/myjava/ckfinder/config.php on line 74
+[09-Nov-2021 14:34:13 Asia/Taipei] PHP Notice:  Undefined index: ckeditor_url in /home/beautygarage/public_html/js/myjava/ckfinder/config.php on line 74
+[09-Nov-2021 14:34:14 Asia/Taipei] PHP Notice:  Undefined index: ckeditor_url in /home/beautygarage/public_html/js/myjava/ckfinder/config.php on line 74
+[09-Nov-2021 14:34:15 Asia/Taipei] PHP Notice:  Undefined index: ckeditor_url in /home/beautygarage/public_html/js/myjava/ckfinder/config.php on line 74

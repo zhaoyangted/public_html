@@ -1,0 +1,217 @@
+.toolbar {
+    padding: 46px 5px 5px;
+    margin-left: 16px;
+}
+
+a:focus {
+    color: #fff;
+}
+
+.toolbar-btn {
+    transition: 0.4s;
+    -moz-transition: 0.4s;
+    -ms-transition: 0.4s;
+    -o-transition: 0.4s;
+    display: inline-block;
+    color: #fff;
+    padding: 5px 19px;
+    font-size: 1.8rem;
+    letter-spacing: 1px;
+    border-radius: 49px;
+}
+
+.toolbar a:hover {
+    transition: 0.4s;
+    -moz-transition: 0.4s;
+    -ms-transition: 0.4s;
+    -o-transition: 0.4s;
+    color: #fff;
+    box-shadow: 0px 2px 3.88px 0.12px rgba(0, 0, 0, 0.35);
+}
+
+.toolbar .enable {
+    background-color: #22ac38;
+    margin-right: 5px;
+}
+
+.enable-btn {
+    transition: 0.4s;
+    -moz-transition: 0.4s;
+    -ms-transition: 0.4s;
+    -o-transition: 0.4s;
+    display: inline-block;
+    color: #fff;
+    padding: 5px 19px;
+    font-size: 1.8rem;
+    letter-spacing: 1px;
+    border-radius: 49px;
+    background-color: #22ac38;
+}
+
+.enable-btn:hover {
+    transition: 0.4s;
+    -moz-transition: 0.4s;
+    -ms-transition: 0.4s;
+    -o-transition: 0.4s;
+    color: #fff;
+    box-shadow: 0px 2px 3.88px 0.12px rgba(0, 0, 0, 0.35);
+}
+
+.toolbar .disable {
+    background-color: #d44740;
+}
+
+.disable-btn {
+    transition: 0.4s;
+    -moz-transition: 0.4s;
+    -ms-transition: 0.4s;
+    -o-transition: 0.4s;
+    display: inline-block;
+    color: #fff;
+    padding: 5px 19px;
+    font-size: 1.8rem;
+    letter-spacing: 1px;
+    border-radius: 49px;
+    background-color: #d44740;
+}
+
+.disable-btn:hover {
+    transition: 0.4s;
+    -moz-transition: 0.4s;
+    -ms-transition: 0.4s;
+    -o-transition: 0.4s;
+    color: #fff;
+    box-shadow: 0px 2px 3.88px 0.12px rgba(0, 0, 0, 0.35);
+}
+
+.toolbar .add {
+    background-color: #31a1ae;
+    float: right;
+}
+
+.add-btn {
+    transition: 0.4s;
+    -moz-transition: 0.4s;
+    -ms-transition: 0.4s;
+    -o-transition: 0.4s;
+    display: inline-block;
+    color: #fff;
+    padding: 5px 19px;
+    font-size: 1.8rem;
+    letter-spacing: 1px;
+    border-radius: 49px;
+    background-color: #31a1ae;
+}
+
+.add-btn:hover {
+    transition: 0.4s;
+    -moz-transition: 0.4s;
+    -ms-transition: 0.4s;
+    -o-transition: 0.4s;
+    color: #fff;
+    box-shadow: 0px 2px 3.88px 0.12px rgba(0, 0, 0, 0.35);
+}
+
+.toolbar .delete {
+    background-color: #e8a50e;
+    margin-right: 5px;
+    /* float: right; */
+}
+
+.delete-btn {
+    transition: 0.4s;
+    -moz-transition: 0.4s;
+    -ms-transition: 0.4s;
+    -o-transition: 0.4s;
+    display: inline-block;
+    color: #fff;
+    padding: 5px 19px;
+    font-size: 1.8rem;
+    letter-spacing: 1px;
+    border-radius: 49px;
+    background-color: #e8a50e;
+}
+
+.delete-btn:hover {
+    transition: 0.4s;
+    -moz-transition: 0.4s;
+    -ms-transition: 0.4s;
+    -o-transition: 0.4s;
+    color: #fff;
+    box-shadow: 0px 2px 3.88px 0.12px rgba(0, 0, 0, 0.35);
+}
+
+.toolbar .copy {
+    background-color: #9552b7;
+    margin-right: 5px;
+    /* float: right; */
+}
+
+.copy-btn {
+    transition: 0.4s;
+    -moz-transition: 0.4s;
+    -ms-transition: 0.4s;
+    -o-transition: 0.4s;
+    display: inline-block;
+    color: #fff;
+    padding: 5px 19px;
+    font-size: 1.8rem;
+    letter-spacing: 1px;
+    border-radius: 49px;
+    background-color: #9552b7;
+}
+
+.copy-btn:hover {
+    transition: 0.4s;
+    -moz-transition: 0.4s;
+    -ms-transition: 0.4s;
+    -o-transition: 0.4s;
+    color: #fff;
+    box-shadow: 0px 2px 3.88px 0.12px rgba(0, 0, 0, 0.35);
+}
+
+.indexView_block_search form {
+    margin-bottom: 0;
+}
+
+.file-btn {
+    font-size: 1.4rem;
+    padding: 5xp 15px;
+}
+
+.fileBar {
+    margin: 0;
+    padding: 0;
+    display: inline-block;
+}
+
+@media screen and (max-width: 768px) {
+    .toolbar {
+        padding: 0 5px 5px;
+    }
+
+    .toolbar a {
+        padding: 5px 14px;
+        font-size: 1.6rem;
+    }
+
+    .toolbar-btn {
+        font-family: 1.4rem;
+    }
+
+    .toolbar .add {
+        margin-top: 8px;
+        float: none;
+    }
+
+    .toolbar .delete {
+        margin-top: 8px;
+        float: none;
+    }
+
+    .toolbar .copy {
+        margin-right: 0;
+        margin-top: 8px;
+        float: none;
+    }
+}

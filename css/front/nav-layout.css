@@ -1,0 +1,223 @@
+@font-face { font-family: "FontAwesome"; src: url("fonts/fontawesome-webfont.eot"); src: url("fonts/fontawesome-webfont.eot") format("embedded-opentype"), url("fonts/fontawesome-webfont.woff2") format("woff2"), url("fonts/fontawesome-webfont.woff") format("woff"), url("fonts/fontawesome-webfont.ttf") format("truetype"), url("fonts/fontawesome-webfont.svg") format("svg"); }
+
+.icon-desktop:before,
+.icon-menu-close:before,
+.icon-menu:before,
+.icon-mobile:before,
+.icon-submenu-down:before,
+.icon-submenu-right:before,
+.icon-world:before,
+.nav-button:before,
+.nav-close:before,
+.nav .nav-submenu > a:after,
+.nav > ul > .nav-submenu > a:after {
+	font-family: FontAwesome;
+	-webkit-font-smoothing: antialiased;
+	-moz-osx-font-smoothing: grayscale;
+	font-style: normal;
+	font-variant: normal;
+	font-weight: normal;
+	text-decoration: none;
+	text-transform: none;
+	vertical-align: top;
+}
+
+.icon-desktop:before {
+	content: "\f078";
+	font-family: FontAwesome;
+}
+
+.icon-menu-close:before {
+	content: "\f078";
+	font-family: FontAwesome;
+}
+
+.icon-menu:before {
+	content: "\f078";
+	font-family: FontAwesome;
+}
+
+.icon-mobile:before {
+	content: "\f078";
+	font-family: FontAwesome;
+}
+
+.icon-submenu-down:before {
+	content: "\f107";
+	font-family: FontAwesome;
+}
+
+.icon-submenu-right:before {
+	content: "\f078";
+	font-family: FontAwesome;
+}
+
+.icon-world:before {
+	content: "\f078";
+	font-family: FontAwesome;
+}
+
+.nav-button,
+.nav-close {
+	position: fixed;
+	top: 10px;
+	overflow: hidden;
+	z-index: 902;
+	cursor: pointer;
+	text-decoration: none;
+	line-height: 40px;
+	background: #003366;
+	color: #FFF;
+
+	width: 40px;
+    height: 40px;
+    border-radius: 5px;
+    -webkit-transition: all 0.5s ease;
+    transition: all 0.5s ease;
+}
+
+.nav-button:before,
+.nav-close:before {
+	display: block;
+	text-align: center;
+}
+
+.nav-button:hover,
+a.nav-button ,
+.nav-button a:hover,
+.nav-button:active,
+.nav-button:visited {
+	color: #FFF; text-decoration:none;
+}
+.nav-button {
+	display: block;
+	right: 1rem;
+	font-size: 1.7rem;
+}
+
+.nav-button:before {
+	content: "\f0c9";
+}
+
+.nav-close {
+	display: none;
+	right: 4rem;
+	font-size: 1.9rem;
+}
+
+.nav-close:before {
+	content: "\f0c9";
+}
+
+.nav {
+	padding-top: 4.4rem;
+	font-size: 13px;
+	line-height: 2.4rem;
+	background: #f7f6f6;
+	color: #666;
+}
+
+.nav ul {
+	background: #f7f6f6;
+}
+
+.nav ul ul {
+	background: #fff;
+}
+
+.nav ul ul ul {
+	background: #f7f6f6;
+}
+
+.nav ul ul ul ul {
+	background: #fff;
+}
+
+.nav ul ul ul ul ul {
+	background: #f7f6f6;
+}
+
+.nav li {
+	border-top: 1px solid #e0e0e0;
+	cursor: pointer;
+}
+
+.nav li:hover > a,
+.nav li.nav-active > a {
+	color: #FFF;
+	background: #3a8fb7;
+}
+
+.nav .nav-submenu > ul {
+	margin-left: 0px;
+}
+
+.nav .nav-submenu > a {
+	padding-right: 30px !important;
+}
+
+.nav a,
+.nav a:hover,
+.nav a:active,
+.nav a:visited {	
+	padding: 0 15px 1px;
+	color: #8C827D;
+	text-decoration: none;
+}
+
+.nav .nav-submenu > a:after {
+	position: absolute;
+	display: block;
+	right: 10px;
+	top: 1px;
+	content: "\f078";
+}
+
+@media only screen and (min-width: 1080px) {
+
+
+.nav-button {
+	display: none;
+}
+
+.nav {
+	padding: 0 !important;
+}
+
+.nav > ul > li {
+	border-top: none;
+}
+
+.nav li > ul {
+	box-shadow: 0px 0px 5px 0px rgba(0, 0, 0, 0.75);
+}
+
+.nav ul ul ul {
+	border-radius: 0 6px 6px 6px;
+}
+
+.nav ul ul ul li:first-child {
+	border-top: none;
+}
+
+.nav .nav-left > ul {
+	border-radius: 0px 0 0px 0px;
+}
+
+.nav .nav-submenu li {
+	min-width: 110px;
+}
+
+.nav .nav-submenu > ul {
+	margin: 0;
+}
+
+.nav > ul > .nav-submenu > a:after {
+	content: "\f107";	
+}
+.nav .nav-submenu > a:after {
+	content: "\f107";
+}
+
+}
+

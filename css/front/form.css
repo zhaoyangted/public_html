@@ -1,0 +1,238 @@
+@charset "utf-8";
+/* CSS Document */
+/* -表單-------------------------------------------------------------------------------------------------------*/
+.styled-input {	margin:0px 0px 0px 0px; padding:0; list-style:none; 
+	display: flex;
+	flex-wrap: wrap;
+	justify-content: space-between;}
+.styled-input li{ width:100%; margin:0px 0px 30px 0px; padding:0; list-style:none; height:auto; overflow: hidden; font-size: 15px; color:#666; }
+.styled-input li a{ color:#666; text-decoration:underline; }
+.styled-input li.half{ width: calc(50% - 5px); }
+.styled-input li.ps{ margin:-20px 0px 20px 0px; padding:0px 0px 0px 110px; width:100%; font-size: 13px;color: #70accb; height:auto; overflow: hidden; }
+.styled-input li.other{ margin:-20px 0px 20px 0px; padding:0px 0px 0px 110px; width:100%; height:auto; overflow: hidden; display: none; }
+.styled-input li.other span{ margin:0px 0px 0px 10px; color: #70accb; }
+.styled-input li.other a{ color:#70accb; text-decoration:none; }
+.styled-input li.other i{ font-family: FontAwesome; margin:0px 5px;}
+.styled-input h2{ float:left; font-size: 15px; color:#666; font-weight:bold; width:110px; padding:0px 0; margin:5px 0 0 0; }
+.styled-input h3{ float:left; font-size: 15px; color:#e67700; font-weight:bold; padding:8px 0 10px 0;}
+.styled-input h4{ float:left; font-size: 15px; color:#70accb; font-weight:bold; padding:8px 0 10px 0;}
+.styled-input input[type="text"], .styled-input input[type="password"], .styled-input textarea, .styled-input select{ float:left; width:calc(100% - 110px) ;
+	padding:8px 12px;
+	border-radius: 4px;
+	font-size: 14px;
+	color: #666;
+	background: #fff;
+	border:1px solid #e0e0e0; font-family: "Microsoft JhengHei";
+}
+.styled-input input[type="text2"]{ float:left; width:calc(100% - 110px) ; margin-left:110px;
+	padding:8px 12px;
+	border-radius: 4px;
+	font-size: 14px;
+	color: #666;
+	background: #fff;
+	border:1px solid #e0e0e0; font-family: "Microsoft JhengHei";
+}
+.styled-input input[type="text3"]{ width:auto; 
+	padding:8px 12px;
+	border-radius: 4px;
+	font-size: 14px;
+	color: #666;
+	background: #fff;
+	border:1px solid #e0e0e0; font-family: "Microsoft JhengHei";
+}
+.styled-input input[type="File"]{ float:left; width:calc(100% - 110px) ;
+	padding:8px 12px;
+	border-radius: 4px;
+	font-size: 14px;
+	color: #666;
+	background: #fff;
+	border:1px solid #e0e0e0; font-family: "Microsoft JhengHei";
+}
+.styled-input input[type="text"]:focus, .styled-input input[type="password"]:focus, .styled-input textarea:focus, .styled-input select:focus{
+	border:1px solid #66afe9;
+}
+@media only screen and (min-width: 0px) and (max-width: 500px){
+.styled-input li{ margin:0px 0px 10px 0px; }
+.styled-input input[type="text"], .styled-input input[type="password"], .styled-input textarea, .styled-input select, .styled-input input[type="File"] { width:100% }
+.styled-input input[type="text2"]{ width:100%  ; margin-left:0px; }
+.styled-input h4{ width:100% ; padding:5px 0px;}
+.styled-input h2, .styled-input h3{ padding:5px 0;　width:100% ;  }
+}
+@media only screen and (min-width: 0px) and (max-width: 640px){
+.styled-input li.half{
+	width: 100%;
+}
+.styled-input li.ps, .styled-input li.other{ margin:0px 0px 20px 0px; padding:0px 0px 0px 0px;}
+.styled-input li.other span{ margin:5px 0px 0px 0px; }
+.styled-input input[type="text3"]{ width:100%; margin:5px 0px 0px 0px;}
+}
+
+.contact-captcha {
+	display: flex;
+	justify-content: center;
+	align-items: flex-start;
+}
+
+/* -twzipcode-*/
+.mem_add {  width: calc( 100% - 110px); padding: 0px 0px 0px 0px; display: -webkit-inline-box; display: -ms-inline-flexbox; display: inline-flex; -webkit-box-pack: justify; -ms-flex-pack: justify; justify-content: space-between; -ms-flex-line-pack: center; align-content: center; -webkit-box-align: center; -ms-flex-align: center; align-items: center; -ms-flex-wrap: wrap; flex-wrap: wrap;   }
+.mem_add > div.mem_add_inpt, .mem_add > div > input.mem_add_inpt{ width: calc( 100% / 3);
+	padding:8px 12px;
+	border-radius: 4px;
+	font-size: 14px;
+	color: #666;
+	background: #fff;
+	border:1px solid #e0e0e0; font-family: "Microsoft JhengHei";}
+.mem_add > div > select.mem_add_inpt{	width: calc( 100% / 3);
+	padding:8px 12px;
+	border-radius: 4px;
+	font-size: 14px;
+	color: #666;
+	background: #fff;
+	border:1px solid #e0e0e0; font-family: "Microsoft JhengHei";}
+.mem_add > div > select.mem_add_inpt, .mem_add > div > input.mem_add_inpt { width: 100%; }
+.mem_add > div > select:focus, .mem_add > div > input.mem_add_inpt:focus {	border:1px solid #66afe9;}
+.mem_inpt{ width: calc( 100% / 3 - 5px);}
+@media only screen and (min-width: 0px) and (max-width: 500px){
+.mem_add {  width: 100%;}
+.mem_add > div.mem_add_inpt, .mem_add > div > input.mem_add_inpt{ width:100% ; padding:6px 15px;}
+.mem_add > div > select.mem_add_inpt{ width:100% ; padding:6px 5px;}
+}
+
+dd.sell{
+	width:100% ; margin:0 0 0px 0; padding:0; list-style:none; 
+}
+dd.sell input[type="radio"] {
+	display: none;
+}
+dd.sell label {
+	width: auto; 
+	padding:0px 0px 0px 40px; margin: 0px 15px 0 0px;
+	font-size: 22px;
+	color: #666;
+	cursor: pointer;
+	display: inline-block; position:relative;
+}
+dd.sell label:before {
+	content: '';
+	display: block;
+	width: 18px;
+	height: 18px;
+	border: 3px solid #e0e0e0; 
+	border-radius: 50%;
+	background-color:#fff;
+	margin: 8px 0 0 -26px;  position: absolute;
+}
+dd.sell label.checked {
+	color: #353535;
+}
+dd.sell label.checked:before {
+	background-color: #70accb;
+	border-color: #d4e4ed;
+}
+
+.sell02{
+	width:100% ; margin:0 0 0px 0; padding:0; list-style:none; 
+}
+.sell02 input[type="radio"] {
+	display: none;
+}
+.sell02 .sell_list {
+	display: inline-block;
+}
+.sell02 label {
+	width: auto; 
+	padding:0px 0px 0px 40px; margin: 0px 15px 0 0px;
+	font-size: 22px;
+	color: #666;
+	cursor: pointer;
+	display: inline-block; position:relative;
+}
+.sell02 label:before {
+	content: '';
+	display: block;
+	width: 18px;
+	height: 18px;
+	border: 3px solid #e0e0e0; 
+	border-radius: 50%;
+	background-color:#fff;
+	margin: 8px 0 0 -26px;  position: absolute;
+}
+.sell02 label.checked {
+	color: #353535;
+}
+.sell02 label.checked:before {
+	background-color: #70accb;
+	border-color: #d4e4ed;
+}
+
+/* The check_box */
+.check_list_box {
+  width: calc( 100% - 110px); margin: 0px 0px 10px 110px; 
+}
+.check_list_box .check_list {
+  display: inline-block; 
+
+}
+.check_list_box .check_list h5{
+  font-size: 15px; display: inline-block; font-weight: bold;
+  color: #666; margin: 0px 0 0 0; 
+}
+.check_list_box .check_list h5 a{ color: #70accb}
+.check_list input[type="checkbox"] {
+  display:none;
+}
+.check_list input[type="checkbox"] + label span {
+  display          : inline-block;
+  width            : 25px;
+  height           : 25px;
+  margin           : 0px 0.5em 0 0.25em; 
+  border           : none;
+  background       : #e0e0e0;
+  vertical-align   : bottom;
+  border-radius: 4px;
+}
+.check_list input[type="checkbox"]:checked + label span {
+  background :#70accb;
+}
+.check_list input[type=checkbox]:checked + label > span:before{
+  content     : '✓';
+  display     : block;
+  width       : 25px;
+  color       : #FFF;
+  font-size   : 15px;
+  line-height : 25px;
+  text-align  : center;
+  font-weight : bold;
+}
+@media only screen and (min-width: 0px) and (max-width: 500px){
+.check_list_box {  width: 100%; margin: 0px 0px 10px 0px; }
+.check_list_box .check_list {
+  display: block; 
+
+}
+}
+
+select.select_sort{
+	border: 1px solid #e0e0e0;
+	outline:none;
+	padding: 5px 5px;
+	border-radius: 3px;
+	font-size: 13px;
+	color: #666;
+}
+select.select_pd{
+	border: 1px solid #e0e0e0;
+    border-radius: 3px;
+	outline:none;
+	padding: 5px 5px;
+	font-size: 13px;
+	color: #353535;
+}
+.select_point{
+	padding:0px 12px; line-height: 25px;
+	border-radius: 4px;
+	font-size: 14px;
+	color: #666;
+	background: #fff;
+	border:1px solid #e0e0e0; font-family: "Microsoft JhengHei";
+}

@@ -1,0 +1,962 @@
+<?php
+defined('BASEPATH') OR exit('No direct script access allowed');
+// 購物系統
+class Cart extends CI_Controller {
+
+	public function __construct(){
+		parent::__construct();
+        // 前台共用
+        $this->autoful->FrontConfig();
+        // 網頁標題
+        $this->NetTitle='購物車';
+        // 會員等級
+        $this->Mlv=$this->autoful->Mlv;
+        // 會員ID
+        $this->Mid=(!empty($_SESSION[CCODE::MEMBER]['LID'])?$_SESSION[CCODE::MEMBER]['LID']:'');
+
+        // $this->useful->AlertPage('','尚未開放購買');
+        // exit();
+	}
+    // 首頁
+    public function Index(){
+        $MArray=$data=array();
+        // unset($_COOKIE['BeautyCart']);
+        $cart=(!empty($_COOKIE['BeautyCart'])?$_COOKIE['BeautyCart']:'');
+        if(!empty($cart)){
+
+            $data['CartProduct']=$CartProduct=$this->GetProduct($cart);
+            if(empty($CartProduct['Cart'])){
+                $this->useful->AlertPage('index','購物車無任何產品');
+                exit();
+            }
+            // 是否符合加購產品
+            $Notid=(!empty($_SESSION[CCODE::MEMBER]['AddData'])?' and d_id not in ('.$_SESSION[CCODE::MEMBER]['AddData'].')':'');
+
+            $Mdata=$this->mymodel->SelectSearch('products_markup','','d_id,d_title,d_img,d_aprice,d_price','where d_enable="Y" and d_aprice<='.$CartProduct['AllTotal'].' and d_stock>0 '.$Notid.'','d_aprice desc');
+            $Maxnum=0;
+            foreach ($Mdata as $key => $value) {
+                if($value['d_aprice']==$Maxnum || $Maxnum==0){
+                    $MArray[]=$Mdata[$key];
+                    $Maxnum=$value['d_aprice'];
+                }
+            }
+            $data['Mdata']=$MArray;
+
+            $this->load->view('front/cart',$data);
+        }else{
+            $this->useful->AlertPage('index','購物車無任何產品');
+            exit();
+        }
+    }
+    // 購物車登入畫面
+    public function cart_login(){
+        $cart=(!empty($_COOKIE['BeautyCart'])?$_COOKIE['BeautyCart']:'');
+        if(!empty($cart)){
+            $data=array();
+
+            if(!empty($_SESSION[CCODE::MEMBER]['IsLogin'])){
+                $this->useful->AlertPage('cart/cart_payment','');
+                exit();
+            }
+
+            $this->load->view('front/cart_login',$data);
+        }else{
+            $this->useful->AlertPage('index','購物車無任何產品');
+            exit();
+        }
+    }
+    // 購物車1
+    public function cart_payment(){
+        $cart=(!empty($_COOKIE['BeautyCart'])?$_COOKIE['BeautyCart']:'');
+        if(!empty($cart)){
+            $data['CartProduct']=$CartProduct=$this->GetProduct($cart);
+
+            if(!empty($this->Mid)){
+                // 下一級的會員
+                $data['Next_lv']=$this->mymodel->OneSearchSql('member_lv', 'd_title', array('d_id' => $this->Mlv + 1));
+                $dbdata = $this->mymodel->WriteSQL('
+                select m.d_upgrade_date,lv.d_deadline,lv.d_upgrade
+                from member as m
+                left join member_lv as lv on lv.d_id = "' . $this->Mlv . '"
+                where m.d_id = "' . $this->Mid . '"', '1');
+                // 期限內訂單總數計算
+                $data['last_money']=$this->GetLastMoney($dbdata['d_upgrade_date'],$dbdata['d_deadline'],$dbdata['d_upgrade']);
+            }
+
+
+            // 滿額贈
+            $Gdata=$this->mymodel->SelectSearch('products_gift','','d_id,d_title,d_img,d_type,PID','where d_enable="Y" and d_price<='.$CartProduct['AllTotal'].' and d_stock>0');
+            $data['Gdata']=$this->ChkGift($Gdata);
+
+            $this->load->view('front/cart_payment',$data);
+        }else{
+            $this->useful->AlertPage('index','購物車無產品');
+            exit();
+        }
+    }
+    // 購物車2
+    public function cart_information(){
+        $cart=(!empty($_COOKIE['BeautyCart'])?$_COOKIE['BeautyCart']:'');
+        if(!empty($cart)){
+            // print_r($_POST);
+            // 購物車資訊
+            $data['CartProduct']=$CartProduct=$this->GetProduct($cart);
+
+            // 運送方式
+            $data['Ldata']=$Ldata=$this->mymodel->SelectSearch('logistics','','d_id,d_title','where d_enable="Y"');
+            // 付款方式
+            $data['Pdata']=$Pdata=$this->mymodel->SelectSearch('cashflow','','d_id,d_title,d_content','where d_enable="Y"');
+            // 捐贈發票
+            $data['Idata']=$this->mymodel->SelectSearch('invoice','','d_id,d_title','where d_enable="Y"');
+            // 發票類型
+            $data['ITtypedata']=$ITtypedata=$this->mymodel->GetConfig(9);
+
+            if(!empty($this->Mid)){
+                $Mdata=$this->mymodel->OneSearchSql('member',
+                    'd_user_type,d_pname,d_company_title,d_company_tel,d_phone,d_county,d_district,d_zipcode,d_address,d_account,d_company_county,d_company_district,d_company_zipcode,d_company_address,d_bonus,d_company_number'
+                    ,array('d_id'=>$this->Mid));
+                $MArray=array(
+                    'd_pname'=>$Mdata['d_pname'],
+                    'd_phone'=>$Mdata['d_phone'],
+                    'd_account'=>$Mdata['d_account'],
+                    'd_county'=>($Mdata['d_user_type']==1)?$Mdata['d_county']:$Mdata['d_company_county'],
+                    'd_district'=>($Mdata['d_user_type']==1)?$Mdata['d_district']:$Mdata['d_company_district'],
+                    'd_zipcode'=>($Mdata['d_user_type']==1)?$Mdata['d_zipcode']:$Mdata['d_company_zipcode'],
+                    'd_address'=>($Mdata['d_user_type']==1)?$Mdata['d_address']:$Mdata['d_company_address'],
+                    'd_company_title'=>($Mdata['d_user_type']==1)?'':$Mdata['d_company_title'],
+                    'd_company_tel'=>($Mdata['d_user_type']==1)?'':$Mdata['d_company_tel'],
+                    'd_company_number'=>($Mdata['d_user_type']==1)?'':$Mdata['d_company_number'],
+                    'd_bonus'=>$Mdata['d_bonus']
+                );
+                $data['Mdata']=$MArray;
+								// 預設資料
+								$data['Preset_send']=$this->mymodel->OneSearchSql('member_send','d_cname as d_company_title,d_name as d_pname,d_mobile as d_phone,d_phone as d_company_tel,d_city as d_county,d_area as d_district,d_zip as d_zipcode,d_address',array('MID'=>$this->Mid,'d_preset'=>'Y'));
+								$data['Preset_invoice']=$this->mymodel->OneSearchSql('member_invoice','d_cname as d_company_title,d_um as d_company_number,d_mail as d_account,d_city as d_county,d_area as d_district,d_zip as d_zipcode',array('MID'=>$this->Mid,'d_preset'=>'Y'));
+            }
+
+            if(!empty($_POST['d_gift'])){
+                $Gdata=$this->mymodel->WriteSQL('
+                    select PID,d_type,d_img,d_title from products_gift where d_id in ('.implode(',',$_POST['d_gift']).')
+                ');
+                $data['Gdata']=$this->ChkGift($Gdata);
+                $_SESSION[CCODE::MEMBER]['GiftData']=$_POST['d_gift'];
+            }
+
+            $data['post']=$_POST;
+
+            $this->load->view('front/cart_information',$data);
+        }else{
+            $this->useful->AlertPage('index','購物車無產品');
+            exit();
+        }
+    }
+    // 購物車3
+    public function cart_shopping(){
+        // 是否登入判定
+        $this->ChkLogin();
+        $cart=(!empty($_COOKIE['BeautyCart'])?$_COOKIE['BeautyCart']:'');
+        // 任選組合商品A+B
+        $OnsaleCart=(!empty($_SESSION[CCODE::MEMBER]['OnsaleCart'])?$_SESSION[CCODE::MEMBER]['OnsaleCart']:'');
+        if(!empty($cart) || !empty($OnsaleCart)){
+            if(!empty($_POST)){
+                $post=$_POST;
+                $this->ChkData($post);
+
+                // 任選組合商品A+B
+                if(!empty($OnsaleCart)){
+                    $data['OnsaleCartProduct']=$this->GetSetProduct($OnsaleCart);
+                }
+                if(!empty($cart)){
+                    // 活動撈取
+                    $this->GetAction($cart);
+                    // 購物車資訊
+                    $data['CartProduct']=$CartProduct=$this->GetProduct($cart);
+
+                }else{
+                    $data['CartProduct']['Total']=$this->AllSetTotel;
+                    $data['CartProduct']['DeTotal']=$this->AllSetTotel;
+
+                }
+
+                // 發票資訊
+                $post['d_invoice']=(!empty($post['d_invoice'])?$post['d_invoice']:'1');
+
+                // 運送方式
+                $Ldata=$this->mymodel->OneSearchSql('logistics','d_id,d_title,d_freight,d_free',array('d_id'=>$post['d_logistics']));
+                $Str=$Ldata['d_title']."運費NT$".$Ldata['d_freight'];
+                    if($Ldata['d_free']!=0){
+                        $Str.=' 總計金額滿'.$Ldata['d_free'].'元免加收'.$Ldata['d_freight'].'元運費';
+                }
+                $data['d_send']=$Str;
+
+                // 總金額
+                $data['AllTotal']=$post['AllTotal']+$post['d_freight'];
+
+                // 付款方式
+                $data['cashflow']=$this->mymodel->OneSearchSql('cashflow','d_title',array('d_id'=>$post['d_pay']));
+
+                $_SESSION[CCODE::MEMBER]['CartPost']=$data['post']=$post;
+
+                //滿額加價購 滿額贈品
+                if(!empty($_SESSION[CCODE::MEMBER]['Gift'])){
+                    $Gift=substr($_SESSION[CCODE::MEMBER]['Gift'],0,-2);
+                    $this->GetGift('',$Gift);
+                }
+                $this->load->view('front/cart_shopping',$data);
+            }else{
+                $this->useful->AlertPage('index','操作錯誤');
+                exit();
+            }
+        }else{
+            $this->useful->AlertPage('index','購物車無產品');
+            exit();
+        }
+    }
+    // 寫入訂單
+    public function Addorder(){
+        if(empty($_COOKIE['BeautyCart'])){
+            $this->useful->AlertPage('index','操作錯誤，請重新下單');
+            exit();
+        }
+        $this->ChkData($_POST);
+
+        // 寫入訂單流程
+        $date=date('Ymd');
+        $Odata=$this->mymodel->WriteSql('select OID from orders where SUBSTRING(OID,1,8)='.$date.'  order by OID desc limit 0,1','1');
+        if(!empty($Odata))
+            $OID=$Odata['OID']+1;
+        else
+            $OID=$date.'001';
+
+        $data['OID']=$OID;
+        $Cart=$_COOKIE['BeautyCart'];
+
+        $OrderData=$_POST;
+
+        $Subbonus=(!empty($_POST['SubBonus'])?$_POST['SubBonus']:'');
+        $CartProduct=$this->GetProduct($Cart,$Subbonus,$OrderData['d_freight']);
+
+
+        // print_r($CartProduct);
+        // exit();
+        // $OrderData=array_merge($_SESSION[CCODE::MEMBER]['CartPost'],$_POST);
+
+        // 總金額
+        // $AllTotal=$CartProduct['AllTotal']+$CartProduct['d_freight'];
+
+
+
+        if(empty($_SESSION[CCODE::MEMBER]['LID'])){
+            $Mdata=$this->mymodel->OneSearchSql('member','d_id',array('d_account'=>$OrderData['d_email']));
+            if(!empty($Mdata['d_id'])){
+                $this->useful->AlertPage('','此信箱帳號已有註冊，請洽管理人員');
+                exit();
+            }
+            $post['d_chked'] = 4; // 會員審核.
+
+            $post['d_password']=$OrderData['d_moblie'];
+
+            $dbdata = $this->useful->DB_Array($post, '', '', '1');
+            //加密
+            $this->load->library('encryption');
+            $dbdata['d_password'] = $this->encryption->encrypt($post['d_password']);
+            $dbdata['d_newsletter'] = 'N'; // 電子信
+            $dbdata['d_lv'] = 1; // 會員等級
+            $dbdata['d_pname'] = $OrderData['d_name'];; // 會員姓名
+            $dbdata['d_account']=$OrderData['d_email'];
+            $dbdata['d_county']=$OrderData['d_city'];
+            $dbdata['d_district']=$OrderData['d_area'];
+            $dbdata['d_zipcode']=$OrderData['d_zip'];
+            $dbdata['d_address']=$OrderData['d_address'];
+
+            $this->mymodel->InsertData('member', $dbdata);
+            // 寄驗證信給帳號人員
+            $this->SendVri($dbdata['d_account']);
+            $_SESSION[CCODE::MEMBER]['TempoLID']=$LID=$this->mymodel->create_id;
+        }else{
+            $LID=$_SESSION[CCODE::MEMBER]['LID'];
+
+        }
+
+
+
+        // 寫入主訂單
+        $AddOrder=array(
+            'OID'=>$OID,
+            'MID'=>$LID,
+            'd_price'=>$CartProduct['Total'],
+            'd_freight'=>$CartProduct['Freight'],
+            'd_usebonus'=>$CartProduct['Subbonus'],
+            'd_total'=>$CartProduct['AllTotal'],
+            'd_bonus'=>$CartProduct['BonusTotal'],
+            'd_pay'=>$OrderData['d_pay'],
+            'd_logistics'=>$OrderData['d_logistics'],
+            'd_invoice'=>$OrderData['d_invoice'],
+            'd_cname'=>$OrderData['d_cname'],
+            'd_name'=>$OrderData['d_name'],
+            'd_moblie'=>$OrderData['d_moblie'],
+            'd_phone'=>$OrderData['d_phone'],
+            'd_mail'=>$OrderData['d_email'],
+            'd_zip'=>$OrderData['d_zip'],
+            'd_city'=>$OrderData['d_city'],
+            'd_area'=>$OrderData['d_area'],
+            'd_address'=>$OrderData['d_address'],
+            'd_content'=>$OrderData['d_content'],
+            'd_donate'=>$OrderData['d_donate'],
+            'd_othername'=>$OrderData['d_othername'],
+            'd_icname'=>$OrderData['d_icname'],
+            'd_ium'=>$OrderData['d_ium'],
+            'd_imail'=>$OrderData['d_imail'],
+            'd_Invoicecity'=>$OrderData['d_Invoicecity'],
+            'd_Invoicearea'=>$OrderData['d_Invoicearea'],
+            'd_Invoicezip'=>$OrderData['d_Invoicezip'],
+            'd_iaddress'=>$OrderData['d_iaddress'],
+            'd_backagree'=>(!empty($OrderData['d_backagree'])?"Y":"N"),
+            'd_admin'=>(!empty($_SESSION[CCODE::MEMBER]['NoBonus'])?"Y":"N"),
+            'd_create_time'=>$this->useful->get_now_time(),
+            'd_update_time'=>$this->useful->get_now_time(),
+            'd_edit_ip'=>$this->useful->get_ip()
+        );
+        // print_r($AddOrder);
+        // exit();
+
+        $this->mymodel->InsertData('orders',$AddOrder);
+        $NewID=$this->mymodel->create_id;
+        // $NewID=1;
+        // print_r($CartProduct['Cart']);
+
+        foreach ($CartProduct['Cart'] as $key => $value) {
+            $AddorderDetail=array(
+                'OID'=>$NewID,
+                'PID'=>$value['d_id'],
+                'd_title'=>$value['d_title'],
+                'd_img'=>$value['d_img'],
+                'd_num'=>$value['num'],
+                'd_price'=>$value['d_price'],
+                'd_total'=>$value['d_total'],
+                'd_model'=>$value['d_model'],
+                'd_addtitle'=>(!empty($value['AddData']['AddTitle'])?$value['AddData']['AddTitle']:''),
+                'd_addprice'=>(!empty($value['AddData']['AddPrice'])?$value['AddData']['AddPrice']:''),
+                'd_addid'=>(!empty($value['AddData']['Addid'])?$value['AddData']['Addid']:''),
+                'd_content'=>(!empty($this->autoful->DiscountData[$value['d_id']])?$this->autoful->DiscountData[$value['d_id']]['d_title']:''),
+                'd_create_time'=>$this->useful->get_now_time(),
+                'd_update_time'=>$this->useful->get_now_time(),
+                'd_edit_ip'=>$this->useful->get_ip()
+            );
+            $this->mymodel->InsertData('orders_detail',$AddorderDetail);
+            // 扣除庫存
+            $this->SubStock($value['num'],$value['d_id']);
+        }
+
+        // 加價購紀錄
+        if(!empty($CartProduct['AddData'])){
+            foreach ($CartProduct['AddData'] as $key => $value) {
+                $AddMakeupDetail=array(
+                    'OID'=>$NewID,
+                    'MID'=>$value['d_id'],
+                    'd_title'=>$value['d_title'],
+                    'd_img'=>$value['d_img'],
+                    'd_aprice'=>$value['d_aprice'],
+                    'd_price'=>$value['d_price'],
+                    'd_create_time'=>$this->useful->get_now_time(),
+                    'd_update_time'=>$this->useful->get_now_time(),
+                    'd_edit_ip'=>$this->useful->get_ip()
+                );
+                $this->mymodel->InsertData('orders_makeup_detail',$AddMakeupDetail);
+                // 扣除加價購庫存
+                $this->SubMakeStock($value['d_id']);
+                unset($_SESSION[CCODE::MEMBER]['AddData']);
+            }
+        }
+        // 加價購紀錄
+        // 贈品紀錄
+        if(!empty($_SESSION[CCODE::MEMBER]['GiftData'])){
+            $GiftData=$_SESSION[CCODE::MEMBER]['GiftData'];
+            foreach ($GiftData as $key => $value) {
+                $Gdata=$this->mymodel->OneSearchSql('products_gift','d_type,PID,d_title,d_img',array('d_id'=>$value));
+                if($Gdata['d_type']==2){
+                    $Pdata=$this->mymodel->OneSearchSql('products','d_img1,d_title',array('d_id'=>$Gdata['PID']));
+                    $Gdata['d_title']=$Pdata['d_title'];
+                    $Gdata['d_img']=$Pdata['d_img1'];
+                }
+                $AddGiftDetail=array(
+                    'OID'=>$NewID,
+                    'GID'=>$value,
+                    'd_title'=>$Gdata['d_title'],
+                    'd_img'=>$Gdata['d_img'],
+                    'd_create_time'=>$this->useful->get_now_time(),
+                    'd_update_time'=>$this->useful->get_now_time(),
+                    'd_edit_ip'=>$this->useful->get_ip()
+                );
+                $this->mymodel->InsertData('orders_gift_detail',$AddGiftDetail);
+                // 扣除贈品庫存
+                $this->SubGiftStock($value);
+                unset($_SESSION[CCODE::MEMBER]['GiftData']);
+            }
+        }
+        // 贈品紀錄
+
+        setcookie("BeautyCart","",time()-43200,'/');
+        if(!empty($NewID)){
+            if($CartProduct['Subbonus']!=0){
+                $this->SubBouns($CartProduct['Subbonus'],$OID);
+            }
+
+            // 20180724-新訂單則寄信給管理者
+            // $this->Sendmail();
+            $this->useful->AlertPage('cart/order_completed/'.$OID.'','訂單建立成功，將導向詳細頁');
+        }else
+            $this->useful->AlertPage('index','訂單成立失敗，請重新下單');
+    }
+    // 完成訂單
+    public function order_completed($OrderNum=''){
+        if(!empty($OrderNum)){
+            $data=array();
+            $Odata=$this->mymodel->OneSearchSql('orders','*',array('OID'=>$OrderNum));
+
+            if(!empty($Odata) and ($Odata['MID']==$this->Mid or $Odata['MID']==$_SESSION[CCODE::MEMBER]['TempoLID'])){
+                $data['Detaildata']=$Detaildata=$this->mymodel->SelectSearch('orders_detail','','*','where OID='.$Odata['d_id'].'');
+                // 加價購
+                $data['Adddata']=$Adddata=$this->mymodel->SelectSearch('orders_makeup_detail','','*','where OID='.$Odata['d_id'].'');
+                // 贈品
+                $data['Giftdata']=$Giftdata=$this->mymodel->SelectSearch('orders_gift_detail','','*','where OID='.$Odata['d_id'].'');
+                // 物流方式
+                $data['Paystatus']=$this->mymodel->OneSearchSql('logistics','d_title,d_content',array('d_id'=>$Odata['d_logistics']));
+                // 金流
+                $data['Cashflow']=$this->mymodel->OneSearchSql('cashflow','d_title',array('d_id'=>$Odata['d_pay']));
+                // 發票類型
+                $data['ITtypedata']=$ITtypedata=$this->mymodel->GetConfig(9);
+								//
+								$data['Orders_status']=$this->mymodel->GetConfig('10', 'and d_enable="Y"');
+                $data['Odata']=$Odata;
+                // print_r($Odata);
+                $this->load->view('front/order_completed',$data);
+            }else{
+               $this->useful->AlertPage('index','操作錯誤');
+                exit();
+            }
+        }else{
+            $this->useful->AlertPage('index','操作錯誤');
+            exit();
+        }
+    }
+    // 各條件判定
+    private function ChkData($post){
+        $Chkarray=array(
+            '商品運送方式'=>'d_logistics',
+            '付款方式'=>'d_pay',
+            '收貨人姓名'=>'d_name',
+            '手機號碼'=>'d_moblie',
+            'E-mail'=>'d_email',
+            '城市'=>'d_city',
+            '鄉鎮'=>'d_area',
+            '區碼'=>'d_zip',
+            '地址'=>'d_address',
+        );
+
+        if(!empty($post['d_invoice'])){
+            if($post['d_invoice']=='2'){
+                $Chkarray+=array(
+                    '捐贈機關/團體'=>'d_donate',
+                );
+            }
+            if($post['d_invoice']=='3'){
+                $Chkarray+=array(
+                    '公司戶電子發票-統一編號'=>'d_ium',
+                    '公司戶電子發票-E-mail'=>'d_imail',
+                    '公司戶電子發票-城市'=>'d_Invoicecity',
+                    '公司戶電子發票-鄉鎮'=>'d_Invoicearea',
+                    '公司戶電子發票-區碼'=>'d_Invoicezip',
+                    '公司戶電子發票-地址'=>'d_iaddress'
+                );
+            }
+        }
+
+        $err='';
+        foreach ($Chkarray as $key => $value) {
+            if(empty($post[$value]))
+                $err.=$key.'需必填\n';
+        }
+        if(!empty($err)){
+            $this->useful->AlertPage('',$err);
+            exit();
+        }
+    }
+    //  期限內訂單總數計算
+    private function GetLastMoney($UpgradeDate,$deadline,$lastmoney){
+        $deaddate=date('Y-m-d', strtotime("+".$deadline." day", strtotime($UpgradeDate)));
+        $Odata=$this->mymodel->WriteSQL('
+            select sum(d_total) as total
+            from orders
+            where MID="'.$_SESSION[CCODE::MEMBER]['LID'].'" and d_orderstatus=4 and (d_create_time between "'.$UpgradeDate.'" and "'.$deaddate.'")
+        ',1);
+
+        if(!empty($Odata['total'])){
+            $lastmoney-=$Odata['total'];
+        }
+        return $lastmoney;
+    }
+    // 贈品是否有由產品資料來的
+    private function ChkGift($Gdata=''){
+        if(!empty($Gdata)){
+            foreach ($Gdata as $key => $value) {
+                if($value['d_type']==2){
+                    $Pdata=$this->mymodel->OneSearchSql('products','d_img1,d_title',array('d_id'=>$value['PID']));
+                    if(!empty($Pdata)){
+                        $Gdata[$key]['d_title']=$Pdata['d_title'];
+                        $Gdata[$key]['d_img']=$Pdata['d_img1'];
+                    }else{
+                        unset($Gdata[$key]);
+                    }
+                }
+            }
+            return $Gdata;
+        }
+    }
+    // 寄驗證信給帳號人員
+    public function SendVri($Account=''){
+        if(!empty($Account)){
+            $url=site_url('/login/Cheackaccount?').$this->encryptStr('acc='.$Account.'&type=2','jddtshin');
+            $Message ="請點選下面連結已完成驗證:<br>" . $url . "<br>謝謝！";
+            $this->tableful->Sendmail($Account, '美麗平台會員-會員驗證信', $Message);
+        }
+    }
+    // AJAX-更改購物車數量
+    public function ChangeCart(){
+        $str=$_POST['Str'];
+        setcookie("BeautyCart","",time()-43200,'/');
+        setcookie("BeautyCart",$str,time()+43200,'/');
+    }
+    // AJAX-刪除購物車
+    public function RemoveCart(){
+        $id=$_POST['id'];
+        if(!empty($_COOKIE['BeautyCart'])){
+            $cart=explode(';',$_COOKIE['BeautyCart']);
+            setcookie("BeautyCart","",time()-43200,'/');
+            unset($cart[$id]);
+            $cart=array_values($cart);
+        }
+        $cart=implode(';',$cart);
+        setcookie("BeautyCart",$cart,time()+43200,'/');
+    }
+    // AJAX-更改購物車數量-加購價
+    public function ChangeAddCart(){
+        $id=$_POST['id'];
+        $AddCart=(!empty($_SESSION[CCODE::MEMBER]['AddData'])?$_SESSION[CCODE::MEMBER]['AddData']:'');
+        if(!empty($AddCart)){
+            $AddCart=$AddCart.','.$id;
+        }else{
+            $AddCart=$id;
+        }
+        $_SESSION[CCODE::MEMBER]['AddData']=$AddCart;
+    }
+    // AJAX-刪除購物車-加購價
+    public function RemoveAddCart(){
+        $id=$_POST['id'];
+        if(!empty($_SESSION[CCODE::MEMBER]['AddData'])){
+            $cart=explode(',',$_SESSION[CCODE::MEMBER]['AddData']);
+            foreach ($cart as $key => $value) {
+                if($value==$id){
+                    unset($cart[$key]);
+                }
+            }
+            $cart=array_values($cart);
+        }
+        $cart=implode(',',$cart);
+        $_SESSION[CCODE::MEMBER]['AddData']=$cart;
+    }
+    // 扣除會員紅利
+    public function SubBouns($bonus,$OID){
+        $Mdata=$this->mymodel->OneSearchSql('member','d_bonus',array('d_id'=>$this->Mid));
+        // $total=(int)$Mdata['d_bonus']-$bonus;
+
+        $Sdata=array(
+            'MID'=>$this->Mid,
+            'OID'=>$OID,
+            'd_type'=>'2',
+            'd_num'=>$bonus,
+            'd_content'=>'扣抵訂單'
+        );
+
+        $dbdata=$this->useful->DB_Array($Sdata,'','','1');
+
+        $this->mymodel->InsertData('member_point',$dbdata);
+        $this->mymodel->SimpleWriteSQL('update member set d_bonus=d_bonus-'.$bonus.' where d_id='.$this->Mid.'');
+        // 撈取快過期的點數
+        $this->DetailSub($bonus);
+    }
+    // 撈取快過期的點數
+    private function DetailSub($bonus){
+        $Edata=$this->mymodel->WriteSQL('
+            select d_id,d_total from member_point where MID='.$this->Mid.' and d_type=1 and d_enable="Y" and d_total>0 order by d_create_time
+        ','1');
+        if(!empty($Edata['d_total'])){
+            $Subbonus=$Edata['d_total']-$bonus;
+            if($Subbonus<0){
+                $this->mymodel->SimpleWriteSQL('update member_point set d_total=0 where d_id='.$Edata['d_id'].'');
+                $this->DetailSub(abs($Subbonus));
+            }else
+                $this->mymodel->SimpleWriteSQL('update member_point set d_total='.$Subbonus.' where d_id='.$Edata['d_id'].'');
+        }
+    }
+    // 扣除庫存
+    private function SubStock($num,$id){
+        $this->mymodel->SimpleWriteSQL('update products set d_stock=d_stock-'.$num.' where d_id='.$id.'');
+        // $Sdata=$this->mymodel->OneSearchSql('products','d_stock',array('d_id'=>$id));
+        // if($Sdata['d_stock']<=0){
+        //     $this->mymodel->SimpleWriteSQL('update products set d_sstatus="2" where d_id='.$id.'');
+        // }
+    }
+    // 扣除贈品庫存
+    private function SubGiftStock($id){
+        $this->mymodel->SimpleWriteSQL('update products_gift set d_stock=d_stock-1 where d_id='.$id.'');
+        $Sdata=$this->mymodel->OneSearchSql('products_gift','d_stock',array('d_id'=>$id));
+        if($Sdata['d_stock']<=0){
+            $this->mymodel->SimpleWriteSQL('update products_gift set d_enable="N" where d_id='.$id.'');
+        }
+    }
+    // 扣除加價購庫存
+    private function SubMakeStock($id){
+        $this->mymodel->SimpleWriteSQL('update products_markup set d_stock=d_stock-1 where d_id='.$id.'');
+        $Sdata=$this->mymodel->OneSearchSql('products_markup','d_stock',array('d_id'=>$id));
+        if($Sdata['d_stock']<=0){
+            $this->mymodel->SimpleWriteSQL('update products_markup set d_enable="N" where d_id='.$id.'');
+        }
+    }
+		// AJAX運送方式 判斷是否為離島 加收運費
+		public function ChangeSend(){
+        $id=$_POST['id'];
+				$total=$_POST['total'];
+				$subBonus=$_POST['subBonus'];
+				$outisland=$_POST['outisland'];
+				$Addfreight=0;
+				$logistics=$this->mymodel->OneSearchSql('logistics','d_title',array('d_id'=>$id,'d_enable'=>'Y'));
+				if (!empty($logistics)) {
+					$total=$total-$subBonus;
+					if ($id==2) {
+						$total+=$outisland;
+						$Addfreight=$outisland;
+					}
+					echo json_encode(array('status' => 'success','Addfreight' => $Addfreight,'AllTotal' => $total));
+				}else{
+					echo json_encode(array('status' => 'error'));
+				}
+    }
+
+    // 撈取購物車資訊
+    private function GetProduct($cart,$Subbonus='0',$Freight='0'){
+        $cart=explode(';', $cart);
+        $Order=$CartArray=$AddArray=array();
+        $Chkpay='Y';
+        $AllTotal=$AllBonus=$NormalTotal=$ColdTotal=0;
+				$OneFreight=$this->mymodel->OneSearchSql('freight','d_free,d_freight,d_outisland',array('d_id'=>1));
+				$is_have_One=false; // 訂單是否含有一般運費商品
+				$BigFreight=0;
+				$Outisland=0;
+
+        $Filed='d_id,d_title,d_img1,d_price'.$this->Mlv.' as d_price,d_dprice,d_sprice,d_model,d_stock,d_bonus,FID';
+        // print_r($cart);
+
+        foreach ($cart as $key => $value) {
+            $AddArray=array();
+            $cart1=explode('@#', $value);
+
+            $products=$this->mymodel->OneSearchSql('products',$Filed,array('d_id'=>$cart1[0],'d_enable'=>"Y"));
+
+            if(!empty($products)){
+                // 庫存判定-
+                $Stock=$products['d_stock'];
+                if($cart1['1']>$Stock){
+                    $cart1['1']=$Stock;
+                }
+
+                // 判斷是否有無庫存產品
+                if($Stock<=0){
+                    $Chkpay='N';
+                }
+
+                // 運費撈取
+								$Fdata=$this->mymodel->OneSearchSql('freight','d_freight,d_outisland',array('d_id'=>$products['FID'],'d_enable'=>'Y'));
+								switch ($products['FID']) {
+									case '1':	//一般運
+										$is_have_One=true;
+										break;
+									case '2':	//免運
+										$Outisland+=$Fdata['d_outisland']*$cart1['1'];
+										break;
+									default:	//大型運
+										$BigFreight+=$Fdata['d_freight']*$cart1['1'];
+										$Outisland+=$Fdata['d_outisland']*$cart1['1'];
+										break;
+								}
+
+                // 特價 出清價判斷
+                if($products['d_dprice']!=0){
+                    $products['d_price']=$products['d_dprice'];
+                }elseif($products['d_sprice']!=0){
+                    $products['d_price']=$products['d_sprice'];
+                }
+
+                // 是否有活動
+                $Discount=$this->autoful->ChkDiscount($products['d_id']);
+                $products['d_price']*=$Discount;
+
+                if(!empty($cart1['2'])){
+                    $Modeldata=$this->mymodel->OneSearchSql('products_optional','d_title,d_price',array('d_id'=>$cart1['2']));
+                    $AddCartArray['AddTitle']=$Modeldata['d_title'];
+                    $AddCartArray['AddPrice']=$Modeldata['d_price'];
+                    $AddCartArray['Addid']=$cart1['2'];
+                    $Total=($products['d_price']+$Modeldata['d_price'])*$cart1[1];
+                }else{
+                    $Total=$products['d_price']*$cart1[1];
+                }
+
+                $CartArray[]=array(
+                    'd_id'=>$products['d_id'],
+                    'd_title'=>$products['d_title'],
+                    'd_img'=>$products['d_img1'],
+                    'stock'=>$Stock,
+                    'd_model'=>$products['d_model'],
+                    'num'=>$cart1['1'],
+                    'd_price'=>$products['d_price'],
+                    'd_total'=>$Total,
+                    'AddData'=>(!empty($AddCartArray)?$AddCartArray:'')
+                );
+
+                $AllTotal+=$Total;
+
+                $AllBonus+=$products['d_bonus']*$cart1[1];
+            }
+        }
+
+        // 是否有加購價產品
+        $Notid='';
+        $Addprice=0;
+        if(!empty($_SESSION[CCODE::MEMBER]['AddData'])){
+            $Addid=$_SESSION[CCODE::MEMBER]['AddData'];
+            $Notid=' and d_id not in ('.$Addid.')';
+            $AddArray=$this->mymodel->SelectSearch('products_markup','','d_id,d_title,d_img,d_aprice,d_price','where d_enable="Y" and d_id in ('.$Addid.')');
+            foreach ($AddArray as $key => $value) {
+                $Addprice+=$value['d_price'];
+            }
+        }
+        // print_r($AddArray);
+        $Order['AddData']=$AddArray;
+
+        // 判斷是否有無庫存產品
+        $Order['Chkpay']=$Chkpay;
+        // 扣除紅利
+        $Order['Subbonus']=$Subbonus;
+        // 總紅利
+        $Order['BonusTotal']=$AllBonus;
+        // 產品金額
+        $Order['Total']=$AllTotal+$Addprice;
+				// 大型運費
+        $Order['BigFreight']=$BigFreight;
+				// 一般運費規則
+        $Order['OneFreight']=$OneFreight;
+				// 離島另收
+				$Order['Outisland']=$Outisland+($is_have_One?$OneFreight['d_outisland']:0);
+				// 一般運費
+				$Order['Freight']=($is_have_One && $Order['Total'] < $OneFreight['d_free'] ? $OneFreight['d_freight'] : 0);
+        // 產品總金額金額 (小計+加購+大型運費+一般運費)-紅利折抵
+        $Order['AllTotal']=($AllTotal+$BigFreight+$Order['Freight']+$Addprice)-$Subbonus;
+
+        // print_r($CartArray);
+        // 購物車資訊
+        $Order['Cart']=$CartArray;
+        return $Order;
+    }
+    // 紅利計算
+    public function BonusOperation(){
+        $Bonus=$_POST['Bonus'];
+        $freight=(!empty($_POST['freight'])?$_POST['freight']:0);
+        if(!empty($Bonus)){
+            if($Bonus<0){
+                $data['Status']='紅利折扣不得為負';
+                echo json_encode($data);
+                exit();
+            }
+            $Mdata=$this->mymodel->OneSearchSql('member','d_bonus',array('d_id'=>$this->Mid));
+            if($Bonus>$Mdata['d_bonus']){
+                $data['Status']='您輸入的紅利已超過擁有的數量,請重新輸入,謝謝!';
+                echo json_encode($data);
+                exit();
+            }
+            $cart=(!empty($_COOKIE['BeautyCart'])?$_COOKIE['BeautyCart']:'');
+            $CartProduct=$this->GetProduct($cart);
+            $Total=($CartProduct['AllTotal']+$freight)-$Bonus;
+            if($Total<0){
+                $data['Status']='您輸入的紅利已超過總計金額,請重新輸入,謝謝!';
+                echo json_encode($data);
+                exit();
+            }
+            $data['Subbonus']=number_format(($Total));
+            $data['Status']='OK';
+            echo json_encode($data);
+        }
+    }
+    // 撈取收件人資料
+    public function GetSend(){
+        if(!empty($_POST['id'])){
+            $Sdata=$this->mymodel->OneSearchSql('member_send','d_id,d_cname,d_name,d_mobile,d_phone,d_city,d_area,d_zip,d_address',array('d_id'=>$_POST['id']));
+            echo json_encode($Sdata);
+        }else{
+            $Sdata=$this->mymodel->SelectSearch('member_send','','d_id,d_cname,d_name,d_mobile,d_phone,d_city,d_area,d_zip,d_address,d_preset','where MID='.$this->Mid.'');
+            $html='';
+            foreach ($Sdata as $key => $value) {
+                $html.='<ul>
+                  <li style="width:170px"><a class="btn-style10" href="javascript: void(0)" id="PresetSend" rel="'.$value['d_id'].'" >'.($value['d_preset']=='N'?'預設':'取消預設').'</a><a class="btn-style10" href="javascript: void(0)" id="PostSend" rel="'.$value['d_id'].'">寄送給</a></li>
+                  <li>'.$value['d_name'].'</li>
+                  <li>'.$value['d_zip'].' '.$value['d_city'].$value['d_area'].$value['d_address'].'</li>
+                  <li>
+                    <a class="btn-style10 fancybox" href="#add_info02" id="EditSend" rel="'.$value['d_id'].'">修改</a>
+                    <a class="btn-style10" href="javascript: void(0)" id="DelSend" rel="'.$value['d_id'].'">刪除</a>
+                  </li>
+                </ul>';
+            }
+            echo $html;
+        }
+    }
+    // 寫入/修改收件人資料
+    public function AddSend(){
+        $Postarray=$_POST['Postarray'];
+        $idata=array(
+            'MID'=>$this->Mid,
+            'd_cname'=>(!empty($Postarray[0])?$Postarray[0]:''),
+            'd_name'=>(!empty($Postarray[1])?$Postarray[1]:''),
+            'd_mobile'=>(!empty($Postarray[2])?$Postarray[2]:''),
+            'd_phone'=>(!empty($Postarray[3])?$Postarray[3]:''),
+            'd_city'=>(!empty($Postarray[4])?$Postarray[4]:''),
+            'd_area'=>(!empty($Postarray[5])?$Postarray[5]:''),
+            'd_zip'=>(!empty($Postarray[6])?$Postarray[6]:''),
+            'd_address'=>(!empty($Postarray[7])?$Postarray[7]:'')
+        );
+        if(!empty($_POST['d_id'])){
+            $this->mymodel->UpdateData('member_send',$idata,' where d_id='.$_POST['d_id'].' and MID='.$this->Mid.'');
+            echo '修改成功';
+        }else{
+            $msg=$this->mymodel->InsertData('member_send',$idata);
+            if(!empty($msg)){
+                echo '新增成功';
+            }else{
+                echo '新增失敗';
+            }
+        }
+    }
+		// 預設收件人資料
+		public function PresetSend(){
+			if(!empty($_POST['d_id'])){
+					$Preset=$this->mymodel->OneSearchSql('member_send','d_preset',array('d_id'=>$_POST['d_id'],'MID'=>$this->Mid));
+					if ($Preset['d_preset']=='N') {
+						$this->mymodel->UpdateData('member_send',array('d_preset' => 'N'),' where MID='.$this->Mid.'');
+						$this->mymodel->UpdateData('member_send',array('d_preset' => 'Y'),' where d_id='.$_POST['d_id'].' and MID='.$this->Mid.'');
+						echo 'Y';
+					}else{
+						$this->mymodel->UpdateData('member_send',array('d_preset' => 'N'),' where d_id='.$_POST['d_id'].' and MID='.$this->Mid.'');
+					}
+			}
+		}
+    // 刪除收件人資料
+    public function DelSend(){
+        if(!empty($_POST['d_id'])){
+            $this->mymodel->DelectData('member_send',' where d_id='.$_POST['d_id'].' and MID='.$this->Mid.'');
+            echo '刪除成功';
+        }
+    }
+    // 撈取統編備忘錄
+    public function GetInvoice(){
+        if(!empty($_POST['id'])){
+            $Sdata=$this->mymodel->OneSearchSql('member_invoice','d_id,d_cname,d_um,d_mail,d_city,d_area,d_zip,d_address',array('d_id'=>$_POST['id']));
+            echo json_encode($Sdata);
+        }else{
+            $Sdata=$this->mymodel->SelectSearch('member_invoice','','d_id,d_cname,d_um,d_preset','where MID='.$this->Mid.'');
+            $html='';
+            foreach ($Sdata as $key => $value) {
+                $html.='<ul>
+                  <li style="width:170px"><a class="btn-style10" href="javascript: void(0)" id="PresetInvoice" rel="'.$value['d_id'].'" >'.($value['d_preset']=='N'?'預設':'取消預設').'</a><a class="btn-style10" href="javascript: void(0)" id="PostInvoice" rel="'.$value['d_id'].'">寄送給</a></li>
+                  <li>'.$value['d_cname'].'</li>
+                  <li>'.$value['d_um'].'</li>
+                  <li>
+                    <a class="btn-style10 fancybox" href="#invoice_info02" id="EditInvoice" rel="'.$value['d_id'].'">修改</a>
+                    <a class="btn-style10" href="javascript: void(0)" id="DelInvoice" rel="'.$value['d_id'].'">刪除</a>
+                  </li>
+                </ul>';
+            }
+            echo $html;
+        }
+    }
+    // 寫入/修改統編備忘錄
+    public function AddInvoice(){
+        $Postarray=$_POST['Postarray'];
+        $idata=array(
+            'MID'=>$this->Mid,
+            'd_cname'=>(!empty($Postarray[0])?$Postarray[0]:''),
+            'd_um'=>(!empty($Postarray[1])?$Postarray[1]:''),
+            'd_mail'=>(!empty($Postarray[2])?$Postarray[2]:''),
+            'd_city'=>(!empty($Postarray[3])?$Postarray[3]:''),
+            'd_area'=>(!empty($Postarray[4])?$Postarray[4]:''),
+            'd_zip'=>(!empty($Postarray[5])?$Postarray[5]:''),
+            'd_address'=>(!empty($Postarray[6])?$Postarray[6]:'')
+        );
+        if(!empty($_POST['d_id'])){
+            $this->mymodel->UpdateData('member_invoice',$idata,' where d_id='.$_POST['d_id'].' and MID='.$this->Mid.'');
+            echo '修改成功';
+        }else{
+            $msg=$this->mymodel->InsertData('member_invoice',$idata);
+            if(!empty($msg)){
+                echo '新增成功';
+            }else{
+                echo '新增失敗';
+            }
+        }
+    }
+		// 預設統編備忘錄
+		public function PresetInvoice(){
+			if(!empty($_POST['d_id'])){
+					$Preset=$this->mymodel->OneSearchSql('member_invoice','d_preset',array('d_id'=>$_POST['d_id'],'MID'=>$this->Mid));
+					if ($Preset['d_preset']=='N') {
+						$this->mymodel->UpdateData('member_invoice',array('d_preset' => 'N'),' where MID='.$this->Mid.'');
+						$this->mymodel->UpdateData('member_invoice',array('d_preset' => 'Y'),' where d_id='.$_POST['d_id'].' and MID='.$this->Mid.'');
+						echo 'Y';
+					}else{
+						$this->mymodel->UpdateData('member_invoice',array('d_preset' => 'N'),' where d_id='.$_POST['d_id'].' and MID='.$this->Mid.'');
+					}
+			}
+		}
+    // 刪除統編備忘錄
+    public function DelInvoice(){
+        if(!empty($_POST['d_id'])){
+            $this->mymodel->DelectData('member_invoice',' where d_id='.$_POST['d_id'].' and MID='.$this->Mid.'');
+            echo '刪除成功';
+        }
+    }
+    // 寄回覆信
+    private function Sendmail(){
+        $Cdata=$this->webmodel->BaseConfig(1);
+
+        $Subject=$Cdata['d_title'].'-新訂單通知信';
+        $Message ='有新的訂單，請至後台管理查看!';
+
+        $Mailarray=$this->webmodel->BaseConfig(3);
+        $Mail=$Mailarray['d_title'];
+
+        $this->tableful->Sendmail($Mail, $Subject, $Message);
+    }
+    // 加密
+    private function encryptStr($str, $key){
+        $block = mcrypt_get_block_size('des', 'ecb');
+        $pad = $block - (strlen($str) % $block);
+        $str .= str_repeat(chr($pad), $pad);
+        $enc_str = mcrypt_encrypt(MCRYPT_DES, $key, $str, MCRYPT_MODE_ECB);
+        return base64_encode($enc_str);
+    }
+    // 解密
+    private function decryptStr($str, $key){
+        $str = base64_decode($str);
+        $str = mcrypt_decrypt(MCRYPT_DES, $key, $str, MCRYPT_MODE_ECB);
+        $block = mcrypt_get_block_size('des', 'ecb');
+        $pad = ord($str[($len = strlen($str)) - 1]);
+        return substr($str, 0, strlen($str) - $pad);
+    }
+}

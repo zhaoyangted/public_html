@@ -1,0 +1,59 @@
+@charset "utf-8";
+/* CSS Document */
+.w14{
+	font-size: 14px;
+	color:#333;
+	font-weight:normal;
+	text-decoration:none;
+	font-style: normal;	
+	line-height:2;
+}
+.w14_2{
+	font-size: 14px;
+	color:#333;
+	font-weight:normal;
+	text-decoration:none;
+	font-style: normal;	
+	line-height:2;
+}
+.w16{
+	font-size: 16px;
+	color:#333;
+	font-weight:normal;
+	text-decoration:none;
+	font-style: normal;	
+	line-height:2;
+}
+.g15{
+	font-size: 16px;
+	color:#545454;
+	font-weight:normal;
+	text-decoration:none;
+	font-style: normal;	
+	line-height:2;
+}
+.w20{
+	font-size: 20px;
+	color:#333;
+	font-weight:normal;
+	text-decoration:none;
+	font-style: normal;	
+	line-height:2;
+}
+.r16{
+	font-size: 16px;
+	color:#ff3c6c;
+	font-weight:normal;
+	text-decoration:none;
+	font-style: normal;	
+	line-height:2;
+}
+.r18{
+	font-size: 18px;
+	color:#ff3c6c;
+	font-weight:normal;
+	text-decoration:none;
+	font-style: normal;	
+	line-height:2;
+}
+

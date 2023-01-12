@@ -1,0 +1,59 @@
+header {
+    width: 100%;
+    height: auto;
+    position: fixed;
+    z-index: 99;
+    background-color: rgba(255, 255, 255, 0.95);
+    -webkit-box-shadow: 0px 3px 2px 0px rgba(58, 143, 183, 0.25);
+    box-shadow: 0px 3px 2px 0px rgba(58, 143, 183, 0.25);
+}
+
+main {
+    width: 100%;
+    height: auto;
+    display: -webkit-inline-box;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    -ms-flex-line-pack: center;
+    align-content: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    position: relative;
+    padding-top: 312px;
+    float: left;
+}
+
+article {
+    width: 100%;
+    height: auto;
+    display: -webkit-inline-box;
+    display: -ms-inline-flexbox;
+    display: inline-flex;
+    -webkit-box-pack: center;
+    -ms-flex-pack: center;
+    justify-content: center;
+    -ms-flex-line-pack: center;
+    align-content: center;
+    -webkit-box-align: center;
+    -ms-flex-align: center;
+    align-items: center;
+    -ms-flex-wrap: wrap;
+    flex-wrap: wrap;
+    position: relative;
+    padding: 0px;
+}
+
+footer {
+    width: 100%;
+    height: auto;
+    position: relative;
+    float: left;
+}
+
+/*# sourceMappingURL=layout02.css.map */
