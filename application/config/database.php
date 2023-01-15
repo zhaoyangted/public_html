@@ -98,10 +98,10 @@ $db['default'] = array(
 // 正式
 $db['Online'] = array(
 	'dsn'	=> '',
-	'hostname' => 'localhost',
-	'username' => 'beautyga_1',
+	'hostname' => 'database:3306',
+	'username' => 'beauty_ga1',
 	'password' => '80$#=kOX{-a7',
-	'database' => 'beautyga_1',
+	'database' => 'beauty_ga1',
 	'dbdriver' => 'mysqli',
 	'dbprefix' => '',
 	'pconnect' => FALSE,
