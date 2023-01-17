@@ -12,8 +12,8 @@
     font-weight: normal;
     font-style: normal;
 
-    src: url('./fonts/slick.eot');
-    src: url('./fonts/slick.eot?#iefix') format('embedded-opentype'), url('./fonts/slick.woff') format('woff'), url('./fonts/slick.ttf') format('truetype'), url('./fonts/slick.svg#slick') format('svg');
+    src: url('fonts/slick.eot');
+    src: url('fonts/slick.eot?#iefix') format('embedded-opentype'), url('fonts/slick.woff') format('woff'), url('fonts/slick.ttf') format('truetype'), url('fonts/slick.svg#slick') format('svg');
 }
 /* Arrows */
 .slick-prev,
@@ -23,12 +23,12 @@
     line-height: 0;
 
     position: absolute;
-    top: 57%;
-z-index: 0;
+    top: 50%;
+
     display: block;
 
     width: 20px;
-    height: auto;
+    height: 40px;
     padding: 0;
     -webkit-transform: translate(0, -50%);
     -ms-transform: translate(0, -50%);
@@ -36,17 +36,17 @@ z-index: 0;
 
     cursor: pointer;
 
-    color: transparent;
+    color: #d62872;
     border: none;
     outline: none;
-    background: transparent;
+    background: #f5f5f5;
 }
 .slick-prev:hover,
 .slick-prev:focus,
 .slick-next:hover,
 .slick-next:focus
 {
-    color: transparent;
+    color: #d62872;
     outline: none;
     background: transparent;
 }
@@ -76,15 +76,10 @@ z-index: 0;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
 }
-.index_news_box .slick-prev{
-    left: 15px;
-}
-.index_news_box .slick-next{
-    right: 19px;
-}
+
 .slick-prev
 {
-    left: -30px;
+    left: -25px;
 }
 [dir='rtl'] .slick-prev
 {
@@ -93,13 +88,7 @@ z-index: 0;
 }
 .slick-prev:before
 {
-    content: "";
-    width: 24px;
-    height: 39px;
-    float: left;
-    background-image: url("../images/left_ar.png");
-    -webkit-background-size: contain;
-    background-size: contain;
+    content: '←';
 }
 [dir='rtl'] .slick-prev:before
 {
@@ -108,7 +97,7 @@ z-index: 0;
 
 .slick-next
 {
-    right: -30px;
+    right: -25px;
 }
 [dir='rtl'] .slick-next
 {
@@ -117,19 +106,12 @@ z-index: 0;
 }
 .slick-next:before
 {
-    content: "";
-    width: 24px;
-    height: 39px;
-    float: left;
-    background-image: url("../images/right_ar.png");
-    -webkit-background-size: contain;
-    background-size: contain;
+    content: '→';
 }
 [dir='rtl'] .slick-next:before
 {
     content: '←';
 }
-
 /* Dots */
 
 .slick-dots

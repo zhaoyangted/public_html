@@ -14,16 +14,9 @@ class Index extends CI_Controller {
 				$Lv_where = !empty($_SESSION[CCODE::MEMBER]['IsLogin']) && $_SESSION[CCODE::MEMBER]['IsLogin'] == 'Y' ? ' and (d_lv like "'.$_SESSION[CCODE::MEMBER]['Mlv'].'@#%" or d_lv like "%@#'.$_SESSION[CCODE::MEMBER]['Mlv'].'" or d_lv like "%@#'.$_SESSION[CCODE::MEMBER]['Mlv'].'@#%" or d_lv='.$_SESSION[CCODE::MEMBER]['Mlv'].' or d_lv = "" )' : ' and d_lv="" ';
         // Banner
         $BannerData=$this->mymodel->WriteSql('
-        SELECT
-        d_img,
-        d_link
-    FROM
-        `banner`
-    WHERE
-        d_start <= NOW() AND(
-            d_end >= NOW() OR d_end = "0000-00-00 00:00:00") AND d_enable = "Y"'.$Lv_where.'
-        ORDER BY
-            d_sort;
+        SELECT d_img,d_link FROM `banner`
+            where if(d_start!="",d_start<=now(),1) and (if(d_end!="",d_end>=now(),1) or d_end="0000-00-00 00:00") and d_enable="Y"'.$Lv_where.'
+            ORDER BY d_sort
         ');
         $data['BannerData']=$BannerData;
         // Action
