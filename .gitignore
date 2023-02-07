@@ -3,3 +3,5 @@ uploads/
 cgi-bin/
 user_guide/
 .gitgnore
+uploads/.DS_Store
+.gitignore

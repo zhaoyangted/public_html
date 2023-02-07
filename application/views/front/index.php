@@ -114,8 +114,8 @@
 
                 <? endforeach; ?>
                 <ul>
-                            <li class="PordPHt"><a href="<? echo site_url('products/hot/'.$value['PTID'].'') ?>"><img src="<? echo CCODE::DemoPrefix.('/images/front/topPord.jpg')?>" alt=""></a></li>
-                        </ul>
+                  <li class="PordPHt"><a href="<? echo site_url('products/hot/' . $value['PTID'] . '') ?>"><img src="<? echo CCODE::DemoPrefix . ('/images/front/topPord.jpg') ?>" alt=""></a></li>
+                </ul>
               </div>
             </div>
 
@@ -124,24 +124,24 @@
         endif; ?>
         <!--  <div class="Pord_cfBox"><? echo $key; ?></div> -->
       </div>
-    
 
-    <div class="NewsALLBox">
-      <div class="NewsBox">
-        <div class="NewsTpALBx">
-          <div class="CnTT"><a href="<? echo site_url('news') ?>">[ 最新消息 & 活動公告 ]</a></div>
-        </div>
-        <div class="NewsConBox">
-          <? if (!empty($NewsData)) : foreach ($NewsData as $value) : ?>
-              <ul class="Ntur"><b><? echo $value['d_date'] ?></b>
-                <span class="NewsTA NEWPDS" style="background-color:<? echo $value['d_color'] ?>"><? echo $value['nttitle'] ?></span>
-                <a href="<? echo site_url('news/info/' . $value['d_id'] . '') ?>"><? echo $value['d_title'] ?></a>
-              </ul>
-          <? endforeach;
-          endif; ?>
+
+      <div class="NewsALLBox">
+        <div class="NewsBox">
+          <div class="NewsTpALBx">
+            <div class="CnTT"><a href="<? echo site_url('news') ?>">[ 最新消息 & 活動公告 ]</a></div>
+          </div>
+          <div class="NewsConBox">
+            <? if (!empty($NewsData)) : foreach ($NewsData as $value) : ?>
+                <ul class="Ntur"><b><? echo $value['d_date'] ?></b>
+                  <span class="NewsTA NEWPDS" style="background-color:<? echo $value['d_color'] ?>"><? echo $value['nttitle'] ?></span>
+                  <a href="<? echo site_url('news/info/' . $value['d_id'] . '') ?>"><? echo $value['d_title'] ?></a>
+                </ul>
+            <? endforeach;
+            endif; ?>
+          </div>
         </div>
       </div>
-    </div>
     </div>
     <div class="build-your-own02">
       <div class="ContUs">若有相關購物問題請您，撥打客服專線，或至 <a href="<? echo site_url('contact') ?>">聯絡我們</a> 留下您的相關問題我們將盡快為您服務!~^^謝謝</div>
@@ -269,7 +269,7 @@
     ]
   });
   $(function() {
-    
+
     // 預設顯示第一個 Tab
     var _showTab = 0;
     var $defaultLi = $('ul.tabs li').eq(_showTab).addClass('active');
@@ -286,10 +286,10 @@
       // 把目前點擊到的 li 頁籤加上 .active
       // 並把兄弟元素中有 .active 的都移除 class
       $this.addClass('active').siblings('.active').removeClass('active');
-      
+
       // 淡入相對應的內容並隱藏兄弟元素
       $(_clickTab).addClass('active').siblings('.active').removeClass('active');
-      
+
       $(_clickTab).stop(false, true).fadeIn().siblings().hide();
       $('.Pord_BoxStr').slick('refresh');
       //$('.Pord_BoxStr').resize();
@@ -297,7 +297,7 @@
     }).find('a').focus(function() {
       this.blur();
     });
-    
+
   });
 </script>
 <?php include '_footer.php'; ?>
