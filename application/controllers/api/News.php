@@ -1,18 +1,35 @@
 <?php
+
 defined('BASEPATH') or exit('No direct script access allowed');
 
-class News extends CI_Controller
+
+require_once APPPATH . 'libraries/RestController.php';
+//require_once 'Format.php';
+
+use Restserver\Libraries\RestController;
+
+/**
+ * Description of RestGetController
+ *
+ * @author https://roytuts.com
+ */
+class News extends RestController
 {
 
-    public function __construct()
-    {
-        parent::__construct();
-        $this->autoful->FrontConfig();
-        // 網頁標題
-        $this->NetTitle = '最新消息';
-    }
-    // 列表
-    public function Index($TID = '0')
+	function __construct()
+	{
+		parent::__construct();
+		$this->load->database();
+		$this->load->model('MyModel/Webmodel', 'webmodel');
+		$this->autoful->FrontConfig();
+		// 網頁標題
+		$this->NetTitle = '產品介紹';
+		//$this->autoful->FrontConfig();
+		// 網頁標題
+		//$this->NetTitle = '產品介紹';
+		//$this->load->model('ContactModel', 'cm');
+	}
+    public function list_get($TID = '0')
     {
         $data = array();
         if (!empty($TID)) {
@@ -34,15 +51,15 @@ class News extends CI_Controller
         $data['NewsData'] = !empty($data['News_type']) ? $this->mymodel->FrontSelectPage('news', '*,SUBSTR(d_date, 1,10) as d_date', 'where d_enable="Y" and TID IN (' . implode(",", array_column($data['News_type'], 'd_id')) . ')' . (!empty($TID) ? ' and TID="' . $TID . '"' : '') . $Where, 'd_sort, d_date desc', 6) : array();
         $data['TID'] = !empty($dbdata) ? $dbdata['d_title'] : '';
 
-        $this->load->view('front/news', $data);
+        $this->response($data,200);
     }
-    // 內頁
-    public function info($d_id = '')
+    public function index_get($d_id)
     {
         $data = array();
 
         // News
         $dbdata = $this->mymodel->OneSearchSql('news', '*,SUBSTR(d_date, 1,10) as d_date', array('d_id' => $d_id, 'd_enable' => "Y"));
+        //echo $dbdata;
         $category = !empty($dbdata) ? $this->mymodel->OneSearchSql('news_type', 'd_id,d_title,d_color', array('d_id' => $dbdata['TID'], 'd_enable' => "Y")) : array();
         if (empty($d_id) || empty($dbdata) || empty($category)) {
             $this->useful->AlertPage('', '操作錯誤');
@@ -56,7 +73,11 @@ class News extends CI_Controller
 
         $data['category'] = $category;
         $data['dbdata'] = $dbdata;
+        if ($data) {
+            $this->response($data,200);
+        } else {
+            $this->response(NULL,404);
+        }
 
-        $this->load->view('front/news_info', $data);
     }
 }

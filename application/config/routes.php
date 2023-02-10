@@ -54,3 +54,5 @@ $route['default_controller'] = "Index";
 // $route['default_controller']='welcome';
 $route['404_override'] = 'index/show404';
 $route['translate_uri_dashes'] = FALSE;
+$route['api/product/(:any)'] = 'api/product/$1';
+$route['api/news/(:number)'] = 'api/news/$1';
