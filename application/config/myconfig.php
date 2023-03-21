@@ -9,9 +9,6 @@ class CCODE {
 	const VIEW_SPACE=true;//html縮排減少檔案傳送byte數,增加速度
 	const SH="";//搜尋列表專用
 	const DemoPrefix="";  //DEmo前綴詞
-	const JSPrefix="";
-	const ImgPrefix="";
-	const CssPrefix="https://bgtw.s3.ap-northeast-1.amazonaws.com";
 
 }
 $config["site_config"]=array();//預設

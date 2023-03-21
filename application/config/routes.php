@@ -56,3 +56,6 @@ $route['404_override'] = 'index/show404';
 $route['translate_uri_dashes'] = FALSE;
 $route['api/product/(:any)'] = 'api/product/$1';
 $route['api/news/(:number)'] = 'api/news/$1';
+$route['api/menus/'] = 'api/menus/';
+$route['api/menus/config/'] = 'api/menus/config/';
+$route['api/homepage/'] = 'api/homepage/';

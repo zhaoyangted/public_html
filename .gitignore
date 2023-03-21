@@ -5,3 +5,4 @@ user_guide/
 .gitgnore
 uploads/.DS_Store
 .gitignore
+.DS_Store

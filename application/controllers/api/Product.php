@@ -18,6 +18,8 @@ class Product extends RestController
 
 	function __construct()
 	{
+		header('Access-Control-Allow-Origin: *');
+        header("Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, DELETE");
 		parent::__construct();
 		$this->load->database();
 		$this->load->model('MyModel/Webmodel', 'webmodel');

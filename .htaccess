@@ -7,7 +7,9 @@ RewriteCond %{HTTPS} off
 #RewriteCond %{HTTP_HOST} ^beautygarage\.tw$ [OR]
 #RewriteCond %{HTTP_HOST} ^www\.beautygarage\.tw$
 #RewriteRule ^/?$ "https\:\/\/www\.beautygarage\.tw\/" [R=301,L]
-
+<FilesMatch ".(eot|ttf|otf|woff)">
+    Header set Access-Control-Allow-Origin "*"
+</FilesMatch>
 <Files 403.shtml>
 order allow,deny
 allow from all
