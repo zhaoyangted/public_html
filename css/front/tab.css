@@ -1,142 +1,67 @@
 @charset "utf-8";
 /* CSS Document */
-.abgne_tab {
-	clear: left;
-	width: 100%;
-	margin: 80px 0px 0px 0px;
-	height: auto;
-	overflow: hidden;
-}
-ul.tabs {
-	width: 100%;
-	border-bottom: 1px solid #eee;
-	text-align: center;
-	height: 48px;
-}
-ul.tabs li {
-	display: inline-block;
-	height: 48px;
-	line-height: 48px;
-	overflow: hidden;
-	position: relative;
-	margin-bottom: -1px; /* 讓 li 往下移來遮住 ul 的部份 border-bottom */
-	border: 1px solid #eee;
-	background: #f9f9f9;
-	margin: 0 2px;
+	.abgne_tab {
+		clear: left;
+		width: 100%;
+		margin: 80px 0px 0px 0px;
+		height:auto; overflow: hidden;
+	}
+	ul.tabs {
+		width: 100%;
+		border-bottom: 1px solid #eee;
+		text-align:center;
+		height: 48px;
+	}
+	ul.tabs li {
+		display:inline-block;
+		height: 48px;
+		line-height: 48px;
+		overflow: hidden;
+		position: relative;
+		margin-bottom: -1px;	/* 讓 li 往下移來遮住 ul 的部份 border-bottom */
+		border: 1px solid #eee;
+		background: #f9f9f9;
+		margin:0 2px;
 
-	-webkit-border-top-left-radius: 4px;
-	-webkit-border-top-right-radius: 4px;
-	-moz-border-radius-topleft: 4px;
-	-moz-border-radius-topright: 4px;
-	border-top-left-radius: 4px;
-	border-top-right-radius: 4px;
-}
-div.CnTBox ul.tabs {
-	width: 100%;
-	/* border-bottom: 2px solid #eee; */
-	/* text-align:center; */
-	height: 48px;
-	overflow: scroll;
-	flex-direction: row;
-	display: flex;
-}
-div.CnTBox ul.tabs li {
-	display: inline-block;
-	height: 48px;
-	/* line-height: 48px; */
-	overflow: hidden;
-	position: relative;
-	/* margin-bottom: -1px; */
-	/* 讓 li 往下移來遮住 ul 的部份 border-bottom */
-	/* border: 2px solid #eee; */
-	background: #f9f9f9;
-	border-radius: 5px 5px 0 0;
-	/* margin-right: 2px; */
-	border: unset;
-	margin-right: 2px;
-	-webkit-border-top-left-radius: 4px;
-	-webkit-border-top-right-radius: 4px;
-	-moz-border-radius-topleft: 4px;
-	-moz-border-radius-topright: 4px;
-	border-top-left-radius: 4px;
-	border-top-right-radius: 4px;
-}
-/* ul.tabs.li.a:nth-child(1){border:2px solid #F2195B;}
-	:nth-child(2){border:2px solid #F2195B;}
-	:nth-child(3){border:2px solid #62b616;}
-	:nth-child(4){border:2px solid #4e87c1;}
-	:nth-child(5){border:2px solid #003b78;}
-	:nth-child(6){border:2px solid #00ccb2;} */
-
-div.CnTBox ul.tabs li a {
-	display: block;
-	padding: 5px;
-	color: #000;
-	/* border: 1px solid #fff; */
-	text-decoration: none;
-	font-size: small;
-	border: unset;
-}
-div.CnTBox ul.tabs li.active a {
-	color: #fff;
-}
-div.CnTBox ul.tabs li.active {
-	background: #f2195b;
-	color: #fff;
-}
-div.CnTBox ul.tabs {
-	height: 40px;
-}
-div.CnTBox ul.tabs li {
-	height: 40px;
-	text-align: center;
-	/* align-items: center; */
-	display: flex;
-}
-div.CnTBox ul.tabs li:hover a:hover {
-	background: #fff;
-	color: #f2195b;
-}
-ul.tabs li a {
-	display: block;
-	padding: 0 80px;
-	color: #000;
-	border: 1px solid #fff;
-	text-decoration: none;
-}
-ul.tabs li.active {
-	background: #fff;
-	border-bottom: 1px solid #fff;
-}
-ul.tabs li.active a:hover {
-	background: #fff;
-}
-ul.tabs li a:hover {
-	background: #f9f9f9;
-	color: #70accb;
-}
-ul.tabs li:active {
-	background: #fff;
-	border: 1px solid #fff;
-}
-
-div.tab_container {
-	clear: left;
-	width: 100%;
-	border-top: none;
-	background: #fff;
-}
-
-div.tab_content img {
-	max-width: 100%;
-}
-
-.tab-content .active {
-	height: auto;
-}
-div.tab_content iframe {
-	max-width: 100%;
-}
+		-webkit-border-top-left-radius: 4px;
+-webkit-border-top-right-radius: 4px;
+-moz-border-radius-topleft: 4px;
+-moz-border-radius-topright: 4px;
+border-top-left-radius: 4px;
+border-top-right-radius: 4px;
+	}
+	ul.tabs li a {
+		display: block;
+		padding: 0 80px;
+		color: #000;
+		border: 1px solid #fff;
+		text-decoration: none;
+	}
+	ul.tabs li a:hover {
+		background: #f9f9f9; color:#70accb;
+	}
+	ul.tabs li.active  {
+		background: #fff;
+		border-bottom: 1px solid #fff;
+	}
+	ul.tabs li.active a:hover {
+		background: #fff;
+	}
+	div.tab_container {
+		clear: left;
+		width: 100%;
+		border-top: none;
+		background: #fff;
+	}
+	div.tab_container .tab_content {
+		padding: 50px 20px;
+	}
+	div.tab_content img {
+		max-width: 100%;
+	}
+	div.tab_content iframe {
+		max-width: 100%;
+	}
 
 @media only screen and (min-width: 0px) and (max-width: 768px) {
 	ul.tabs li a {
