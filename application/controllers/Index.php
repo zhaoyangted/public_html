@@ -86,4 +86,8 @@ class Index extends CI_Controller
   {
     $this->load->view('errors/404');
   }
+  private function maintenance() {
+    $this->output->set_status_header('503'); 
+    echo $this->load->view('front/maintenance');
+  }
 }

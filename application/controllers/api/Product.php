@@ -21,7 +21,7 @@ class Product extends RestController
 		header('Access-Control-Allow-Origin: *');
         header("Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, DELETE");
 		parent::__construct();
-		$this->load->database();
+		//$this->load->database();
 		$this->load->model('MyModel/Webmodel', 'webmodel');
 		$this->autoful->FrontConfig();
 		// 網頁標題
@@ -87,7 +87,6 @@ class Product extends RestController
 	}
 	public function index_get($d_id = '')
 	{
-
 		/* if (empty($d_id)) {
 			//$this->useful->AlertPage('', '操作錯誤');
 			exit();
@@ -146,6 +145,7 @@ class Product extends RestController
 				$this->autoful->UpLvtitle = '沙龍價(銅)';
 			}
 		}
+		
 		// 是否有活動
 		$SaleArr = array($dbdata['d_id'], 0, "");
 		$this->autoful->ChkSingleSale($SaleArr, $dbdata['d_price']);
@@ -156,7 +156,19 @@ class Product extends RestController
 		$this->NetTitle = (!empty($dbdata['d_stitle']) ? $dbdata['d_stitle'] : $this->NetTitle);
 		$this->Seokeywords = (!empty($dbdata['d_skeywords']) ? $dbdata['d_skeywords'] : '');
 		$this->Seodescription = (!empty($dbdata['d_sdescription']) ? $dbdata['d_sdescription'] : '');
-
+		
+		//get 會員價
+		if(((!empty($this->autoful->DiscountData[$dbdata['d_id']]) && $this->autoful->DiscountData[$dbdata['d_id']]['GetBonus']=='Y') || empty($this->autoful->DiscountData[$dbdata['d_id']])) && $dbdata['d_bonus']!=0){
+			$dbdata['isBonus']=true;
+		}
+		if(!empty($this->autoful->DiscountData[$dbdata['d_id']])) {
+		$dbdata['isSalePrice'] = number_format($this->autoful->DiscountData[$dbdata['d_id']]['d_price']);
+		}
+		if(!empty($this->autoful->Lvtitle)) { $dbdata['isMember']=$this->autoful->Lvtitle;}
+		if(!empty($this->autoful->UpLvtitle)) {
+		$dbdata['isNotAvail'] = $this->autoful->UpLvtitle;
+		}
+		//}
 		$data['dbdata'] = $dbdata;
 
 		// 撈取標題
@@ -255,7 +267,9 @@ class Product extends RestController
 		} else {
 			$_SESSION[CCODE::MEMBER]['Watch'] = $d_id;
 		}
+		
 		// 紀錄瀏覽人數
+		$this->AddVisit($d_id);
 		if ($data) {
 			//$this->AddVisit($d_id);
 			$this->response($data, 200);
@@ -263,6 +277,35 @@ class Product extends RestController
 			$this->response(NULL, 404);
 		}
 		//$this->load->view('front/products_info',$data);
+	}
+	public function hot_get()
+	{
+		// Hot
+		$HotArray = array();
+		$HotData = $this->mymodel->WriteSql('
+				select pt.d_title as pttitle,pt.d_id as PTID,p.d_id,p.d_title,p.d_img1,p.d_img2,p.d_price1,p.d_price2,p.d_price3,p.d_price4,p.d_dprice,p.d_sprice,concat(p.TID,",",p.TTID,",",p.TTTID) as TID,p.MTID
+				from products_hot h
+						
+						inner join products p on p.d_id=h.PID
+						inner join products_hot_type pt on pt.d_id=h.TID
+				where p.d_enable="Y" and h.d_enable="Y" and pt.d_enable="Y"
+				order by pt.d_sort asc,h.d_sort asc
+			');
+	
+		// 根據會員等級顯示金額
+		$HotData = $this->autoful->GetProductPrice($HotData);
+		foreach ($HotData as $h) {
+		  if (isset($HotArray[$h['pttitle']]) && count($HotArray[$h['pttitle']]) > 9) {
+			continue;
+		  }
+		  $HotArray[$h['pttitle']][] = $h;
+		}
+		if ($HotArray) {
+			//$this->AddVisit($d_id);
+			$this->response($HotArray, 200);
+		} else {
+			$this->response(NULL, 404);
+		}
 	}
 	/* function contacts_get() {
         $contacts = $this->cm->get_contact_list();
