@@ -1369,16 +1369,24 @@ justify-content: space-between;
 #sticker {
       width: 100%;
     }
+@media only screen and (min-width: 1636px) {
+	.HeadNavUB {
+		padding: 0px 40px;
+	}
+}
 @media only screen and (min-width: 1371px) and (max-width: 1635px){
 .products_more ul li{ width: calc( 100% / 7 - 14px); }
 .products_more ul li:nth-child(even){ width: calc( 100% / 7 - 14px);}
 .HeadNavUB {
-	padding: 0px 40px;
+	padding: 0px 30px;
 }
 }
 @media only screen and (min-width: 1025px) and (max-width: 1370px){
 .products_more ul li{ width: calc( 100% / 6 - 14px); }
 .products_more ul li:nth-child(even){ width: calc( 100% / 6 - 14px);}
+.HeadNavUB {
+	padding: 0px 20px;
+}
 }
 @media only screen and (min-width: 801px) and (max-width: 1024px){
 .products_more ul li{ width: calc( 100% / 5 - 14px); }
