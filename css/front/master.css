@@ -23,7 +23,7 @@ input, textarea { outline: none; }
 
 @font-face { font-family: "FontAwesome"; src: url("fonts/fontawesome-webfont.eot"); src: url("fonts/fontawesome-webfont.eot") format("embedded-opentype"), url("fonts/fontawesome-webfont.woff2") format("woff2"), url("fonts/fontawesome-webfont.woff") format("woff"), url("fonts/fontawesome-webfont.ttf") format("truetype"), url("fonts/fontawesome-webfont.svg") format("svg"); }
 
-@font-face { font-family: 'notobs2'; src: url("beautygarage/fonts/SourceHanSerif-Heavy.otf") format("opentype"); }
+@font-face { font-family: 'notobs2'; src: url("fonts/SourceHanSerif-Heavy.otf") format("opentype"); }
 
 .HeadConALLBOX { width: 100%; height: auto; float: left; padding: 0px 60px;  }
 
