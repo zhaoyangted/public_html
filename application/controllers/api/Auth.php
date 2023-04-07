@@ -23,7 +23,7 @@ class Auth extends RestController
 		parent::__construct();
         $this->autoful->FrontConfig();
         $this->load->library('form_validation');
-		$this->load->model('Mymodel/User');
+		$this->load->model('MyModel/User');
 		// 網頁標題
 		//$this->NetTitle = '產品介紹';
 		//$this->autoful->FrontConfig();
