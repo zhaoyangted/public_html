@@ -18,8 +18,9 @@ class News extends RestController
 
 	function __construct()
 	{
-        header('Access-Control-Allow-Origin: *');
-        header("Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, DELETE");
+        /* header('Access-Control-Allow-Origin: *');
+        header("Access-Control-Allow-Methods: GET, POST, OPTIONS, PUT, DELETE"); */
+        header("Access-Control-Allow-Credentials: true");
 		parent::__construct();
 		$this->load->database();
 		$this->load->model('MyModel/Webmodel', 'webmodel');

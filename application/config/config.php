@@ -394,8 +394,8 @@ $config['sess_regenerate_destroy'] = FALSE;
 |       'cookie_httponly') will also affect sessions.
 |
 */
-$config['cookie_prefix']	= 'bgtw';
-$config['cookie_domain']	= 'beautygarage.tw';
+$config['cookie_prefix']	= '';
+$config['cookie_domain']	= '';
 $config['cookie_path']		= '/';
 $config['cookie_secure']	= FALSE;
 $config['cookie_httponly'] 	= FALSE;
@@ -526,5 +526,5 @@ $config['proxy_ips'] = '';
 | $config['maintenance_mode'] = TRUE; // site is offline
 | $config['maintenance_mode'] = FALSE; // site is online
 */
-$config['maintenance_mode'] = TRUE;
+$config['maintenance_mode'] = FALSE;
 $config['maintenance_ips'] = array('36.230.108.247','127.0.0.1','0.0.0.0');
