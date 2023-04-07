@@ -145,13 +145,40 @@ select > option { padding-top: 10px !important; padding-bottom: 10px !important;
 .searICBXsit{ width: 30px; height: 30px; -webkit-transition: all 0.5s ease; transition: all 0.5s ease; }
 }
 
-.HeadNavBx { width: 100%; height: auto;/*  padding: 0px 60px; */ float: left; display: -webkit-inline-box; display: -ms-inline-flexbox; display: inline-flex; -webkit-box-pack: center; -ms-flex-pack: center; justify-content: center; -ms-flex-line-pack: center; align-content: space-evenly; -webkit-box-align: center; -ms-flex-align: center; align-items: center; }
+.HeadNavBx { 
+	position: relative;
+	width: 100%; 
+	height: auto;
+	/*  padding: 0px 60px; */ 
+	float: left; display: -webkit-inline-box; 
+	display: -ms-inline-flexbox; 
+	display: inline-flex; 
+	-webkit-box-pack: center; 
+	-ms-flex-pack: center; 
+	justify-content: center; 
+	-ms-flex-line-pack: center; 
+	align-content: space-evenly; 
+	-webkit-box-align: center; 
+	-ms-flex-align: center; 
+	align-items: center; 
+}
 @media only screen and (min-width: 0px) and (max-width: 1080px){
 .HeadNavBx > ul{ display: none;}
 }
 .HeadNavUB { width: auto; height: 40px; padding: 0px 20px; display: -webkit-inline-box; display: -ms-inline-flexbox; display: inline-flex; -webkit-box-pack: start; -ms-flex-pack: start; justify-content: flex-start; -ms-flex-line-pack: center; align-content: center; -webkit-box-align: center; -ms-flex-align: center; align-items: center; font-size: 15px; font-weight: 600; line-height: 50px; position: relative; -webkit-transition: all 0.5s ease; transition: all 0.5s ease; }
 
-.HeadNavUB > ul { width: 1000px; height: auto; position: absolute; max-height: 0px; top: 42px; margin-left: -110px; border-radius: 8px; -webkit-box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0.25); box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0.25); overflow: hidden; -webkit-transition: all 0.5s ease; transition: all 0.5s ease; }
+.HeadNavUB > ul { 
+	z-index: 1000;
+	width: 1000px; 
+	height: auto; 
+	position: absolute; 
+	max-height: 0px; 
+	top: 42px; 
+	margin-left: -100px; 
+	border-radius: 8px; 
+	-webkit-box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0.25); box-shadow: 0px 0px 0px 0px rgba(0, 0, 0, 0.25); 
+	overflow: hidden; 
+	-webkit-transition: all 0.5s ease; transition: all 0.5s ease; }
 
 .HeadNavUB.ovhe { height: 30px; -webkit-transition: all 0.5s ease; transition: all 0.5s ease; }
 
@@ -219,13 +246,15 @@ select > option { padding-top: 10px !important; padding-bottom: 10px !important;
 
 .MuT2_T2 > ul { margin-left: -300px; }
 
-.MuT2_T3 > ul { margin-left: -490px; }
+.MuT2_T3 > ul { margin-left: -390px; }
 
-.MuT2_T4 > ul { margin-left: -680px; }
-
-.MuT2_T5 > ul { margin-left: -870px; }
-
-.MuT2_T6 > ul { margin-left: -1060px; }
+.MuT2_T4 > ul { left: -380px; }
+ul.HeadNavUB.MuT2_T5:nth-of-type(2) .ul{left:-600px;right: auto;}
+ul.MuT2_T5:last-child .ul{right:-50px;left: auto;}
+ .MuT2_T5 > ul { left: -450px; }
+/*.MuT2_T5:nth-of-type(2)>ul{ margin-left: -550px;}
+.MuT2_T5:nth-of-type(3)>ul{ margin-left: -650px;}
+.MuT2_T6 > ul { margin-left: -1060px; } */
 
 .int_bannerCS { width: 100%; height: auto; padding-bottom: 40px; position: relative; }
 .int_bannerCS img{ width: 100%; }
@@ -2438,7 +2467,7 @@ div.page .current {
 .e404 {
 	width: 100%;
 	display: block;
-	padding: 0
+	padding: 0;
 	height:auto; overflow: hidden; text-align: center;
 }
 .e404 .pic{

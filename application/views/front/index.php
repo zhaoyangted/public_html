@@ -56,7 +56,7 @@
                             <?endif; ?>
                             <ul class="bantBOX">
                                 <li class="butt01"><input type="button" class="bant01" value="立即購買" onclick="javascript:window.location.href='<? echo site_url('products/info/'.$value['d_id'].'') ?>'"></li>
-                                <!-- <li class="butt02"><input type="button" class="bant02" value="加入最愛" id="AddFavourite" rel="<?echo $value['d_id']?>"></li> -->
+                                <li class="butt02"><input type="button" class="bant02" value="加入最愛" id="AddFavourite" rel="<?echo $value['d_id']?>"></li>
                             </ul>
                         </ul>
                     <? endforeach;?>

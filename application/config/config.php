@@ -526,4 +526,5 @@ $config['proxy_ips'] = '';
 | $config['maintenance_mode'] = TRUE; // site is offline
 | $config['maintenance_mode'] = FALSE; // site is online
 */
-$config['maintenance_mode'] = FALSE;
+$config['maintenance_mode'] = TRUE;
+$config['maintenance_ips'] = array('36.230.108.247','127.0.0.1','0.0.0.0');
