@@ -97,7 +97,7 @@ z-index: 0;
     width: 24px;
     height: 39px;
     float: left;
-    background-image: url("../images/left_ar.png");
+    background-image: url("/images/front/left_ar.png");
     -webkit-background-size: contain;
     background-size: contain;
 }
@@ -121,7 +121,7 @@ z-index: 0;
     width: 24px;
     height: 39px;
     float: left;
-    background-image: url("../images/right_ar.png");
+    background-image: url("/images/front/right_ar.png");
     -webkit-background-size: contain;
     background-size: contain;
 }
