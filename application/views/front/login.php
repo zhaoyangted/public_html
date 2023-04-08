@@ -31,7 +31,7 @@
                     <input type="text" name="d_captcha" />
                   </li>
                   <li class="contact-captcha">
-                    <img width="20%" id="captcha" src="<? echo site_url('/login/make_vcode_img') ?>" />
+                    <img width="20%" id="captcha" src="<? echo site_url('/api/makeVcode') ?>" />
                   </li>
                   <div class="pw"><a href="<? echo site_url('login/forgetpwd') ?>">忘記密碼?</a></div>
                   <li style="text-align:center;">
