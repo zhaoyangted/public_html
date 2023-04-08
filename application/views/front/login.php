@@ -16,7 +16,7 @@
           <!--會員登入-->
           <div class="member">
             <div class="mbox">
-              <form action="<? echo site_url('/login/login_ok') ?>" method="post">
+              <form action="<? echo site_url('login/login_ok') ?>" method="post">
                 <ul class="styled-input">
                   <li>
                     <h2>帳號*</h2>
@@ -31,7 +31,7 @@
                     <input type="text" name="d_captcha" />
                   </li>
                   <li class="contact-captcha">
-                    <img width="20%" id="captcha" src="<? echo site_url('/api/makeVcode') ?>" />
+                    <img width="20%" id="captcha" src="<? echo site_url('login/make_vcode_img') ?>" />
                   </li>
                   <div class="pw"><a href="<? echo site_url('login/forgetpwd') ?>">忘記密碼?</a></div>
                   <li style="text-align:center;">
