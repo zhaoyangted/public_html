@@ -97,7 +97,7 @@ class Useful {
 	public function CKediter($push_path){
 		// ckeditor 文字編輯器
 		$this -> create_dir('../'.CCODE::DemoPrefix.'/uploads/'.$push_path.'/ckfinder_image/');
-		$this -> start_session(3600);
+		//$this -> start_session(3600);
 		$_SESSION['ckeditor_url']=CCODE::DemoPrefix.'/uploads/'.str_replace(".", "", $push_path).'/ckfinder_image';
 		session_write_close();
 		// ckeditor 文字編輯器
