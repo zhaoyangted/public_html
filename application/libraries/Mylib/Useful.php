@@ -97,7 +97,7 @@ class Useful {
 	public function CKediter($push_path){
 		// ckeditor 文字編輯器
 		$this -> create_dir('../'.CCODE::DemoPrefix.'/uploads/'.$push_path.'/ckfinder_image/');
-		//$this -> start_session(3600);
+		$this -> start_session(3600);
 		$_SESSION['ckeditor_url']=CCODE::DemoPrefix.'/uploads/'.str_replace(".", "", $push_path).'/ckfinder_image';
 		session_write_close();
 		// ckeditor 文字編輯器
@@ -320,7 +320,8 @@ class Useful {
 	//session
 	private function start_session($expire = 0)
 	{
-	    if ($expire == 0) {
+	   if(!isset($_SESSION)) {
+		if ($expire == 0) {
 	        $expire = ini_get('session.gc_maxlifetime');
 	    } else {
 	        ini_set('session.gc_maxlifetime', $expire);
@@ -333,6 +334,7 @@ class Useful {
 	        @session_start();
 	        setcookie('PHPSESSID', session_id(), time() + $expire);
 	     }
+		} 
 	}
 	
 	//短網址
