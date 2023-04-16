@@ -53,7 +53,7 @@ class Auth extends RestController
 			// 導回正確連結
 			$BackUrl='member';
 			$ErrorUrl='login';
-			if(!empty($_POST['BackUrl'])){
+			if(!empty($this->post('BackUrl'))){
 				$BackUrl='cart/cart_payment';
 				$ErrorUrl='cart/cart_login';
 			}
@@ -95,6 +95,7 @@ class Auth extends RestController
 			   $_SESSION[CCODE::MEMBER]['Mtype1'] = $dbdata['TID1'];
 			   $_SESSION[CCODE::MEMBER]['Mlv'] = $dbdata['d_lv'];
 			   $_SESSION[CCODE::MEMBER]['Mlv_title'] = $dbdata['d_title'];
+			   $_SESSION[CCODE::MEMBER]['IsLogin'] = 'Y';
 			   //print_r($_SESSION);
                 $this->response(
 					[
@@ -155,6 +156,26 @@ class Auth extends RestController
 	}
 	public function user_put(){
 		
+	}
+	public function logout_put(){
+		// session_start();
+		if (isset($_SESSION[CCODE::MEMBER]['IsLogin']) && $_SESSION[CCODE::MEMBER]['IsLogin'] == 'Y') {
+			unset($_SESSION[CCODE::MEMBER]);
+			// remove session datas
+			if (ini_get("session.use_cookies")) {
+				$params = session_get_cookie_params();
+				setcookie(session_name(), '', time() - 42000,
+					$params["path"], $params["domain"],
+					$params["secure"], $params["httponly"]
+				);
+				// 最后，销毁会话
+				}
+			// user logout ok
+            $this->response(['Logout success!'], 200);
+			
+		} else {
+            $this->response(['Not found.'], 400);	
+		}
 	}
     // 加密
 	private function encryptStr($str, $key){

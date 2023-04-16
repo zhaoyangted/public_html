@@ -206,7 +206,7 @@ class Login extends CI_Controller {
 	// 寄驗證信給帳號人員
 	public function SendVri($Account=''){
 		if(!empty($Account)){
-			$url=site_url('/login/Cheackaccount?').$this->encryptStr('acc='.$Account.'&type=1','jddtshin');
+			$url=site_url('/login/Cheackaccount?').$this->encrypt('acc='.$Account.'&type=1','jddtshin');
 			$Message ="請點選下面連結已完成驗證:<br><a href='".$url."' target='_blank'>" . $url . "</a><br>謝謝！";
 			$this->tableful->Sendmail($Account, '美麗平台會員-會員驗證信', $Message);
 		}
@@ -214,7 +214,7 @@ class Login extends CI_Controller {
 	// 驗證函式
 	public function Cheackaccount(){
 		$Key=$_SERVER['QUERY_STRING'];
-		$data=$this->decryptStr($Key,'jddtshin');
+		$data=$this->decrypt($Key,'jddtshin');
 		$edata=explode('&',$data);
 		foreach ($edata as $key => $value) {
 			$eidata=explode('=',$value);
@@ -295,6 +295,81 @@ class Login extends CI_Controller {
 		$block = mcrypt_get_block_size('des', 'ecb');
 		$pad = ord($str[($len = strlen($str)) - 1]);
 		return substr($str, 0, strlen($str) - $pad);
+	}
+	/**
+	 *
+	 * 修改:mcrypt对称加密代码在PHP7.1已经被抛弃了，所以使用下面的openssl来代替
+	 * Encrypts data.
+	 *
+	 * @param string $data
+	 *        	data to be encrypted.
+	 * @param string $key
+	 *        	the decryption key. This defaults to null, meaning using {@link getEncryptionKey EncryptionKey}.
+	 * @return string the encrypted data
+	 * @throws CException if PHP Mcrypt extension is not loaded or key is invalid
+	 */
+	public function encrypt($data, $key = null) {
+		if ($key === null)
+			$key = $this->getEncryptionKey ();
+		//$this->validateEncryptionKey ( $key );
+		$text = $data;
+		$iv = substr ( $key, 0, 16 );
+		
+		$block_size = 32;
+		$text_length = strlen ( $text );
+		$amount_to_pad = $block_size - ($text_length % $block_size);
+		if ($amount_to_pad == 0) {
+			$amount_to_pad = $block_size;
+		}
+		$pad_chr = chr ( $amount_to_pad );
+		$tmp = '';
+		for($index = 0; $index < $amount_to_pad; $index ++) {
+			$tmp .= $pad_chr;
+		}
+		$text = $text . $tmp;
+		/*
+		 * mcrypt对称加密代码在PHP7.1已经被抛弃了，所以使用下面的openssl来代替
+		 * $size = mcrypt_get_block_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_CBC);
+		 * $module = mcrypt_module_open(MCRYPT_RIJNDAEL_128, '', MCRYPT_MODE_CBC, '');
+		 * mcrypt_generic_init($module, $key, $iv);
+		 * $encrypted = mcrypt_generic($module, $text);
+		 * mcrypt_generic_deinit($module);
+		 * mcrypt_module_close($module);
+		 */
+		$encrypted = openssl_encrypt ( $text, 'AES-256-CBC', $key, OPENSSL_RAW_DATA | OPENSSL_ZERO_PADDING, $iv );
+		$encrypt_msg = base64_encode ( $encrypted );
+		return $encrypt_msg;
+	}
+	
+	/**
+	 *
+	 * 修改:mcrypt对称加密代码在PHP7.1已经被抛弃了，所以使用下面的openssl来代替
+	 * Decrypts data
+	 *
+	 * @param string $data
+	 *        	data to be decrypted.
+	 * @param string $key
+	 *        	the decryption key. This defaults to null, meaning using {@link getEncryptionKey EncryptionKey}.
+	 * @return string the decrypted data
+	 * @throws CException if PHP Mcrypt extension is not loaded or key is invalid
+	 */
+	public function decrypt($data, $key = '', $appid = '') {
+		if ($key === null)
+			$key = $this->getEncryptionKey ();
+		//$this->validateEncryptionKey ( $key );
+		$ciphertext_dec = base64_decode ( $data );
+		$iv = substr ( $key, 0, 16 );
+		
+		/*
+		 * mcrypt对称解密代码在PHP7.1已经被抛弃了，所以使用下面的openssl来代替
+		 * $module = mcrypt_module_open(MCRYPT_RIJNDAEL_128, '', MCRYPT_MODE_CBC, '');
+		 * mcrypt_generic_init($module, $key, $iv);
+		 * $decrypted = mdecrypt_generic($module, $ciphertext_dec);
+		 * mcrypt_generic_deinit($module);
+		 * mcrypt_module_close($module);
+		 */
+		$decrypted = openssl_decrypt ( $ciphertext_dec, 'AES-256-CBC', $key, OPENSSL_RAW_DATA | OPENSSL_ZERO_PADDING, $iv );
+		return $decrypted;
 	}
 
 }

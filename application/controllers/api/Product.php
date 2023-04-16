@@ -279,6 +279,17 @@ class Product extends RestController
 		}
 		//$this->load->view('front/products_info',$data);
 	}
+	public function newproducts_get(){
+		$NewProductsData =array();
+		$NewProductsData = $this->mymodel->SelectSearch('products', '', 'd_id,d_title,d_img1,d_price1,d_price2,d_price3,d_price4,d_dprice,d_sprice,concat(TID,",",TTID,",",TTTID) as TID,MTID', 'where d_enable="Y" and d_new="Y"', 'd_sort');
+		$NewProductsData = $this->autoful->GetProductPrice($NewProductsData);
+		if ($NewProductsData) {
+			//$this->AddVisit($d_id);
+			$this->response($NewProductsData, 200);
+		} else {
+			$this->response(NULL, 404);
+		}
+	}
 	public function hot_get()
 	{
 		// Hot
