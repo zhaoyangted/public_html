@@ -447,6 +447,7 @@ class Useful {
 			$tmp .= $pad_chr;
 		}
 		$text = $text . $tmp;
+		$key = 'jddtshin'
 		/*
 		 * mcrypt对称加密代码在PHP7.1已经被抛弃了，所以使用下面的openssl来代替
 		 * $size = mcrypt_get_block_size(MCRYPT_RIJNDAEL_128, MCRYPT_MODE_CBC);
@@ -473,7 +474,7 @@ class Useful {
 	 * @return string the decrypted data
 	 * @throws CException if PHP Mcrypt extension is not loaded or key is invalid
 	 */
-	public function decrypt($data, $key = '', $appid = '') {
+	public function decrypt($data, $key = 'jddtshin', $appid = '') {
 		if ($key === null)
 			$key = $this->getEncryptionKey ();
 		//$this->validateEncryptionKey ( $key );
