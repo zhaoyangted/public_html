@@ -206,7 +206,7 @@ class Login extends CI_Controller {
 	// 寄驗證信給帳號人員
 	public function SendVri($Account=''){
 		if(!empty($Account)){
-			$url=site_url('/login/Cheackaccount?').$this->encrypt('acc='.$Account.'&type=1','jddtshin');
+			$url=site_url('/login/Cheackaccount?').$this->useful->encrypt('acc='.$Account.'&type=1','jddtshin');
 			$Message ="請點選下面連結已完成驗證:<br><a href='".$url."' target='_blank'>" . $url . "</a><br>謝謝！";
 			$this->tableful->Sendmail($Account, '美麗平台會員-會員驗證信', $Message);
 		}
@@ -214,7 +214,7 @@ class Login extends CI_Controller {
 	// 驗證函式
 	public function Cheackaccount(){
 		$Key=$_SERVER['QUERY_STRING'];
-		$data=$this->decrypt($Key,'jddtshin');
+		$data=$this->useful->decrypt($Key,'jddtshin');
 		$edata=explode('&',$data);
 		foreach ($edata as $key => $value) {
 			$eidata=explode('=',$value);

@@ -198,7 +198,7 @@ class Member_edit extends CI_Controller {
 			if ($this->input->is_ajax_request() && !empty($MID)) {
 					$Mdata=$this->mymodel->OneSearchSql('member','d_account',array('d_id'=>$MID,'d_chked'=>4));
 					if (!empty($Mdata)) {
-						$url=site_url('/login/Cheackaccount?').$this->encryptStr('acc='.$Mdata['d_account'].'&type=1','jddtshin');
+						$url=site_url('/login/Cheackaccount?').$this->useful->encrypt('acc='.$Mdata['d_account'].'&type=1','jddtshin');
 						$Message ="請點選下面連結已完成驗證:<br><a href='".$url."' target='_blank'>" . $url . "</a><br>謝謝！";
 						$this->tableful->Sendmail($Mdata['d_account'], '美麗平台會員-會員驗證信', $Message);
 						$_SESSION[CCODE::ADMIN]['ReSendVri'.$MID] = true;

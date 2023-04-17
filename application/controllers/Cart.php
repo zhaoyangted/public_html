@@ -527,7 +527,7 @@ class Cart extends CI_Controller
     private function SendVri($Account = '')
     {
         if (!empty($Account)) {
-            $url = site_url('/login/Cheackaccount?') . $this->encryptStr('acc=' . $Account . '&type=2', 'jddtshin');
+            $url = site_url('/login/Cheackaccount?') . $this->useful->encrypt('acc=' . $Account . '&type=2', 'jddtshin');
             $Message = "請點選下面連結已完成驗證:<br><a href='" . $url . "' target='_blank'>" . $url . "</a><br>謝謝！";
             $this->tableful->Sendmail($Account, '美麗平台會員-會員驗證信', $Message);
         }
