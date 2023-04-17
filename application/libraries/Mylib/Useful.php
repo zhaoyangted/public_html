@@ -474,13 +474,12 @@ class Useful {
 	 * @return string the decrypted data
 	 * @throws CException if PHP Mcrypt extension is not loaded or key is invalid
 	 */
-	public function decrypt($data, $key = 'jddtshin', $appid = '') {
+	public function decrypt($data, $key = ' ', $appid = '') {
 		if ($key === null)
 			$key = $this->getEncryptionKey ();
 		//$this->validateEncryptionKey ( $key );
 		$ciphertext_dec = base64_decode ( $data );
 		$iv = substr ( $key, 0, 16 );
-		
 		/*
 		 * mcrypt对称解密代码在PHP7.1已经被抛弃了，所以使用下面的openssl来代替
 		 * $module = mcrypt_module_open(MCRYPT_RIJNDAEL_128, '', MCRYPT_MODE_CBC, '');
@@ -489,7 +488,8 @@ class Useful {
 		 * mcrypt_generic_deinit($module);
 		 * mcrypt_module_close($module);
 		 */
-		$decrypted = openssl_decrypt ( $ciphertext_dec, 'des-ede3', $key, OPENSSL_RAW_DATA | OPENSSL_ZERO_PADDING/* , $iv */ );
+		$decrypted = openssl_decrypt ( $ciphertext_dec, 'des-ede3', $key); /*OPENSSL_RAW_DATA | OPENSSL_ZERO_PADDING , $iv */ 
+		print_r($decrypted);
 		return $decrypted;
 	}
 }
