@@ -32,7 +32,33 @@ class Auth extends RestController
 		//$this->NetTitle = '產品介紹';
 		//$this->load->model('ContactModel', 'cm');
 	}
-    
+    public function join_get() {
+		if (!empty($_SESSION[CCODE::MEMBER]['IsLogin'])) {
+			//$this->useful->AlertPage('member', '');
+		}
+		$data = array(
+			'Member_rules' => $this->mymodel->GetCkediter(3),
+			'Member_types' => $this->mymodel->SelectSearch('member_type', '', 'd_id,d_title', 'where d_enable="Y"', 'd_sort'),
+			'Member_user_types' => $this->mymodel->GetConfig('6', 'and d_enable="Y"'),
+			'Member_company_types' => $this->mymodel->GetConfig('4', 'and d_enable="Y"'),
+			'Member_operate_types' => $this->mymodel->GetConfig('5', 'and d_enable="Y"'),
+			'Member_Sales' => $this->mymodel->SelectSearch('salesman', '', 'd_id,d_title', 'where d_enable="Y"', 'd_sort'),
+		);
+		if (!empty($_GET['F'])) {
+			$dbdata = $this->mymodel->OneSearchSql('member_friend', 'MID', array('d_Fcode' => $_GET['F'], 'd_enable' => "Y"));
+			if (!empty($dbdata)) {
+				$data['FID'] = $dbdata['MID'];
+			}
+		}
+
+		$this->NetTitle = '會員註冊';
+		if (!empty($data)){
+            $this->response($data,200);
+        }else{
+            $this->response(NULL,404);
+        }
+		//$this->load->view('front/join', $data);
+	}
     public function login_post()
     {
         $post = array('d_account'=>$this->post('d_account'),'d_password'=>$this->post('d_password'));
@@ -174,7 +200,7 @@ class Auth extends RestController
             $this->response(['Logout success!'], 200);
 			
 		} else {
-            $this->response(['Not found.'], 400);	
+            $this->response(['Not found.'], 500);	
 		}
 	}
     // 加密

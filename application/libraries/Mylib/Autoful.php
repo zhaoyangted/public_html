@@ -87,6 +87,7 @@ class Autoful
             // $this->last_money = $this->GetLastMoney($dbdata['d_upgrade_date'], $dbdata['d_deadline'], $dbdata['d_upgrade'], $dbdata['d_upgrade_total']);
             // 會員資訊
             $this->member_info = $dbdata;
+            //print_r($this->member_info['d_chked']);
         }
 
         // 購物車
@@ -124,7 +125,7 @@ class Autoful
         $TypeData = array_unique(explode(',', str_replace('@#', ',', $TypeData['MTID'] . ',' . $value['MTID'])));
         $result = array_intersect($TypeData, $Mtype);
 
-        if($this->UserType==1 or empty($this->UserType)){
+        if($this->UserType==1 or empty($this->UserType) or $this->member_info['d_chked']==2){
             $Pdata[$key]['d_price'] = $value['d_price1'];
             $Pdata[$key]['Lvtitle']='會員價';
             $Chked = 'N';
@@ -587,4 +588,4 @@ public function ChkSingleSale($cart, $price)
     }
 
 }
-?>
+

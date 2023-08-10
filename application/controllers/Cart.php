@@ -101,7 +101,9 @@ class Cart extends CI_Controller
             $data['Mdata'] = $MArray;
             // 預設資料
             $data['Preset_send'] = $this->mymodel->OneSearchSql('member_send', 'd_cname as d_company_title,d_name as d_pname,d_mobile as d_phone,d_phone as d_company_tel,d_city as d_county,d_area as d_district,d_zip as d_zipcode,d_address', array('MID' => $this->Mid, 'd_preset' => 'Y'));
+            print_r($data['Preset_send']);
             $data['Preset_invoice'] = $this->mymodel->OneSearchSql('member_invoice', 'd_cname as d_company_title,d_um as d_company_number,d_mail as d_account,d_city as d_county,d_area as d_district,d_zip as d_zipcode,d_address', array('MID' => $this->Mid, 'd_preset' => 'Y'));
+
         }
 
         $data['post'] = $_POST;

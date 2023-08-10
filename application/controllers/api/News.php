@@ -32,6 +32,37 @@ class News extends RestController
 		//$this->NetTitle = '產品介紹';
 		//$this->load->model('ContactModel', 'cm');
 	}
+    public function catList_get($TID = '0')
+    {   
+        $Pages=$this->get('page');
+		$Limit=$this->get('limit');
+		$Order=$this->get('order');
+        $data = array();
+        if (!empty($TID)) {
+            $dbdata = $this->mymodel->OneSearchSql('news_type', '*', array('d_id' => $TID, 'd_enable' => "Y"));
+            // 各頁面的SEO
+            $this->NetTitle = (!empty($dbdata['d_stitle']) ? $dbdata['d_stitle'] : $this->NetTitle);
+            $this->Seokeywords = (!empty($dbdata['d_skeywords']) ? $dbdata['d_skeywords'] : '');
+            $this->Seodescription = (!empty($dbdata['d_sdescription']) ? $dbdata['d_sdescription'] : '');
+            if (empty($dbdata)) {
+                $this->useful->AlertPage('', '操作錯誤');
+                return '';
+            }
+        }
+        $data['News_type'] = $this->mymodel->SelectSearch('news_type', '', 'd_id,d_title,d_color', 'where d_enable="Y"', 'd_sort');
+
+        // 20191021-多時間判斷
+        $Where = ' and d_date<=now() ';
+
+        $data['NewsData'] = !empty($data['News_type']) ? $this->mymodel->APISelectPage('news', '*,SUBSTR(d_date, 1,10) as d_date', 'where d_enable="Y" and TID IN (' . implode(",", array_column($data['News_type'], 'd_id')) . ')' . (!empty($TID) ? ' and TID="' . $TID . '"' : '') . $Where, 'd_sort, d_date desc',$Pages,$Limit) : array();
+        $data['TID'] = !empty($dbdata) ? $dbdata['d_title'] : '';
+        if ($data) {
+            $this->response($data,200);
+        } else {
+            $this->response(NULL,404);
+        }
+        //$this->load->view('front/news', $data);
+    }
     public function list_get($TID = '0')
     {
         $data = array();

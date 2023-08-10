@@ -21,6 +21,21 @@ class Mymodel extends CI_Model{
 		$backdata['dbdata']= $this->SelectSearch($dbname,$qpage['result'],$filed,$where,$order);
 		return $backdata;
 	}
+	// 分頁搜尋資料查詢(API)
+	public function APISelectPage($dbname,$filed='*',$where='',$order='',$pages=1,$limit=12){
+		$backdata=array();
+		// 分頁程式 start
+		$page=new page();
+		$page->SetMySQL($this->db);
+		$page->SetPagSize($limit);
+		$qpage=$page->PageStar($dbname,'',$where);
+		$backdata['PageList']=$qpage;
+        //分頁程式 end
+		$result=" limit ".$pages*$limit.",".$limit;
+		//print_r($result);
+		$backdata['dbdata']= $this->SelectSearch($dbname,$result/* $qpage['result'] */,$filed,$where,$order);
+		return $backdata;
+	}
 	// 分頁搜尋資料查詢(後台)
 	public function SelectPage($dbname,$filed='*',$where='',$order='',$PageNum='10'){
 		if(!empty($_SESSION[CCODE::ADMIN]['PageNum_'.$dbname.''])){
@@ -66,6 +81,7 @@ class Mymodel extends CI_Model{
 		if($order!=''){
 			$sql.=' order by '.$order;
 		}
+		//echo $page;
 		$sql.=$page;
 		//echo $sql;
 		$query = $this->db->query($sql)->result_array();

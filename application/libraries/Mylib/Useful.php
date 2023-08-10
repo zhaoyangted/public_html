@@ -474,7 +474,7 @@ class Useful {
 	 * @return string the decrypted data
 	 * @throws CException if PHP Mcrypt extension is not loaded or key is invalid
 	 */
-	public function decrypt($data, $key = ' ', $appid = '') {
+	public function decrypt($data, $key = 'jddtshin', $appid = '') {
 		if ($key === null)
 			$key = $this->getEncryptionKey ();
 		//$this->validateEncryptionKey ( $key );
@@ -489,7 +489,6 @@ class Useful {
 		 * mcrypt_module_close($module);
 		 */
 		$decrypted = openssl_decrypt ( $ciphertext_dec, 'des-ede3', $key); /*OPENSSL_RAW_DATA | OPENSSL_ZERO_PADDING , $iv */ 
-		print_r($decrypted);
 		return $decrypted;
 	}
 }

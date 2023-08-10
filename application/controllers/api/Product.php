@@ -32,9 +32,39 @@ class Product extends RestController
 		//$this->NetTitle = '產品介紹';
 		//$this->load->model('ContactModel', 'cm');
 	}
+	public function toplist_get($TID = ''){
+		$Pages=$this->get('page');
+		$Limit=$this->get('limit');
+		if (empty($TID)) {
+			$this->useful->AlertPage('', '操作錯誤');
+			exit();
+		}
+		$data = array();
+		// 分類撈取
+		$this->GetProductsType($TID);
+		// 各頁面的SEO
+		$this->NetTitle = (!empty($this->MenuData['d_stitle']) ? $this->MenuData['d_stitle'] : $this->NetTitle);
+		$this->Seokeywords = (!empty($this->MenuData['d_skeywords']) ? $this->MenuData['d_skeywords'] : '');
+		$this->Seodescription = (!empty($this->MenuData['d_sdescription']) ? $this->MenuData['d_sdescription'] : '');
+		// 產品撈取
+		$Pdata = $this->mymodel->APISelectPage('products', 'd_id,d_title,d_img1,d_price1,d_price2,d_price3,d_price4,d_dprice,d_sprice,d_model,concat(TID,",",TTID,",",TTTID) as TID,MTID', 'where d_enable="Y" and (TID like "%' . $TID . '@#%" or TID like "%@#' . $TID . '%" or TID like "%@#' . $TID . '@#%" or TID=' . $TID . ')', 'd_update_time desc',  $Pages,$Limit);
+		// 根據會員等級顯示金額
+		$Pdata['dbdata'] = $this->autoful->GetProductPrice($Pdata['dbdata']);
+		// print_r($Pdata);
+		$data['dbdata'] = $Pdata;
+		$data['Menudata'] = $this->MenuData;
+		$data['Menu']=$this->Menu;
+		if ($data) {
+			$this->response($data,200);
+			} else {
+				$this->response(Null,404);
+			}
+	}
 	public function plist_get($TID = '')
 	{
-
+		$Pages=$this->get('page');
+		$Limit=$this->get('limit');
+		$Order=$this->get('order');
 		if (empty($TID)) {
 			$this->useful->AlertPage('', '操作錯誤');
 			exit();
@@ -53,7 +83,7 @@ class Product extends RestController
 		$this->GetProductsType($TID1);
 		// 排序
 		$data['OrderArray'] = $OrderArray = array('1' => '依上架時間：新至舊', '2' => '依上架時間：舊至新', '3' => '依價格排序：低至高', '4' => '依價格排序：高至低', '5' => '瀏覽最多商品');
-		$data['Orderid'] = $Orderid = (!empty($_POST['Orderby']) ? $_POST['Orderby'] : '1');
+		$data['Orderid'] = $Orderid = (!empty($Order) ? $Order : '1');
 		$Order = 'd_update_time desc';
 		if ($Orderid == 2) {
 			$Order = 'd_update_time';
@@ -70,14 +100,18 @@ class Product extends RestController
 		if (!empty($TypeData['TID'])) {
 			if (!empty($TypeData['TTID'])) {
 				// 產品撈取
-				$Pdata = $this->mymodel->FrontSelectPage('products', 'd_id,d_title,d_img1,d_price1,d_price2,d_price3,d_price4,d_dprice,d_sprice,concat(TID,",",TTID,",",TTTID) as TID,MTID', 'where d_enable="Y" and (TID like "' . $TypeData['TID'] . '@#%" or TID like "%@#' . $TypeData['TID'] . '" or TID like "%@#' . $TypeData['TID'] . '@#%" or TID=' . $TypeData['TID'] . ') and (TTID like "' . $TypeData['TTID'] . '@#%" or TTID like "%@#' . $TypeData['TTID'] . '" or TTID like "%@#' . $TypeData['TTID'] . '@#%" or TTID=' . $TypeData['TTID'] . ') and (TTTID like "' . $TID . '@#%" or TTTID like "%@#' . $TID . '" or TTTID like "%@#' . $TID . '@#%" or TTTID=' . $TID . ')', $Order, '12');
+				$Pdata = $this->mymodel->APISelectPage('products', 'd_id,d_title,d_img1,d_price1,d_price2,d_price3,d_price4,d_dprice,d_sprice,concat(TID,",",TTID,",",TTTID) as TID,MTID', 'where d_enable="Y" and (TID like "' . $TypeData['TID'] . '@#%" or TID like "%@#' . $TypeData['TID'] . '" or TID like "%@#' . $TypeData['TID'] . '@#%" or TID=' . $TypeData['TID'] . ') and (TTID like "' . $TypeData['TTID'] . '@#%" or TTID like "%@#' . $TypeData['TTID'] . '" or TTID like "%@#' . $TypeData['TTID'] . '@#%" or TTID=' . $TypeData['TTID'] . ') and (TTTID like "' . $TID . '@#%" or TTTID like "%@#' . $TID . '" or TTTID like "%@#' . $TID . '@#%" or TTTID=' . $TID . ')', $Order, $Pages,$Limit );
 			} else {
 				// 產品撈取
-				$Pdata = $this->mymodel->FrontSelectPage('products', 'd_id,d_title,d_img1,d_price1,d_price2,d_price3,d_price4,d_dprice,d_sprice,concat(TID,",",TTID,",",TTTID) as TID,MTID', 'where d_enable="Y" and (TID like "' . $TypeData['TID'] . '@#%" or TID like "%@#' . $TypeData['TID'] . '" or TID like "%@#' . $TypeData['TID'] . '@#%" or TID=' . $TypeData['TID'] . ') and (TTID like "' . $TID . '@#%" or TTID like "%@#' . $TID . '" or TTID like "%@#' . $TID . '@#%" or TTID=' . $TID . ')', $Order, '12');
+				$Pdata = $this->mymodel->APISelectPage('products', 'd_id,d_title,d_img1,d_price1,d_price2,d_price3,d_price4,d_dprice,d_sprice,concat(TID,",",TTID,",",TTTID) as TID,MTID', 'where d_enable="Y" and (TID like "' . $TypeData['TID'] . '@#%" or TID like "%@#' . $TypeData['TID'] . '" or TID like "%@#' . $TypeData['TID'] . '@#%" or TID=' . $TypeData['TID'] . ') and (TTID like "' . $TID . '@#%" or TTID like "%@#' . $TID . '" or TTID like "%@#' . $TID . '@#%" or TTID=' . $TID . ')', $Order, $Pages, $Limit);
 			}
 			// 根據會員等級顯示金額
-			$Pdata['dbdata'] = $this->autoful->GetProductPrice($Pdata['dbdata']);
+			if (!empty($Pdata['dbdata'])) {$Pdata['dbdata'] = $this->autoful->GetProductPrice($Pdata['dbdata']);
 			$data['dbdata'] = $Pdata;
+			$data['Menudata'] = $this->MenuData;
+			$data['Menu']=$this->Menu;} else {
+				$data=[];
+			}
 		}
 		// print_r($Pdata);
 		if ($data) {
@@ -319,6 +353,86 @@ class Product extends RestController
 			$this->response(NULL, 404);
 		}
 	}
+	//品牌列表
+	public function blist_get($BID = '')
+	{
+		$Pages=$this->get('page');
+		$Limit=$this->get('limit');
+		$Order=$this->get('order');
+		if (empty($BID)) {
+			$this->useful->AlertPage('', '操作錯誤');
+			exit();
+		}
+		$data = array();
+
+		// 排序
+		$data['OrderArray'] = $OrderArray = array('1' => '依上架時間：新至舊', '2' => '依上架時間：舊至新', '3' => '依價格排序：低至高', '4' => '依價格排序：高至低');
+		$data['Orderid'] = $Orderid = (!empty($Order) ? $Order : '1');
+		$Order = 'd_update_time desc';
+		if ($Orderid == 2) {
+			$Order = 'd_update_time';
+		} elseif ($Orderid == 3) {
+			$Order = 'd_price1 ';
+		} elseif ($Orderid == 4) {
+			$Order = 'd_price1 desc';
+		}
+
+		// 產品撈取
+		$Pdata = $this->mymodel->APISelectPage('products', 'd_id,d_title,d_img1,d_price1,d_price2,d_price3,d_price4,d_dprice,d_sprice,d_model,concat(TID,",",TTID,",",TTTID) as TID,MTID,TID as GTID,concat(TTID,",",TTTID) as GTTID', 'where d_enable="Y" and BID=' . $BID, $Order, $Pages,$Limit);
+
+		/* $Pdata = $this->mymodel->FrontSelectPage('products', 'd_id,d_title,d_img1,d_price1,d_price2,d_price3,d_price4,d_dprice,d_sprice,concat(TID,",",TTID,",",TTTID) as TID,MTID,TID as GTID,concat(TTID,",",TTTID) as GTTID', 'where d_enable="Y" and BID=' . $BID, $Order, '12'); */
+		/* $query = $db->query('SELECT d_id,d_title,d_img1,d_price1,d_price2,d_price3,d_price4,d_dprice,d_sprice,concat(TID,",",TTID,",",TTTID) as TID,MTID,TID as GTID,concat(TTID,",",TTTID) as GTTID FROM products WHERE d_enable="Y" and BID=$BID $Order'); */
+		/* $this->db->select('d_id,d_title,d_img1,d_price1,d_price2,d_price3,d_price4,d_dprice,d_sprice,concat(TID,",",TTID,",",TTTID) as TID,MTID,TID as GTID,concat(TTID,",",TTTID) as GTTID');
+		$this->db->from('products');
+		$this->db->where('d_enable',"Y");
+		$this->db->where('BID',$BID);
+		$query=$this->db->get();
+		$Pdata['dbdata']=$query->result_array(); */
+
+		//print_r($Pdata);
+		// 品牌資料
+		$data['BrandData'] = $BrandData = $this->mymodel->OneSearchSql('products_brand', 'd_title', array('d_id' => $BID));
+
+		// 分類撈取
+		$this->db->query('SET SESSION group_concat_max_len = 1000000');	// 2020/04/15增加查詢長度
+
+		$Bdata = $this->mymodel->OneSearchSql('products', 'group_concat(TID) as TID,group_concat(TTID) as TTID,group_concat(TTTID) as TTTID', array('BID' => $BID));
+		$tID = array_unique(array_filter(explode(',', str_replace('@#', ',', $Bdata['TID']))));
+		$ttID = array_unique(array_filter(explode(',', str_replace('@#', ',', $Bdata['TTID']))));
+		$tttID = array_unique(array_filter(explode(',', str_replace('@#', ',', $Bdata['TTTID']))));
+		$TID = array_sum($tID) == 0 ? '' : implode(',', $tID);
+		$TTID = array_sum($ttID) == 0 ? '' : implode(',', $ttID);
+		$TTTID = array_sum($tttID) == 0 ? '' : implode(',', $tttID);
+
+		$this->GetProductsType_PID($TID, $TTID, $TTTID);
+		// print_r($this->Menu);
+		// print_r($TID);
+
+		// print_r($Pdata['dbdata']);
+		// $this->GetProductsType($TID1,'1');
+
+
+		// 根據會員等級顯示金額
+		if (!empty($Pdata['dbdata'])) {
+			$Pdata['dbdata'] = $this->autoful->GetProductPrice($Pdata['dbdata']);
+			$data['dbdata'] = $Pdata;
+			//$data['Menudata'] = $this->MenuData;
+			$data['Menu']=$this->Menu;
+		} else {
+				$data['dbdata']=[];
+			}
+		//$Pdata['dbdata'] = $this->autoful->GetProductPrice($Pdata['dbdata']);
+		//$data['dbdata'] = $Pdata;
+		//$data['Menudata'] = $this->MenuData;
+		//$data['Menu']=$this->Menu;
+		if ($data['dbdata']) {
+			//$this->AddVisit($d_id);
+			$this->response($data, 200);
+		} else {
+			$this->response(NULL, 404);
+		}
+		//$this->load->view('front/products_blist', $data);
+	}
 	/* function contacts_get() {
         $contacts = $this->cm->get_contact_list();
 
@@ -343,6 +457,104 @@ class Product extends RestController
         }
     } */
 	// 分類撈取
+	public function search_post()
+	{
+		$keyword=$this->post('Pkeyword');
+		$type=$this->post('Ptype');
+		$data = array();
+		$Pages=$this->post('page');
+		$Limit=$this->post('limit');
+		$Order=$this->post('order');
+		if (empty($keyword)) {	// 2020/05/06 可以不輸入文字搜尋
+			// $this->useful->AlertPage('','請輸入搜尋文字');
+			// exit();
+			if (!empty($type)) {
+				$data['TID'] = $TID = $type;
+				$data['searchtext'] = '';
+				$Search = 'and (TID like "' . $type . '@#%" or TID like "%@#' . $type . '" or TID like "%@#' . $type . '@#%" or TID=' . $type . ')';
+				// 分類撈取
+				$this->GetProductsType($TID);
+			} else {
+				$this->useful->AlertPage('', '請選擇分類');
+				exit();
+			}
+		} else {
+
+			$data['searchtext'] = $keyword = $keyword;
+
+			if (!empty($type)) {
+				$data['TID'] = $TID = $type;
+				$Search = 'and (TID like "' . $TID . '@#%" or TID like "%@#' . $TID . '" or TID like "%@#' . $TID . '@#%" or TID=' . $TID . ') and (d_title like "%' . $keyword . '%" or d_model like "%' . $keyword . '%")';
+				// 分類撈取
+				$this->GetProductsType($TID);
+			} else {
+				$Search = 'and (d_title like "%' . $keyword . '%" or d_model like "%' . $keyword . '%")';
+			}
+			// 總碼
+			$Allspec = $this->mymodel->WriteSql('select PID from products_allspec where d_title like "%' . $keyword . '%" and PID !=""', '');
+			if (!empty($Allspec)) {
+				$Search .= ' or d_id in(';
+				foreach (array_column($Allspec, 'PID') as $v) {
+					$Search .= implode(',', explode('@#', $v));
+				}
+				$Search .= ')';
+			}
+		}
+
+		// 排序
+		$data['OrderArray'] = $OrderArray = array('1' => '依上架時間：新至舊', '2' => '依上架時間：舊至新', '3' => '依價格排序：低至高', '4' => '依價格排序：高至低');
+		$data['Orderid'] = $Orderid = (!empty($_POST['Orderby']) ? $_POST['Orderby'] : '1');
+		$Order = 'd_update_time desc';
+		if ($Orderid == 2) {
+			$Order = 'd_update_time';
+		} elseif ($Orderid == 3) {
+			$Order = 'd_price1 ';
+		} elseif ($Orderid == 4) {
+			$Order = 'd_price1 desc';
+		}
+
+		// 產品撈取
+		$Pdata = $this->mymodel->APISelectPage('products', 'd_id,d_title,d_img1,d_price1,d_price2,d_price3,d_price4,d_dprice,d_sprice,concat(TID,",",TTID,",",TTTID) as TID,MTID', 'where d_enable="Y" ' . $Search . ' and TID!=""', $Order,$Pages,'12');
+		// if($this->autoful->Mtype!='1'){
+		$Mtype = explode(',', str_replace('@#', ',', $this->autoful->Mtype));
+
+		foreach ($Pdata['dbdata'] as $key => $value) {
+
+			$TID = implode(',', explode('@#', $value['TID']));
+			$TID = implode(',', array_filter(explode(',', $TID)));
+
+			$this->db->query('SET SESSION group_concat_max_len = 1000000');	// 2020/04/15增加查詢長度
+
+			$TypeData = $this->mymodel->WriteSql('select GROUP_CONCAT(MTID) as MTID from products_type where d_id in(' . $TID . ')', '1');
+			$TypeData = array_unique(explode(',', str_replace('@#', ',', $TypeData['MTID'] . $value['MTID'])));
+			// print_r($TypeData);
+			$result = array_intersect($TypeData, $Mtype);
+			if (count($result) == 0) {
+				$Pdata['dbdata'][$key]['d_price'] = $value['d_price1'];
+			} else {
+				$Pdata['dbdata'][$key]['d_price'] = $value['d_price' . $this->autoful->Mlv . ''];
+			}
+		}
+
+		// }
+		if (!empty($type)) {
+		$data['Menudata'] = $this->MenuData;
+		$data['Menu']=$this->Menu;
+		}else{
+		$data['Menudata'] = $this->autoful->SideMenu;
+		}
+		// 根據會員等級顯示金額
+		$Pdata['dbdata'] = $this->autoful->GetProductPrice($Pdata['dbdata']);
+		$data['dbdata'] = $Pdata;
+		// print_r($Pdata);
+		if ($data['dbdata']) {
+			//$this->AddVisit($d_id);
+			$this->response($data, 200);
+		} else {
+			$this->response(NULL, 404);
+		}
+		//$this->load->view('front/products_search', $data);
+	}
 	private function GetProductsType($TID = '')
 	{
 		$Menu = array();

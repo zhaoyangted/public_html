@@ -116,4 +116,4 @@ class Pay_result extends CI_Controller
     }
 
 }
-?>
+

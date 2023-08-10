@@ -209,7 +209,7 @@ class Cartful
         // 扣除紅利
         $Order['Subbonus'] = $Subbonus;
         // 此次獲得總紅利
-        $Order['BonusTotal'] = $this->CI->autoful->CountBonus($BonusArray, $AllTotal + $Addprice - $Subbonus);
+        $Order['BonusTotal'] = $this->CI->autoful->CountBonus($BonusArray, (int)$AllTotal + (int)$Addprice - (int)$Subbonus);
         // 產品金額
         $Order['Total'] = $AllTotal + $Addprice;
         // 大型運費
@@ -223,7 +223,7 @@ class Cartful
         // 特殊運費
         $Order['Special'] = $special;
         // 產品總金額金額 (小計+加購+大型運費+一般運費)-紅利折抵
-        $Order['AllTotal'] = ($AllTotal + $BigFreight + $Order['Freight'] + $Addprice) - $Subbonus;
+        $Order['AllTotal'] = ((int)$AllTotal + (int)$BigFreight + (int)$Order['Freight'] + (int)$Addprice) - (int)$Subbonus;
         // 購物車資訊
         $Order['Cart'] = $CartArray;
 

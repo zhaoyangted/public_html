@@ -77,9 +77,9 @@
                 <a href="<? echo site_url('contact') ?>">
                   <ul>與我們聯繫</ul>
                 </a>
-                <a href="<? echo site_url('edm') ?>">
+                <!-- <a href="<? echo site_url('edm') ?>">
                   <ul>型錄下載</ul>
-                </a>
+                </a> -->
               </div>
             </li>
           </div>
