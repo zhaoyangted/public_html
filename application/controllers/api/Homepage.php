@@ -40,7 +40,8 @@ class Homepage extends RestController
     // Banner
     $BannerData = $this->mymodel->WriteSql('
         SELECT d_img,d_link FROM `banner`
-            where if(d_start!="",d_start<=now(),1) and (if(d_end!="",d_end>=now(),1) or d_end="0000-00-00 00:00") and d_enable="Y"' . $Lv_where . '
+		where d_start <= NOW() AND(
+			d_end >= NOW() OR d_end = "0000-00-00 00:00:00") AND d_enable = "Y"'. $Lv_where . '
             ORDER BY d_sort
         ');
     $data['BannerData'] = $BannerData;

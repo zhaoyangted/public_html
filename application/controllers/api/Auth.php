@@ -203,6 +203,41 @@ class Auth extends RestController
             $this->response(['Not found.'], 500);	
 		}
 	}
+	// 忘記帳號
+	/* public function forgetpwd() {
+		$data = array();
+		if (!empty($_SESSION[CCODE::MEMBER]['IsLogin'])) {
+			$this->useful->AlertPage('member', '');
+			exit();
+		}
+		$this->NetTitle = '忘記密碼';
+		$this->load->view('front/forgetpwd', $data);
+	} */
+
+	// 忘記帳密驗證
+	public function forget_post() {
+		$post = $_POST;
+		// 忘記帳密檢查
+		if ($this->form_validation->run('forget') == true) {
+			$this->_chk_Captcha($post['d_captcha']);
+			$dbdata = $this->mymodel->OneSearchSql('member', 'd_password', array('d_account' => $post['d_account']));
+			if (empty($dbdata)) {
+				$this->response(['change failed!'], 400);
+				//$this->useful->AlertPage('', '無此會員');
+				exit();
+			}
+			$this->load->library('encryption');
+			$this->tableful->Sendmail($post['d_account'], '美麗平台-忘記密碼通知信', '您好，您的密碼是' . $this->encryption->decrypt($dbdata['d_password']));
+			$this->useful->AlertPage('index', '已將資料寄到您當初所填的信箱。');
+			$this->response(['change success!'], 200);
+			exit();
+		} else {
+			$this->form_validation->set_error_delimiters('', '\n');
+			$this->useful->AlertPage('', preg_replace("/\n/", "", validation_errors()));
+			exit();
+		}
+
+	}
     // 加密
 	private function encryptStr($str, $key){
 		$block = mcrypt_get_block_size('des', 'ecb');

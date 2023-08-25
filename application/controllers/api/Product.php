@@ -47,7 +47,8 @@ class Product extends RestController
 		$this->Seokeywords = (!empty($this->MenuData['d_skeywords']) ? $this->MenuData['d_skeywords'] : '');
 		$this->Seodescription = (!empty($this->MenuData['d_sdescription']) ? $this->MenuData['d_sdescription'] : '');
 		// 產品撈取
-		$Pdata = $this->mymodel->APISelectPage('products', 'd_id,d_title,d_img1,d_price1,d_price2,d_price3,d_price4,d_dprice,d_sprice,d_model,concat(TID,",",TTID,",",TTTID) as TID,MTID', 'where d_enable="Y" and (TID like "%' . $TID . '@#%" or TID like "%@#' . $TID . '%" or TID like "%@#' . $TID . '@#%" or TID=' . $TID . ')', 'd_update_time desc',  $Pages,$Limit);
+		$Pdata = $this->mymodel->APISelectPage('products p left join products_brand pb on pb.d_id=p.BID
+		left join freight f on f.d_id=p.FID', 'p.*,pb.d_id as pbid,pb.d_title as pbtitle,f.d_free,f.d_freight,f.d_title as ftitle,f.d_id as fid,concat(TID,",",TTID,",",TTTID) as TID,MTID', 'where p.d_enable="Y" and (p.TID like "%' . $TID . '@#%" or p.TID like "%@#' . $TID . '%" or TID like "%@#' . $TID . '@#%" or TID=' . $TID . ')', 'd_update_time desc',  $Pages,$Limit);
 		// 根據會員等級顯示金額
 		$Pdata['dbdata'] = $this->autoful->GetProductPrice($Pdata['dbdata']);
 		// print_r($Pdata);
@@ -100,10 +101,12 @@ class Product extends RestController
 		if (!empty($TypeData['TID'])) {
 			if (!empty($TypeData['TTID'])) {
 				// 產品撈取
-				$Pdata = $this->mymodel->APISelectPage('products', 'd_id,d_title,d_img1,d_price1,d_price2,d_price3,d_price4,d_dprice,d_sprice,concat(TID,",",TTID,",",TTTID) as TID,MTID', 'where d_enable="Y" and (TID like "' . $TypeData['TID'] . '@#%" or TID like "%@#' . $TypeData['TID'] . '" or TID like "%@#' . $TypeData['TID'] . '@#%" or TID=' . $TypeData['TID'] . ') and (TTID like "' . $TypeData['TTID'] . '@#%" or TTID like "%@#' . $TypeData['TTID'] . '" or TTID like "%@#' . $TypeData['TTID'] . '@#%" or TTID=' . $TypeData['TTID'] . ') and (TTTID like "' . $TID . '@#%" or TTTID like "%@#' . $TID . '" or TTTID like "%@#' . $TID . '@#%" or TTTID=' . $TID . ')', $Order, $Pages,$Limit );
+				$Pdata = $this->mymodel->APISelectPage('products p left join products_brand pb on pb.d_id=p.BID
+				left join freight f on f.d_id=p.FID', 'p.*,pb.d_id as pbid,pb.d_title as pbtitle,f.d_free,f.d_freight,f.d_title as ftitle,f.d_id as fid,concat(TID,",",TTID,",",TTTID) as TID,MTID', 'where p.d_enable="Y" and (p.TID like "' . $TypeData['TID'] . '@#%" or p.TID like "%@#' . $TypeData['TID'] . '" or p.TID like "%@#' . $TypeData['TID'] . '@#%" or p.TID=' . $TypeData['TID'] . ') and (p.TTID like "' . $TypeData['TTID'] . '@#%" or p.TTID like "%@#' . $TypeData['TTID'] . '" or p.TTID like "%@#' . $TypeData['TTID'] . '@#%" or p.TTID=' . $TypeData['TTID'] . ') and (p.TTTID like "' . $TID . '@#%" or p.TTTID like "%@#' . $TID . '" or p.TTTID like "%@#' . $TID . '@#%" or p.TTTID=' . $TID . ')', $Order, $Pages,$Limit );
 			} else {
 				// 產品撈取
-				$Pdata = $this->mymodel->APISelectPage('products', 'd_id,d_title,d_img1,d_price1,d_price2,d_price3,d_price4,d_dprice,d_sprice,concat(TID,",",TTID,",",TTTID) as TID,MTID', 'where d_enable="Y" and (TID like "' . $TypeData['TID'] . '@#%" or TID like "%@#' . $TypeData['TID'] . '" or TID like "%@#' . $TypeData['TID'] . '@#%" or TID=' . $TypeData['TID'] . ') and (TTID like "' . $TID . '@#%" or TTID like "%@#' . $TID . '" or TTID like "%@#' . $TID . '@#%" or TTID=' . $TID . ')', $Order, $Pages, $Limit);
+				$Pdata = $this->mymodel->APISelectPage('products p left join products_brand pb on pb.d_id=p.BID
+				left join freight f on f.d_id=p.FID', 'p.*,pb.d_id as pbid,pb.d_title as pbtitle,f.d_free,f.d_freight,f.d_title as ftitle,f.d_id as fid,concat(TID,",",TTID,",",TTTID) as TID,MTID', 'where p.d_enable="Y" and (p.TID like "' . $TypeData['TID'] . '@#%" or p.TID like "%@#' . $TypeData['TID'] . '" or p.TID like "%@#' . $TypeData['TID'] . '@#%" or p.TID=' . $TypeData['TID'] . ') and (p.TTID like "' . $TID . '@#%" or p.TTID like "%@#' . $TID . '" or p.TTID like "%@#' . $TID . '@#%" or p.TTID=' . $TID . ')', $Order, $Pages, $Limit);
 			}
 			// 根據會員等級顯示金額
 			if (!empty($Pdata['dbdata'])) {$Pdata['dbdata'] = $this->autoful->GetProductPrice($Pdata['dbdata']);
@@ -315,7 +318,17 @@ class Product extends RestController
 	}
 	public function newproducts_get(){
 		$NewProductsData =array();
-		$NewProductsData = $this->mymodel->SelectSearch('products', '', 'd_id,d_title,d_img1,d_price1,d_price2,d_price3,d_price4,d_dprice,d_sprice,concat(TID,",",TTID,",",TTTID) as TID,MTID', 'where d_enable="Y" and d_new="Y"', 'd_sort');
+		//$NewProductsData = $this->mymodel->SelectSearch('products', '', 
+		//'d_id,d_title,d_img1,d_price1,d_price2,d_price3,d_price4,d_dprice,d_sprice,concat(TID,",",TTID,",",TTTID) as TID,MTID', 'where d_enable="Y" and d_new="Y"', 'd_sort');
+		$NewProductsData = $this->mymodel->WriteSql('
+		select p.d_id,p.d_title,p.d_img1,p.d_img2,p.d_price1,p.d_price2,p.d_price3,p.d_price4,p.d_dprice,p.d_sprice,p.d_stock,p.d_model,f.d_free,f.d_freight,f.d_title as ftitle,f.d_id as fid,pb.d_id as pbid,pb.d_title as pbtitle,concat(TID,",",TTID,",",p.TTTID) as TID,p.MTID
+				from products p
+				left join products_brand pb on pb.d_id=p.BID
+				left join freight f on f.d_id=p.FID
+				where p.d_enable="Y" and p.d_new="Y"
+				order by p.d_sort asc
+				');
+
 		$NewProductsData = $this->autoful->GetProductPrice($NewProductsData);
 		if ($NewProductsData) {
 			//$this->AddVisit($d_id);
@@ -329,11 +342,14 @@ class Product extends RestController
 		// Hot
 		$HotArray = array();
 		$HotData = $this->mymodel->WriteSql('
-				select pt.d_title as pttitle,pt.d_id as PTID,p.d_id,p.d_title,p.d_img1,p.d_img2,p.d_price1,p.d_price2,p.d_price3,p.d_price4,p.d_dprice,p.d_sprice,concat(p.TID,",",p.TTID,",",p.TTTID) as TID,p.MTID
+				select pt.d_title as pttitle,pt.d_id as PTID,p.d_id,p.d_title,p.d_img1,p.d_img2,p.d_price1,p.d_price2,p.d_price3,p.d_price4,p.d_dprice,p.d_sprice,p.d_stock,p.d_model,f.d_free,f.d_freight,f.d_title as ftitle,f.d_id as fid,pbh.d_id as pbid,pbh.d_title as pbtitle,concat(p.TID,",",p.TTID,",",p.TTTID) as TID,p.MTID
 				from products_hot h
-						
+				left join products_brand pb on pb.d_id=h.PID
+				
 						inner join products p on p.d_id=h.PID
+						left join products_brand pbh on pbh.d_id=p.BID
 						inner join products_hot_type pt on pt.d_id=h.TID
+						left join freight f on f.d_id=p.FID
 				where p.d_enable="Y" and h.d_enable="Y" and pt.d_enable="Y"
 				order by pt.d_sort asc,h.d_sort asc
 			');
@@ -378,7 +394,8 @@ class Product extends RestController
 		}
 
 		// 產品撈取
-		$Pdata = $this->mymodel->APISelectPage('products', 'd_id,d_title,d_img1,d_price1,d_price2,d_price3,d_price4,d_dprice,d_sprice,d_model,concat(TID,",",TTID,",",TTTID) as TID,MTID,TID as GTID,concat(TTID,",",TTTID) as GTTID', 'where d_enable="Y" and BID=' . $BID, $Order, $Pages,$Limit);
+		$Pdata = $this->mymodel->APISelectPage('products p left join products_brand pb on pb.d_id=p.BID
+		left join freight f on f.d_id=p.FID', 'p.*,pb.d_id as pbid,pb.d_title as pbtitle,f.d_free,f.d_freight,f.d_title as ftitle,f.d_id as fid,concat(TID,",",TTID,",",TTTID) as TID,MTID,TID as GTID,concat(TTID,",",TTTID) as GTTID ', 'where p.d_enable="Y" and p.BID=' . $BID, $Order, $Pages,$Limit);
 
 		/* $Pdata = $this->mymodel->FrontSelectPage('products', 'd_id,d_title,d_img1,d_price1,d_price2,d_price3,d_price4,d_dprice,d_sprice,concat(TID,",",TTID,",",TTTID) as TID,MTID,TID as GTID,concat(TTID,",",TTTID) as GTTID', 'where d_enable="Y" and BID=' . $BID, $Order, '12'); */
 		/* $query = $db->query('SELECT d_id,d_title,d_img1,d_price1,d_price2,d_price3,d_price4,d_dprice,d_sprice,concat(TID,",",TTID,",",TTTID) as TID,MTID,TID as GTID,concat(TTID,",",TTTID) as GTTID FROM products WHERE d_enable="Y" and BID=$BID $Order'); */
