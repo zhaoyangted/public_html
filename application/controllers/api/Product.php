@@ -572,6 +572,57 @@ class Product extends RestController
 		}
 		//$this->load->view('front/products_search', $data);
 	}
+	// 活動內頁
+	public function sales_get($SID = '')
+	{
+		$SID="3";
+		/* if (empty($SID)) {
+			$this->useful->AlertPage('', '操作錯誤');
+			exit();
+		} */
+		$data = array();
+
+		// 活動撈取
+		$data['Adata'] = $Adata = $this->mymodel->WriteSql('
+			select s.d_title,s.PID
+			from products_sale s
+			left join products_sale_type t on t.d_id=s.TID
+			left join products_sale_detail d on d.SID=s.d_id
+			where s.d_id=' . $SID . ' and s.d_enable="Y" and t.d_start<="' . date('Y-m-d') . '" and t.d_end>="' . date('Y-m-d') . '" and t.d_start!="" and t.d_end!="" and t.d_enable="Y" and d.d_enable="Y"
+			', '1');
+
+		if (empty($Adata)) {
+			$this->useful->AlertPage('', '操作錯誤');
+			exit();
+		}
+
+		// 排序
+		$data['OrderArray'] = $OrderArray = array('1' => '依上架時間：新至舊', '2' => '依上架時間：舊至新', '3' => '依價格排序：低至高', '4' => '依價格排序：高至低');
+		$data['Orderid'] = $Orderid = (!empty($_POST['Orderby']) ? $_POST['Orderby'] : '1');
+		$Order = 'd_update_time desc';
+		if ($Orderid == 2) {
+			$Order = 'd_update_time';
+		} elseif ($Orderid == 3) {
+			$Order = 'd_price1 ';
+		} elseif ($Orderid == 4) {
+			$Order = 'd_price1 desc';
+		}
+
+		// 產品撈取
+		$Pdata = $this->mymodel->FrontSelectPage('products', 'd_id,d_title,d_img1,d_price1,d_price2,d_price3,d_price4,concat(TID,",",TTID,",",TTTID) as TID,MTID', 'where d_enable="Y" and d_id in (' . str_replace('@#', ',', $Adata['PID']) . ')', $Order, '12');
+
+		// 根據會員等級顯示金額
+		$Pdata['dbdata'] = $this->autoful->GetProductPrice($Pdata['dbdata']);
+		$data['dbdata'] = $Pdata;
+		if ($data['dbdata']) {
+			//$this->AddVisit($d_id);
+			$this->response($data, 200);
+		} else {
+			$this->response(NULL, 404);
+		}
+		// print_r($Pdata);
+		//$this->load->view('front/products_sales', $data);
+	}
 	private function GetProductsType($TID = '')
 	{
 		$Menu = array();
@@ -613,6 +664,7 @@ class Product extends RestController
 
 		$this->Menu = $Menu;
 	}
+	
 	// 撈取標題
 	private function GetMenutitle($dbdata)
 	{
