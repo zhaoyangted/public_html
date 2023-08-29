@@ -71,8 +71,9 @@ Examples:
 ATTENTION: The trailing slash is required.
 */
 // $baseUrl = $_SESSION['img_url'];
-$baseUrl = $_SESSION['ckeditor_url'];
-
+// $baseUrl = $_SESSION['ckeditor_url'];
+$baseUrl = 'http://bgtwmedia.s3.ap-northeast-1.amazonaws.com'.$_SESSION['ckeditor_url'];
+//$baseDir = 'uploads/';
 /*
 $baseDir : the path to the local directory (in the server) which points to the
 above $baseUrl URL. This is the path used by CKFinder to handle the files in
@@ -344,3 +345,15 @@ include_once "plugins/zip/plugin.php";
 $config['plugin_imageresize']['smallThumb'] = '90x90';
 $config['plugin_imageresize']['mediumThumb'] = '120x120';
 $config['plugin_imageresize']['largeThumb'] = '180x180';
+
+$config['backends'][] = array(
+    'name'         => 'awss3',
+    'adapter'      => 's3',
+    'bucket'       => 'bgtwmedia',
+    'region'       => 'ap-northeast-1',
+    'key'          => 'AKIAQAVTMB3SG4XXGPIH',
+    'secret'       => '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',
+    'visibility'   => 'public',
+    /* 'baseUrl'      => 'http://bgtwmedia.s3.ap-northeast-1.amazonaws.com/bgtwmedia'.$_SESSION['ckeditor_url'],
+    'root'         => 'uploads' */
+);
