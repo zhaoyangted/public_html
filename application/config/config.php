@@ -528,3 +528,13 @@ $config['proxy_ips'] = '';
 */
 $config['maintenance_mode'] = FALSE;
 $config['maintenance_ips'] = array('36.230.108.247','127.0.0.1','0.0.0.0');
+
+//add below s3 configs to your config.php file
+
+$config['folder_name'] = 'uploads/';
+
+$config['s3_access_key'] = 'AKIAQAVTMB3SG4XXGPIH';
+$config['s3_secret_key'] = 'QQuoXribc56Vdqgvj6v86XjY2QNCRuTYbhIEXZsF';
+
+$config['s3_bucket_name'] = 'bgtwmedia';
+$config['s3_bucket_url'] = 'https://bgtwmedia.s3.ap-northeast-1.amazonaws.com';

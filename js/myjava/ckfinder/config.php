@@ -72,7 +72,7 @@ ATTENTION: The trailing slash is required.
 */
 // $baseUrl = $_SESSION['img_url'];
 // $baseUrl = $_SESSION['ckeditor_url'];
-$baseUrl = 'http://bgtwmedia.s3.ap-northeast-1.amazonaws.com'.$_SESSION['ckeditor_url'];
+$baseUrl = 'https://bgtwmedia.s3.ap-northeast-1.amazonaws.com'.$_SESSION['ckeditor_url'];
 //$baseDir = 'uploads/';
 /*
 $baseDir : the path to the local directory (in the server) which points to the

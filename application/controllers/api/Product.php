@@ -699,9 +699,9 @@ class Product extends RestController
 				$rs = $this->mymodel->OneSearchSql('products_type', 'd_id, d_title', array('d_id' => $v));
 				//p($rs);
 				if ($k == 0) {
-					$Menutitle .= '<li><a href="' . site_url('products/index/' . $rs['d_id'] . '') . '">' . $rs['d_title'] . '</a></li>';
+					$Menutitle .= '<li><a href="' . '/products/top_list/' . $rs['d_id'] . '' . '">' . $rs['d_title'] . '</a></li>';
 				} else {
-					$Menutitle .= '<li><a href="' . site_url('products/products_list/' . $rs['d_id'] . '') . '">' . $rs['d_title'] . '</a></li>';
+					$Menutitle .= '<li><a href="' . '/products/products_list/' . $rs['d_id'] . '' . '">' . $rs['d_title'] . '</a></li>';
 				}
 			}
 		}

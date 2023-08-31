@@ -604,7 +604,7 @@ $config['allow_any_cors_domain'] = false;
 | e.g. $config['allowed_origins'] = ['http://www.example.com', 'https://spa.example.com']
 |
 */
-$config['allowed_cors_origins'] = ['http://localhost:3000','http://localhost','http://bgtwweb.s3-website-ap-northeast-1.amazonaws.com'];
+$config['allowed_cors_origins'] = ['http://localhost:3000','http://localhost','https://master.d3mlmyxf8zlcwd.amplifyapp.com/'];
 
 /*
 |--------------------------------------------------------------------------

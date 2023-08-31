@@ -13,6 +13,8 @@ class Autoful
         $this->CI = &get_instance();
         $this->cf = $cf;
         $this->CI->load->model('MyModel/Webmodel', 'webmodel');
+        $this->CI->load->helper('form');
+        
     }
     //前台基本設定
     public function FrontConfig($chkIogin = '')
@@ -586,6 +588,54 @@ public function ChkSingleSale($cart, $price)
             $this->CI->mymodel->SimpleWriteSQL('update products set d_stock=d_stock+' . $v['d_num'] . ' where d_id=' . $v['PID'] . '');
         }
     }
+    //upload to S3
+    public function addImages($FILE = '', $Config = array())
+    {       
+        $this->CI->load->library('Mylib/S3_upload');
+        $this->CI->load->library('Mylib/S3');
+        if ($FILE[$Config['Fname']]['name']) {
+            if (!empty($Config['LimitSize'])) {
+                if ($_FILES[$Config['Fname']]['size'] > $Config['LimitSize']) {
+                    echo '<script>alert("圖片已超過限制大小，請重新上傳!");history.go(-1);</script>';
+                    exit();
+                }
+            }
+
+            if ($FILE[$Config['Fname']]['type'] != 'image/png' and $FILE[$Config['Fname']]['type'] != 'image/jpeg' and $FILE[$Config['Fname']]['type'] != 'image/gif') {
+                echo '<script>alert("預覽圖檔案格式錯誤，請上傳jpg or png or gif副檔名");history.go(-1);</script>';
+                exit();
+            }
+            if (!empty($_POST['' . $Config['Fname'] . '_ImgHidden']) and empty($Config['Nodel'])) {
+                $ImgStr = explode('/', $_POST['' . $Config['Fname'] . '_ImgHidden']);
+                $Tmp = './' . $ImgStr[0] . '/' . $ImgStr[1] . '/tmp/tmp_' . $ImgStr[2];
+                if (is_file($Tmp)) {
+                    unlink($Tmp);
+                }
+
+                //unlink('./' . $_POST['' . $Config['Fname'] . '_ImgHidden']);
+            }
+            $path = 'uploads/' . $Config['Filename'] . '/'; //路徑
+            $this->CI->useful->create_dir($path);
+            // 撈取副檔名
+            $Subname = explode('/', $FILE[$Config['Fname']]['type']);
+            $imgtype = $Subname[1];
+
+            //$icon = $this->CI->up_image->uploadimage($FILE[$Config['Fname']], date('YmdHis') . rand(0, 9999) . '.' . $imgtype . '', $path, $Config);
+            //sleep(0.5);
+            $icon = $this->CI->s3_upload->upload_file($FILE[$Config['Fname']], date('YmdHis') . rand(0, 9999) . '.' . $imgtype . '', $path, $Config);  
+            sleep(0.5);
+            if (!empty($icon['error'])) {
+                echo '<script>alert("' . $icon['error'] . '");</script>';
+                exit();
+            }   else {
+                $_POST[$Config['Fname']] = $icon;
+                //return $icon;
+            }         
+
+        }
+
+    }
+
 
 }
 

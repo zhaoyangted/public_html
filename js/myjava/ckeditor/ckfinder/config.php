@@ -65,7 +65,8 @@ ATTENTION: The trailing slash is required.
 
 if($_SERVER['HTTP_HOST']!="localhost"){
 	//上線用
-	$baseUrl = 'http://'.$_SERVER['HTTP_HOST'].'/uploads/ckeditor/';
+	//$baseUrl = 'http://'.$_SERVER['HTTP_HOST'].'/uploads/ckeditor/';
+	$baseUrl='https://bgtwmedia.s3.ap-northeast-1.amazonaws.com'.'/uploads/ckeditor/';
 }
 elseif (strpos($_SERVER["HTTP_HOST"],'demo')) {
 	//demo區

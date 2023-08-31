@@ -76,6 +76,7 @@ class Banner_add extends CI_Controller {
             'Fname'=>'d_img',
             'Filename'=>'banner',
         );
-        $this->autoful->DefaultUpload($_FILES,$Config);
+        $this->autoful->addImages($_FILES,$Config);
+        //$this->autoful->DefaultUpload($_FILES,$Config);
     }
 }
