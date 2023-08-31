@@ -330,12 +330,12 @@ class Product extends RestController
 				');
 
 		$NewProductsData = $this->autoful->GetProductPrice($NewProductsData);
-		if ($NewProductsData) {
+		//if ($NewProductsData) {
 			//$this->AddVisit($d_id);
 			$this->response($NewProductsData, 200);
-		} else {
-			$this->response(NULL, 404);
-		}
+		//} else {
+		//	$this->response(NULL, 404);
+		//}
 	}
 	public function hot_get()
 	{
