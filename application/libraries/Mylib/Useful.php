@@ -329,7 +329,7 @@ class Useful {
 	 
 	    if (isset($_COOKIE["PHPSESSID"])) {
 	        session_set_cookie_params($expire);
-			//header('Set-Cookie: PHPSESSID='.$_COOKIE["PHPSESSID"].'; SameSite=None');
+			header('Set-Cookie: PHPSESSID='.$_COOKIE["PHPSESSID"].'; SameSite=None');
 	        @session_start();
 	    } else {
 	        @session_start();

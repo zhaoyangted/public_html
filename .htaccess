@@ -16,7 +16,9 @@ allow from all
 </Files>
 
 deny from 183.197.229.0/24
-
+<If "%{HTTP_USER_AGENT} !~ /(iPhone; CPU iPhone OS 1[0-4]|iPad; CPU OS 1[0-4]|iPod touch; CPU iPhone OS 1[0-4]|Macintosh; Intel Mac OS X.*Version\x2F1[0-3].*Safari|Macintosh;.*Mac OS X 10_14.* AppleWebKit.*Version\x2F1[0-3].*Safari)/i">
+    Header edit Set-Cookie ^(.*)$ $1;SameSite=None;Secure
+</If>
 # php -- BEGIN cPanel-generated handler, do not edit
 # Set the “ea-php56” package as the default “PHP” programming language.
 #<IfModule mime_module>
