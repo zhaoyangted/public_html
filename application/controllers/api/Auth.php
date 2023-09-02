@@ -162,11 +162,14 @@ class Auth extends RestController
     public function registration_post(){
 
 	}
-	public function user_get($id=0){
-		$user = array ();
-		$user = $this->user->getRows($id);
+	public function user_get(){
+		//$user = array ();
+		//$user = $this->user->getRows($id);
 		//$this->mymodel->OneSearchSql('member','*',array('d_id'=>$id));
-		if(!empty($user)){
+		//if(!empty($user)){
+			if(isset($_SESSION[CCODE::MEMBER]['IsLogin'])&&$_SESSION[CCODE::MEMBER]['IsLogin'] == 'Y'){
+				$user = array ();
+				$user = $this->user->getRows($_SESSION[CCODE::MEMBER]['LID']);
 			$this->response([
 				'data'=>$user,
 				'status'=>'Success',
@@ -175,10 +178,13 @@ class Auth extends RestController
 		}else{
 			$this->response(
 				[
-					'msg'=>'no found'
-				],500
+					//'data'=>$user,
+					'msg'=>'no online',
+					'isLoggedIn'=>false
+				],200
 			);
 		}
+	}
 	}
 	public function user_put(){
 		
