@@ -185,7 +185,7 @@ class Auth extends RestController
 			);
 		}
 	}
-	}
+	
 	public function user_put(){
 		
 	}
