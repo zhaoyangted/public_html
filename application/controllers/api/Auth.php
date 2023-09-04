@@ -168,10 +168,16 @@ class Auth extends RestController
 		//$this->mymodel->OneSearchSql('member','*',array('d_id'=>$id));
 		//if(!empty($user)){
 			if(isset($_SESSION[CCODE::MEMBER]['IsLogin'])&&$_SESSION[CCODE::MEMBER]['IsLogin'] == 'Y'){
-				$user = array ();
-				$user = $this->user->getRows($_SESSION[CCODE::MEMBER]['LID']);
+				$this->db->select('member.d_id,member.d_account,member.d_phone,member.d_pname,member.d_lv,member.d_password,member.d_chked,member.TID,member.TID1,member.d_user_type,member.d_enable,member.d_chked,member_lv.d_title');
+			$this->db->from('member');
+			$this->db->join('member_lv','member.d_lv=member_lv.d_id','left');
+			$this->db->where('d_id',$_SESSION[CCODE::MEMBER]['LID']);
+			$query=$this->db->get();
+			$dbdata=$query->result_array()[0];
+			//	$user = array ();
+			//	$user = $this->user->getRows($_SESSION[CCODE::MEMBER]['LID']);
 			$this->response([
-				'data'=>$user,
+				'data'=>$dbdata,
 				'status'=>'Success',
 				'isLoggedIn'=>true
 			],200);

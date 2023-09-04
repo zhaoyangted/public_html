@@ -267,11 +267,11 @@ class Member extends RestController
         }
         
         $this->NetTitle = '我的收藏';
-        if (!empty($data)){
+       // if (!empty($data)){
             $this->response($data,200);
-        }else{
-            $this->response(NULL,404);
-        }
+       // }else{
+        //    $this->response(NULL,404);
+       // }
         //$this->load->view('front/member_favorite', $data);
     }
     // 訂單列表，未完成，前台畫面皆須再測試
