@@ -62,7 +62,12 @@ class Member extends RestController
     public function point_get()
     {
         $this->Mid = (!empty($_SESSION[CCODE::MEMBER]['LID']) ? $_SESSION[CCODE::MEMBER]['LID'] : '');
+        
         $data = array();
+        if (!empty($this->Mid)){
+            $this->response($data,200);
+            exit();
+        }
         // 紅利點數說明
         $data['Content'] = $this->webmodel->BaseConfig('16');
         $dbdata = $this->mymodel->FrontSelectPage('member_point', 'OID,d_type,d_num,d_content,d_create_date,d_create_time,d_enable', 'where MID=' . $this->Mid . '', 'd_create_date desc,d_id desc', 10);
@@ -251,6 +256,10 @@ class Member extends RestController
     {
         $data = array();
         $this->Mid = (!empty($_SESSION[CCODE::MEMBER]['LID']) ? $_SESSION[CCODE::MEMBER]['LID'] : '');
+        if (!empty($this->Mid)){
+            $this->response($data,200);
+            exit();
+        }
         $dbdata = $this->mymodel->FrontSelectPage('member_favorite', '*', 'where MID = ' . $this->Mid . '', 'd_create_time desc', '5');
         if (!empty($dbdata['dbdata'])) {
             $data['AID'] = array_column($dbdata['dbdata'], 'AID', 'PID');
