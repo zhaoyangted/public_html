@@ -171,7 +171,7 @@ class Auth extends RestController
 		//$user = $this->user->getRows($id);
 		//$this->mymodel->OneSearchSql('member','*',array('d_id'=>$id));
 		//if(!empty($user)){
-			if($_SESSION[CCODE::MEMBER]['IsLogin'] = 'Y'){
+			if(isset($_SESSION[CCODE::MEMBER]['IsLogin']) &&$_SESSION[CCODE::MEMBER]['IsLogin'] == 'Y'){
 				/* $this->db->select('member.d_id,member.d_account,member.d_phone,member.d_pname,member.d_lv,member.d_password,member.d_chked,member.TID,member.TID1,member.d_user_type,member.d_enable,member.d_chked,member_lv.d_title');
 			$this->db->from('member');
 			$this->db->join('member_lv','member.d_lv=member_lv.d_id','left');
@@ -253,6 +253,13 @@ class Auth extends RestController
 			exit();
 		}
 
+	}
+	//檢查驗證碼
+	private function _chk_Captcha($code,$url='') {
+		if ($_SESSION[CCODE::MEMBER]['VcodeNum'] != $code) {
+			$this->useful->AlertPage($url, '驗證碼輸入錯誤');
+			exit();
+		}
 	}
     // 加密
 	private function encryptStr($str, $key){
