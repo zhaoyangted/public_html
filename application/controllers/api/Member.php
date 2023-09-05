@@ -58,43 +58,7 @@ class Member extends RestController
         }
         //$this->load->view('front/member', $data);
     }
-    // 會員點數查詢
-    public function point_get()
-    {
-        $this->Mid = (!empty($_SESSION[CCODE::MEMBER]['LID']) ? $_SESSION[CCODE::MEMBER]['LID'] : '');
-        
-        $data = array();
-        if (!empty($this->Mid)){
-            $this->response($data,200);
-            exit();
-        }
-        // 紅利點數說明
-        $data['Content'] = $this->webmodel->BaseConfig('16');
-        $dbdata = $this->mymodel->FrontSelectPage('member_point', 'OID,d_type,d_num,d_content,d_create_date,d_create_time,d_enable', 'where MID=' . $this->Mid . '', 'd_create_date desc,d_id desc', 10);
-
-        foreach ($dbdata['dbdata'] as $key => $value) {
-            $Odata = $this->mymodel->OneSearchSql('orders', 'd_id', array('OID' => $value['OID']));
-            $dbdata['dbdata'][$key]['orderid'] = $Odata['d_id'];
-            if ($value['d_type'] == 1) {
-                $dbdata['dbdata'][$key]['Daedline'] = date("Y-m-d", strtotime("+1 year", strtotime($value['d_create_time'])));
-            }
-        }
-        // 撈取快過期的點數
-        $data['Edata'] = $this->mymodel->WriteSQL('
-           select sum(d_total) as d_total,DATE_FORMAT(d_create_time,"%Y-%m-%d") as d_date,DATE_FORMAT(date_add(d_create_time,interval 1 year),"%Y-%m-%d") as Daedline from member_point where MID=' . $this->Mid . ' and d_type=1 and d_enable="Y" and d_total>0 group by d_date order by d_date
-           ', '1');
-        // 會員點數資料
-        $data['Mdata'] = $this->mymodel->OneSearchSql('member', 'd_bonus', array('d_id' => $this->Mid));
-        // print_r($Edata);
-        $data['dbdata'] = $dbdata;
-        $this->NetTitle = '會員點數查詢';
-        if (!empty($data)){
-            $this->response($data,200);
-        }else{
-            $this->response(NULL,404);
-        }
-        //$this->load->view('front/member_point', $data);
-    }
+    
     // 會員補齊資料頁
     public function review_get()
     {
@@ -255,11 +219,11 @@ class Member extends RestController
     public function favorite_get()
     {
         $data = array();
-        $this->Mid = (!empty($_SESSION[CCODE::MEMBER]['LID']) ? $_SESSION[CCODE::MEMBER]['LID'] : '');
-        if (!empty($this->Mid)){
-            $this->response($data,200);
+        if (empty($_SESSION[CCODE::MEMBER]['LID'])){
+            $this->response(NULL,404,['msg'=>'not login']);
             exit();
         }
+        //$this->Mid = (!empty($_SESSION[CCODE::MEMBER]['LID']) ? $_SESSION[CCODE::MEMBER]['LID'] : '');
         $dbdata = $this->mymodel->FrontSelectPage('member_favorite', '*', 'where MID = ' . $this->Mid . '', 'd_create_time desc', '5');
         if (!empty($dbdata['dbdata'])) {
             $data['AID'] = array_column($dbdata['dbdata'], 'AID', 'PID');
@@ -282,6 +246,43 @@ class Member extends RestController
         //    $this->response(NULL,404);
        // }
         //$this->load->view('front/member_favorite', $data);
+    }
+    // 會員點數查詢
+    public function point_get()
+    {
+        
+        $data = array();
+        if (empty($_SESSION[CCODE::MEMBER]['LID'])){
+            $this->response(NULL,200,['msg'=>'not login']);
+            exit();
+        }
+        //$this->Mid = (!empty($_SESSION[CCODE::MEMBER]['LID']) ? $_SESSION[CCODE::MEMBER]['LID'] : '');
+        // 紅利點數說明
+        $data['Content'] = $this->webmodel->BaseConfig('16');
+        $dbdata = $this->mymodel->FrontSelectPage('member_point', 'OID,d_type,d_num,d_content,d_create_date,d_create_time,d_enable', 'where MID=' . $this->Mid . '', 'd_create_date desc,d_id desc', 10);
+
+        foreach ($dbdata['dbdata'] as $key => $value) {
+            $Odata = $this->mymodel->OneSearchSql('orders', 'd_id', array('OID' => $value['OID']));
+            $dbdata['dbdata'][$key]['orderid'] = $Odata['d_id'];
+            if ($value['d_type'] == 1) {
+                $dbdata['dbdata'][$key]['Daedline'] = date("Y-m-d", strtotime("+1 year", strtotime($value['d_create_time'])));
+            }
+        }
+        // 撈取快過期的點數
+        $data['Edata'] = $this->mymodel->WriteSQL('
+           select sum(d_total) as d_total,DATE_FORMAT(d_create_time,"%Y-%m-%d") as d_date,DATE_FORMAT(date_add(d_create_time,interval 1 year),"%Y-%m-%d") as Daedline from member_point where MID=' . $this->Mid . ' and d_type=1 and d_enable="Y" and d_total>0 group by d_date order by d_date
+           ', '1');
+        // 會員點數資料
+        $data['Mdata'] = $this->mymodel->OneSearchSql('member', 'd_bonus', array('d_id' => $this->Mid));
+        // print_r($Edata);
+        $data['dbdata'] = $dbdata;
+        $this->NetTitle = '會員點數查詢';
+        if (!empty($data)){
+            $this->response($data,200);
+        }else{
+            $this->response(NULL,404);
+        }
+        //$this->load->view('front/member_point', $data);
     }
     // 訂單列表，未完成，前台畫面皆須再測試
     // $type => 訂單類型，$id => 訂單ID
