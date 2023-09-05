@@ -61,7 +61,11 @@ class Auth extends RestController
 	}
     public function login_post()
     {
-        $post = array('d_account'=>$this->post('d_account'),'d_password'=>$this->post('d_password'));
+        $post = array(
+		'd_account'=>$this->post('d_account'),
+		'd_password'=>$this->post('d_password'),
+		'd_captcha'=>$this->post('d_captcha')
+		);
         //print_r($post);
 		// 登入會員檢查
 /* 		if ($this->form_validation->run('login') == true) {
@@ -167,17 +171,17 @@ class Auth extends RestController
 		//$user = $this->user->getRows($id);
 		//$this->mymodel->OneSearchSql('member','*',array('d_id'=>$id));
 		//if(!empty($user)){
-			if(isset($_SESSION[CCODE::MEMBER]['IsLogin'])&&$_SESSION[CCODE::MEMBER]['IsLogin'] == 'Y'){
-				$this->db->select('member.d_id,member.d_account,member.d_phone,member.d_pname,member.d_lv,member.d_password,member.d_chked,member.TID,member.TID1,member.d_user_type,member.d_enable,member.d_chked,member_lv.d_title');
+			if($_SESSION[CCODE::MEMBER]['IsLogin'] = 'Y'){
+				/* $this->db->select('member.d_id,member.d_account,member.d_phone,member.d_pname,member.d_lv,member.d_password,member.d_chked,member.TID,member.TID1,member.d_user_type,member.d_enable,member.d_chked,member_lv.d_title');
 			$this->db->from('member');
 			$this->db->join('member_lv','member.d_lv=member_lv.d_id','left');
-			$this->db->where('d_id',$_SESSION[CCODE::MEMBER]['LID']);
+			$this->db->where('m.d_id',$_SESSION[CCODE::MEMBER]['LID']);
 			$query=$this->db->get();
-			$dbdata=$query->result_array()[0];
+			$dbdata=$query->result_array()[0]; */
 			//	$user = array ();
 			//	$user = $this->user->getRows($_SESSION[CCODE::MEMBER]['LID']);
 			$this->response([
-				'data'=>$dbdata,
+				//'data'=>$dbdata,
 				'status'=>'Success',
 				'isLoggedIn'=>true
 			],200);
