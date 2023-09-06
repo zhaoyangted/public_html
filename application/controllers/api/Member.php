@@ -220,7 +220,7 @@ class Member extends RestController
     {
         $data = array();
         if (empty($_SESSION[CCODE::MEMBER]['LID'])){
-            $this->response(NULL,404,['msg'=>'not login']);
+            $this->response(NULL,200,['msg'=>'not login']);
             exit();
         }
         //$this->Mid = (!empty($_SESSION[CCODE::MEMBER]['LID']) ? $_SESSION[CCODE::MEMBER]['LID'] : '');
