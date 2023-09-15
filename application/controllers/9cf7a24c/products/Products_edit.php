@@ -153,7 +153,8 @@ class Products_edit extends CI_Controller {
                 'r_height'=>'800',
                 'Nodel'=>'no'
             );
-            $this->autoful->DefaultUpload($_FILES,$Config);
+            //$this->autoful->DefaultUpload($_FILES,$Config);
+            $this->autoful->addImages($_FILES,$Config);
         }
     }
     // Qr code 產生及下載

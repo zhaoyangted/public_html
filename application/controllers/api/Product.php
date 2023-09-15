@@ -692,17 +692,18 @@ class Product extends RestController
 		//p($a);
 
 		//p($a);
-		$Menutitle = '';
+		$Menutitle = array();
 		foreach ($a as $k => $v) {
 			if (!empty($v) && $v != 0) {
 
 				$rs = $this->mymodel->OneSearchSql('products_type', 'd_id, d_title', array('d_id' => $v));
 				//p($rs);
-				if ($k == 0) {
-					$Menutitle .= '<li><a href="' . '/products/top_list/' . $rs['d_id'] . '' . '">' . $rs['d_title'] . '</a></li>';
-				} else {
-					$Menutitle .= '<li><a href="' . '/products/products_list/' . $rs['d_id'] . '' . '">' . $rs['d_title'] . '</a></li>';
-				}
+				//if ($k == 0) {
+					array_push($Menutitle,$rs['d_id']."#".$rs['d_title']);
+				//	$Menutitle .= /* '<li><a href="' . '/products/top_list/' .  */$rs['d_id']." " /* . '' . '">' */ . $rs['d_title'] ."#"/*.  '</a></li>' */;
+				//} else {
+				//	$Menutitle .= /* '<li><a href="' . '/products/products_list/' . */ $rs['d_id']." " /* . '' . '">'  */. $rs['d_title']."#" /* . '</a></li>' */;
+				//}
 			}
 		}
 
