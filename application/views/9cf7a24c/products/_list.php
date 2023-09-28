@@ -138,7 +138,7 @@
             <?php endif;?>
             <?php if($this->tableful->MenuidDb['d_edit']=='Y'):?>
               <td class="text-center">
-                <a href="<?php echo CCODE::AWSS3.'/'.((!empty($this->autoful->FileName)?$this->autoful->FileName:'admin_sys').'/'.$this->DBname.'/'.$this->DBname.'_edit/index/'.$dbval['d_id']);?>"><img class="ico-operating" src="<?php echo CCODE::AWSS3.'/'.('images/backend/ico_p_edit.png')?>"></a>
+                <a href="<?php echo CCODE::DemoPrefix.'/'.((!empty($this->autoful->FileName)?$this->autoful->FileName:'admin_sys').'/'.$this->DBname.'/'.$this->DBname.'_edit/index/'.$dbval['d_id']);?>"><img class="ico-operating" src="<?php echo CCODE::AWSS3.'/'.('images/backend/ico_p_edit.png')?>"></a>
               </td>
             <?php endif;?>
             <?php if($this->autoful->EditView==2):?>
