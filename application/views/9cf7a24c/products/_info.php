@@ -108,7 +108,7 @@
                                 <?php if($this->autoful->EditView==2):?>
                                     <div class="file_upload_btn">
                                         <label for="file-upload_<?php echo $fvalue['d_fname'];?>" class="custom-file-upload">
-                                            <img class="" src="<?php echo CCODE::DemoPrefix.'/images/backend/ico_upload.png'?>">
+                                            <img class="" src="<?php echo CCODE::AWSS3.'/images/backend/ico_upload.png'?>">
                                             <span class="upload">檔案上傳</span>
                                         </label>
                                         <input id="file-upload_<?php echo $fvalue['d_fname'];?>" type="file" name="<?php echo $fvalue['d_fname']?>"/>
@@ -118,7 +118,7 @@
                                 <span id="UploadFile_<?php echo $fvalue['d_fname']?>"></span>
                                 <?php if(!empty($dbdata[$fvalue['d_fname']])):?>
                                     <a href="<?php echo CCODE::DemoPrefix.'/'.(!empty($dbdata[$fvalue['d_fname']])?$dbdata[$fvalue['d_fname']]:'');?>" target="_BALNK">
-                                    <img src="<?php echo CCODE::DemoPrefix.'/'.(!empty($dbdata[$fvalue['d_fname']])?$dbdata[$fvalue['d_fname']]:'');?>" width="10%" >
+                                    <img src="<?php echo CCODE::AWSS3.'/'.(!empty($dbdata[$fvalue['d_fname']])?$dbdata[$fvalue['d_fname']]:'');?>" width="10%" >
                                     </a>
                                     <div class="toolbar fileBar">
                                         <a href="javascript:void(0)" id="DownPic" rel="<?php echo $fvalue['d_fname']?>" class="toolbar-btn enable file-btn">下載</a>
@@ -186,7 +186,7 @@
                             <div>
                                 <div class="file_upload_btn">
                                     <label for="file-upload_<?php echo $fvalue['d_fname'];?>" class="custom-file-upload">
-                                        <img class="" src="<?php echo CCODE::DemoPrefix.'/images/backend/ico_upload.png'?>">
+                                        <img class="" src="<?php echo CCODE::AWSS3.'/images/backend/ico_upload.png'?>">
                                         <span class="upload">檔案上傳</span>
                                     </label>
                                     <input id="file-upload_<?php echo $fvalue['d_fname'];?>" type="file" name="<?php echo $fvalue['d_fname']?>" id="<?php echo $fvalue['d_fname']?>"/>
@@ -268,7 +268,7 @@
                             <div class="form_wrap_title">產品Qrcode</div>
                             <div>
                                 <a href="<?php echo CCODE::DemoPrefix.'/uploads/qrcode/'.$dbdata['d_model'].'.png'?>" target="_BALNK">
-                                <img src="<?php echo CCODE::DemoPrefix.'/uploads/qrcode/'.$dbdata['d_model'].'.png'?>" width="10%" >
+                                <img src="<?php echo CCODE::AWSS3.'/uploads/qrcode/'.$dbdata['d_model'].'.png'?>" width="10%" >
                                 </a>
                                 <div class="toolbar fileBar">
                                     <a href="javascript:void(0)" id="DownQrcode" class="toolbar-btn enable file-btn">下載</a>

@@ -127,7 +127,7 @@
             ?>
               <td><?php echo (!empty($AutoValue['Config'][$dbval[$AutoValue['d_fname']]])?$AutoValue['Config'][$dbval[$AutoValue['d_fname']]]:'無資料');?></td>
             <?php elseif($AutoValue['d_type']==8): ?>
-              <td><img src="<?php echo CCODE::DemoPrefix.'/'.$dbval[$AutoValue['d_fname']]?>" style="max-width: 10%" ></td>
+              <td><img src="<?php echo CCODE::AWSS3.'/'.$dbval[$AutoValue['d_fname']]?>" style="max-width: 10%" ></td>
             <?php elseif($AutoValue['d_type']==10): ?>
               <td><?php echo date("Y-m-d", strtotime($dbval[$AutoValue['d_fname']]));?></td>
             <?php else:?>
@@ -138,7 +138,7 @@
             <?php endif;?>
             <?php if($this->tableful->MenuidDb['d_edit']=='Y'):?>
               <td class="text-center">
-                <a href="<?php echo CCODE::DemoPrefix.'/'.((!empty($this->autoful->FileName)?$this->autoful->FileName:'admin_sys').'/'.$this->DBname.'/'.$this->DBname.'_edit/index/'.$dbval['d_id']);?>"><img class="ico-operating" src="<?php echo CCODE::DemoPrefix.'/'.('images/backend/ico_p_edit.png')?>"></a>
+                <a href="<?php echo CCODE::DemoPrefix.'/'.((!empty($this->autoful->FileName)?$this->autoful->FileName:'admin_sys').'/'.$this->DBname.'/'.$this->DBname.'_edit/index/'.$dbval['d_id']);?>"><img class="ico-operating" src="<?php echo CCODE::AWSS3.'/'.('images/backend/ico_p_edit.png')?>"></a>
               </td>
             <?php endif;?>
             <?php if($this->autoful->EditView==2):?>

@@ -92,7 +92,7 @@ class Cart extends RestController
         $Notid = (!empty($_SESSION[CCODE::MEMBER]['AddData']) ? ' and d_id not in (' . $_SESSION[CCODE::MEMBER]['AddData'] . ')' : ''); //排除現已在購物車內的加購商品
         $Mdata = $this->mymodel->SelectSearch('products_markup', '', 'd_id,d_title,d_img,d_aprice,d_price', 'where d_enable="Y" and d_aprice<=' . $data['CartProduct']['AllTotal'] . ' and d_stock>0 ' . $Notid . '', 'd_aprice desc');
         $data['Mdata'] = $Mdata;
-        //$this->chkCart_alert($data['CartProduct']);
+        $this->chkCart_alert($data['CartProduct']);
         // 滿額贈
         if (!empty($_POST['d_gift'])) {
             $data['Gdata'] = $this->chkGift($data['CartProduct']['AllTotal'], 'and d_id in (' . implode(',', $_POST['d_gift']) . ')', count($_POST['d_gift']));
@@ -402,7 +402,16 @@ class Cart extends RestController
         if ($CartProduct['AllTotal'] == 0) {
             $this->mymodel->UpdateData('orders', array('d_paystatus' => 2, 'd_orderstatus' => 1), ' where d_id=' . $NewID . '');
         }
-        $this->useful->AlertPage('cart/order_completed/' . $OID . '', '訂單建立成功，將導向詳細頁');
+       // if (!empty($data)){
+            $this->response($data,200,['msg'=>'訂單建立成功！']);
+       // }else{
+        //    $this->response(
+		//		[
+		//			'msg'=>'no found'
+		//		],500
+		//	);
+       // }
+       // $this->useful->AlertPage('cart/order_completed/' . $OID . '', '訂單建立成功，將導向詳細頁');
     }
     // 完成訂單
     public function order_completed($OrderNum = '')
@@ -453,16 +462,37 @@ class Cart extends RestController
     private function chkCart_alert($data)
     {
         if ($data['Chkpay'] == 'N') {
-            $this->useful->AlertPage('/api/cart/cart_info', '購物車內有部分商品庫存已不足，請刪除後再繼續！');
+            
+                $this->response(
+                    [
+                        'msg'=>'購物車內有部分商品庫存已不足，請刪除後再繼續！'
+                    ],500
+                );
+            //$this->useful->AlertPage('/api/cart/cart_info', '購物車內有部分商品庫存已不足，請刪除後再繼續！');
             exit();
         } else if ($data['Chkop'] == 'N') {
-            $this->useful->AlertPage('/api/cart/cart_info', '購物車內部分選配商品庫存已不足，請刪除後重新選擇選配商品！');
+            $this->response(
+                [
+                    'msg'=>'購物車內部分選配商品庫存已不足，請刪除後重新選擇選配商品！'
+                ],500
+            );
+            //$this->useful->AlertPage('/api/cart/cart_info', '購物車內部分選配商品庫存已不足，請刪除後重新選擇選配商品！');
             exit();
         } else if ($data['ChkTri'] == 'N') {
-            $this->useful->AlertPage('/api/cart/cart_info', '購物車內部分試用品庫存已不足，請刪除後再繼續！');
+            $this->response(
+                [
+                    'msg'=>'購物車內部分試用品庫存已不足，請刪除後再繼續！'
+                ],500
+            );
+            //$this->useful->AlertPage('/api/cart/cart_info', '購物車內部分試用品庫存已不足，請刪除後再繼續！');
             exit();
         } else if ($data['ChkTriHad'] == 'N') {
-            $this->useful->AlertPage('/api/cart/cart_info', '購物車內部分試用品已領取過，請重新選擇試用品！');
+            $this->response(
+                [
+                    'msg'=>'購物車內部分試用品已領取過，請重新選擇試用品！'
+                ],500
+            );
+            //$this->useful->AlertPage('/api/cart/cart_info', '購物車內部分試用品已領取過，請重新選擇試用品！');
             exit();
         }
     }
