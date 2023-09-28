@@ -46,7 +46,7 @@
               <?php if($this->autoful->EditView==2):?>
                 <div class="file_upload_btn">
                   <label for="excel_upload" class="custom-file-upload">
-                      <img class="" src="<?php echo CCODE::DemoPrefix.'/images/backend/ico_upload.png'?>">
+                      <img class="" src="<?php echo CCODE::AWSS3.'/images/backend/ico_upload.png'?>">
                       <span class="upload">商品Excel上傳</span>
                   </label>
                   <input id="excel_upload" type="file" name="excel_file" accept=".csv, application/vnd.openxmlformats-officedocument.spreadsheetml.sheet, application/vnd.ms-excel" onchange="imgDisplay(this.files)"/>
@@ -138,7 +138,7 @@
             <?php endif;?>
             <?php if($this->tableful->MenuidDb['d_edit']=='Y'):?>
               <td class="text-center">
-                <a href="<?php echo CCODE::DemoPrefix.'/'.((!empty($this->autoful->FileName)?$this->autoful->FileName:'admin_sys').'/'.$this->DBname.'/'.$this->DBname.'_edit/index/'.$dbval['d_id']);?>"><img class="ico-operating" src="<?php echo CCODE::AWSS3.'/'.('images/backend/ico_p_edit.png')?>"></a>
+                <a href="<?php echo CCODE::AWSS3.'/'.((!empty($this->autoful->FileName)?$this->autoful->FileName:'admin_sys').'/'.$this->DBname.'/'.$this->DBname.'_edit/index/'.$dbval['d_id']);?>"><img class="ico-operating" src="<?php echo CCODE::AWSS3.'/'.('images/backend/ico_p_edit.png')?>"></a>
               </td>
             <?php endif;?>
             <?php if($this->autoful->EditView==2):?>

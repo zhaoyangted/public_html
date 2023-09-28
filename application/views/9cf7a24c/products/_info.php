@@ -117,7 +117,7 @@
 
                                 <span id="UploadFile_<?php echo $fvalue['d_fname']?>"></span>
                                 <?php if(!empty($dbdata[$fvalue['d_fname']])):?>
-                                    <a href="<?php echo CCODE::DemoPrefix.'/'.(!empty($dbdata[$fvalue['d_fname']])?$dbdata[$fvalue['d_fname']]:'');?>" target="_BALNK">
+                                    <a href="<?php echo CCODE::AWSS3.'/'.(!empty($dbdata[$fvalue['d_fname']])?$dbdata[$fvalue['d_fname']]:'');?>" target="_BALNK">
                                     <img src="<?php echo CCODE::AWSS3.'/'.(!empty($dbdata[$fvalue['d_fname']])?$dbdata[$fvalue['d_fname']]:'');?>" width="10%" >
                                     </a>
                                     <div class="toolbar fileBar">
@@ -267,7 +267,7 @@
                         <li>
                             <div class="form_wrap_title">產品Qrcode</div>
                             <div>
-                                <a href="<?php echo CCODE::DemoPrefix.'/uploads/qrcode/'.$dbdata['d_model'].'.png'?>" target="_BALNK">
+                                <a href="<?php echo CCODE::AWSS3.'/uploads/qrcode/'.$dbdata['d_model'].'.png'?>" target="_BALNK">
                                 <img src="<?php echo CCODE::AWSS3.'/uploads/qrcode/'.$dbdata['d_model'].'.png'?>" width="10%" >
                                 </a>
                                 <div class="toolbar fileBar">
