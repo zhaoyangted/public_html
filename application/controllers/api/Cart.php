@@ -92,7 +92,7 @@ class Cart extends RestController
         $Notid = (!empty($_SESSION[CCODE::MEMBER]['AddData']) ? ' and d_id not in (' . $_SESSION[CCODE::MEMBER]['AddData'] . ')' : ''); //排除現已在購物車內的加購商品
         $Mdata = $this->mymodel->SelectSearch('products_markup', '', 'd_id,d_title,d_img,d_aprice,d_price', 'where d_enable="Y" and d_aprice<=' . $data['CartProduct']['AllTotal'] . ' and d_stock>0 ' . $Notid . '', 'd_aprice desc');
         $data['Mdata'] = $Mdata;
-        $this->chkCart_alert($data['CartProduct']);
+        //$this->chkCart_alert($data['CartProduct']);
         // 滿額贈
         if (!empty($_POST['d_gift'])) {
             $data['Gdata'] = $this->chkGift($data['CartProduct']['AllTotal'], 'and d_id in (' . implode(',', $_POST['d_gift']) . ')', count($_POST['d_gift']));

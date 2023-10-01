@@ -4,9 +4,9 @@ RewriteCond $1 !^(index\.php|images|uploads|pictmp|js|css|robots\.txt|phpMyadmin
 RewriteRule ^(.+)$ index.php?$1 [L]
 RewriteCond %{HTTPS} off
 #RewriteCond %{HTTP:X-Forwarded-SSL} !on
-#RewriteCond %{HTTP_HOST} ^beautygarage\.tw$ [OR]
-#RewriteCond %{HTTP_HOST} ^www\.beautygarage\.tw$
-#RewriteRule ^/?$ "https\:\/\/www\.beautygarage\.tw\/" [R=301,L]
+#RewriteCond %{HTTP_HOST} ^ckl\.tw$ [OR]
+#RewriteCond %{HTTP_HOST} ^www\.ckl\.tw$
+#RewriteRule ^/?$ "https\:\/\/www\.ckl\.tw\/" [R=301,L]
 <FilesMatch ".(eot|ttf|otf|woff)">
     Header set Access-Control-Allow-Origin "*"
 </FilesMatch>
