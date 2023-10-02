@@ -1,7 +1,7 @@
 <footer>
     <div class="footBOX">
         <div class="foot_LinkBox">
-            <ul><a href="<? echo site_url('about') ?>">關於美麗平台</a></ul>
+            <ul><a href="<? echo site_url('about') ?>">關於千冠莉</a></ul>
             <ul><a href="<? echo site_url('about#position') ?>">公司據點</a></ul>
             <ul><a href="<? echo site_url('news') ?>">最新消息</a></ul>
             <ul><a href="<? echo site_url('qa') ?>">常見問題 Q&A</a></ul>
