@@ -5,14 +5,14 @@
       <div class="box-1">
         <ul class="breadcrumb">
           <li><a href="<? echo site_url('') ?>">首頁</a></li>
-          <li class="active">關於美麗平台</li>
+          <li class="active">關於千冠莉</li>
         </ul>
       </div>
       <!--//bread-->
       <div class="container">
         <div class="col-lg-">
           <section class="content_box">
-            <div class="title01 center">關於美麗平台</div>
+            <div class="title01 center">關於千冠莉</div>
             <!--user_editor-->
             <div class="user_editor line-height">
               <? echo !empty($AboutData)?stripslashes($AboutData):''; ?>

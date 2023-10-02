@@ -14,7 +14,7 @@
         <section class="content_box">
           <div class="title01 center">會員中心</div>
           <?php include '_member_menu.php';?>
-          <div class="w16 center">推薦Beauty Garage 台灣美麗平台給朋友，朋友成功加入會員，並首次購物成功，您可獲得 <span class="r18"><b>100</b></span> 紅利點數</div>
+          <div class="w16 center">推薦台灣千冠莉給朋友，朋友成功加入會員，並首次購物成功，您可獲得 <span class="r18"><b>100</b></span> 紅利點數</div>
           <!--friend-->
           <form action="<? echo site_url('member/check/friend') ?>" method="post">
             <ul class="styled-input" style="margin-top:30px;">

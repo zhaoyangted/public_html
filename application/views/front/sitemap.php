@@ -14,7 +14,7 @@
         <section class="content_box">
           <div class="title01 center">網站導覽</div>
           <div class="site_box">
-            <div class="title02">關於美麗平台</div>
+            <div class="title02">關於千冠莉</div>
             <ul>
               <li><a href="<? echo site_url('about') ?>">公司簡介</a></li>
               <li><a href="<? echo site_url('clause') ?>">隱私權條款</a></li>

@@ -44,7 +44,7 @@
               </div>  
               <div class="mbox03">
                 <div class="title01 center">非會員結帳</div>
-                <div class="w14 center">您不需先加入會員，可以直接進行購物，<br />您可記下您的訂單編號，Beauty Garage 台灣美麗平台提供非會員訂單查詢，謝謝您。</div>
+                <div class="w14 center">您不需先加入會員，可以直接進行購物，<br />您可記下您的訂單編號，台灣千冠莉提供非會員訂單查詢，謝謝您。</div>
                 <div class="center" style="margin-top:20px;">
                   <input type="submit" class="btn-style02 " value="結帳" onclick="location='<? echo site_url('cart/cart_information') ?>'"/>
                 </div>

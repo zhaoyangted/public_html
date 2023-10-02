@@ -11,7 +11,7 @@
             <ul><a href="<? echo site_url('contact') ?>">聯絡我們</a></ul>
         </div>
         <div class="FUTALL">
-            <div class="domeLogoBox"><img src="<? echo CCODE::DemoPrefix.('/images/front/beautygarage_logo02.svg')?>" alt=""></div>
+            <div class="domeLogoBox"><img src="https://bgtwmedia.s3.ap-northeast-1.amazonaws.com/images/front/CKL_LOGO-03.svg" alt=""></div>
             <div class="FUT01">
                 <? if(!empty($WebConfigData[10])):?>
                     <ul class="foot_ConfTxBx"><img src="<? echo CCODE::DemoPrefix.('/images/front/foot_ic02.svg')?>" alt="">服務專線：<?echo $WebConfigData[10];?></ul>
@@ -26,7 +26,7 @@
             </div>
         </div>
         <div class="foot_Copy">
-            <ul>台灣美麗平台股份有限公司 Copyright © 2019 All Right Reserved. </ul>
+            <ul>台灣千冠莉國際股份有限公司 Copyright © 2023 All Right Reserved. </ul>
         </div>
     </div>
 </footer>

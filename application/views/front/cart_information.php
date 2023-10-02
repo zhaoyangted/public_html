@@ -326,7 +326,7 @@
                   </ul>
                   <div class="cart_line"></div>
                   <div class="invoice_list02">
-                    <input type="checkbox" name="d_backagree" value="Y">我同意辦理退貨時，由台灣美麗平台股份有限公司代為處理電子發票及銷貨退回折讓單以加速退款作業。
+                    <input type="checkbox" name="d_backagree" value="Y">我同意辦理退貨時，由台灣千冠莉國際股份有限公司代為處理電子發票及銷貨退回折讓單以加速退款作業。
                   </div>
               </div>
               <!--發票資訊-->

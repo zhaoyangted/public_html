@@ -23,7 +23,7 @@
                 <li><a href="member_friend.php"><i class="fas fa-user-friends"></i> 邀請好友加入會員</a></li>
               </ul>
             </div>
-            <div class="w16 center">提醒您，完成歸戶後若領獎方式選擇銀行帳戶，將由「財政部電子發票整合服務平台」進行發票對獎、領獎相關通知及作業，<br>Beauty Garage 台灣美麗平台將不再另行通知</div>
+            <div class="w16 center">提醒您，完成歸戶後若領獎方式選擇銀行帳戶，將由「財政部電子發票整合服務平台」進行發票對獎、領獎相關通知及作業，<br>台灣千冠莉將不再另行通知</div>
             <!--會員登入-->
             <div class="member" style="margin-top: 10px;">
               <div class="mbox">

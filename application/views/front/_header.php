@@ -79,9 +79,9 @@ $WebConfigData=$this->webmodel->GetWebData();
     <div class="HeadConALLBOX">
         <div class="HeadLogoBx">
             <div class="LogoALBox">
-                <a href="<?echo site_url('')?>"><div class="LogoBox"><img src="<? echo CCODE::DemoPrefix.('/images/front/beautygarage_logo.svg')?>" alt=""></div></a>
+                <a href="<?echo site_url('')?>"><div class="LogoBox"><img src="https://bgtwmedia.s3.ap-northeast-1.amazonaws.com/images/front/CKL_LOGO.svg" alt=""></div></a>
                 <div class="LogoTXBX">
-                    <div class="LogoTXB">Professional Beauty Supply From Japan</div>
+                    <div class="LogoTXB"><!-- Professional Beauty Supply From Japan --></div>
                     <? if(!empty($WebConfigData[13])):?>
                         <div class="LogoSTTx"><?echo $WebConfigData[13];?></div>
                     <?endif;?>

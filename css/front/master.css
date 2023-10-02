@@ -482,7 +482,7 @@ background-color: transparent; -webkit-transition: all 0.5s ease; transition: al
 .foot_LinkBox > ul a{ color: #fff; }
 
 @media only screen and (min-width: 0px) and (max-width:600px){
-.foot_LinkBox { width: 90%; margin: 0px auto; text-align: left; }
+.foot_LinkBox { width: 90%; margin: 0px auto; /* text-align: left; */ }
 .foot_LinkBox > ul { width: calc( 100% / 2 - 4px); padding: 0px 0px; margin: 0px 0px 0px 0px; }
 }
 
