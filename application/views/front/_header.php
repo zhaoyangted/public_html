@@ -61,6 +61,16 @@ $WebConfigData=$this->webmodel->GetWebData();
 
     gtag('config', 'G-GEG4PVDP1N');
     </script>
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-50600153-1"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-50600153-1');
+    </script>
+
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=UA-50600153-2"></script>
     <script>
