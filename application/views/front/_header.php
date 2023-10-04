@@ -53,15 +53,14 @@ $WebConfigData=$this->webmodel->GetWebData();
     <link rel="stylesheet" href="<? echo CCODE::DemoPrefix.('/css/front/nav-layout.css')?>">
     <!--//mobile menu -->
     <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-50600153-1"></script>
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-GEG4PVDP1N"></script>
     <script>
     window.dataLayer = window.dataLayer || [];
     function gtag(){dataLayer.push(arguments);}
     gtag('js', new Date());
 
-    gtag('config', 'UA-50600153-1');
+    gtag('config', 'G-GEG4PVDP1N');
     </script>
-
     <!-- Global site tag (gtag.js) - Google Analytics -->
     <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=UA-50600153-2"></script>
     <script>
