@@ -52,15 +52,25 @@ $WebConfigData=$this->webmodel->GetWebData();
     <link rel="stylesheet" href="<? echo CCODE::DemoPrefix.('/css/front/nav-core.css')?>">
     <link rel="stylesheet" href="<? echo CCODE::DemoPrefix.('/css/front/nav-layout.css')?>">
     <!--//mobile menu -->
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-50600153-1"></script>
+    <script>
+    window.dataLayer = window.dataLayer || [];
+    function gtag(){dataLayer.push(arguments);}
+    gtag('js', new Date());
+
+    gtag('config', 'UA-50600153-1');
+    </script>
+
     <!-- Global site tag (gtag.js) - Google Analytics -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=UA-50600153-2"></script>
+    <!-- <script async src="https://www.googletagmanager.com/gtag/js?id=UA-50600153-2"></script>
     <script>
       window.dataLayer = window.dataLayer || [];
       function gtag(){dataLayer.push(arguments);}
       gtag('js', new Date());
 
       gtag('config', 'UA-50600153-2');
-    </script>
+    </script> -->
     <!-- Google Tag Manager -->
     <script>(function(w,d,s,l,i){w[l]=w[l]||[];w[l].push({'gtm.start':
     new Date().getTime(),event:'gtm.js'});var f=d.getElementsByTagName(s)[0],
