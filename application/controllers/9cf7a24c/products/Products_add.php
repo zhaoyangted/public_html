@@ -103,7 +103,8 @@ class Products_add extends CI_Controller {
                 'r_width'=>'800',
                 'r_height'=>'800'
             );
-            $this->autoful->DefaultUpload($_FILES,$Config);
+            //$this->autoful->DefaultUpload($_FILES,$Config);
+            $this->autoful->addImages($_FILES,$Config);
         }
     }
 }

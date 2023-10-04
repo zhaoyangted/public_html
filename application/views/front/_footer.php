@@ -25,6 +25,9 @@
                 <? endif;?>
             </div>
         </div>
+        <div class="foot_Copytmp">
+            <ul>(原名稱：台灣美麗平台有限公司)</ul>
+        </div>
         <div class="foot_Copy">
             <ul>台灣千冠莉國際股份有限公司 Copyright © 2023 All Right Reserved. </ul>
         </div>
