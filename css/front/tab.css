@@ -38,7 +38,7 @@ border-top-right-radius: 4px;
 		text-decoration: none;
 	}
 	ul.tabs li a:hover {
-		background: #f9f9f9; color:#70accb;
+		background: #f9f9f9; color:#c30d23;
 	}
 	ul.tabs li.active  {
 		background: #fff;
