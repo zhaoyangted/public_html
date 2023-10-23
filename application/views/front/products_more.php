@@ -12,7 +12,7 @@
       <div class="box-1">
         <section class="content_box">
           <div class="products_more">
-            <div class="toppic"><img src="<? echo CCODE::DemoPrefix.'/'.$Pdata['d_img1']?>" alt=""></div>
+            <div class="toppic"><img src="<? echo CCODE::AWSS3.'/'.$Pdata['d_img1']?>" alt=""></div>
             <ul>
               <? foreach ($dbdata as $key => $value):
                   $Qty=0;$Dis='';
@@ -23,7 +23,7 @@
               ?>
                 <li>
                   <div class="name"><a href="<? echo site_url('products/info/'.$value['d_id'].'') ?>"><? echo $value['d_title']?></a></div>
-                  <div class="pic"><a href="<? echo site_url('products/info/'.$value['d_id'].'') ?>"><img src="<? echo CCODE::DemoPrefix.'/'.$value['d_img1']?>" alt=""></a></div>
+                  <div class="pic"><a href="<? echo site_url('products/info/'.$value['d_id'].'') ?>"><img src="<? echo CCODE::AWSS3.'/'.$value['d_img1']?>" alt=""></a></div>
                   <div class="info_list">
                     <div class="dtt">庫存數量</div>
                     <div class="spec"><? echo ($value['d_stock']>0)?$value['d_stock']:'補貨中';?></div>
