@@ -17,12 +17,12 @@
           <div class="left_img">
             <ul class="product-slick">
               <?for ($i=1; $i <=5 ; $i++):if(!empty($dbdata['d_img'.$i])):?>
-                <li><a data-fancybox="images" href="<? echo CCODE::DemoPrefix.('/'.$dbdata['d_img'.$i].'')?>"><img src="<? echo CCODE::DemoPrefix.('/'.$dbdata['d_img'.$i].'')?>" alt="" /></a></li>
+                <li><a data-fancybox="images" href="<? echo CCODE::DemoPrefix.('/'.$dbdata['d_img'.$i].'')?>"><img src="<? echo CCODE::AWSS3.('/'.$dbdata['d_img'.$i].'')?>" alt="" /></a></li>
               <?endif;endfor;?>
             </ul>
             <ul class="product-nav">
               <?for ($i=1; $i <=5 ; $i++):if(!empty($dbdata['d_img'.$i])):?>
-                <li><img src="<? echo CCODE::DemoPrefix.('/'.$dbdata['d_img'.$i].'')?>" alt="" /></li>
+                <li><img src="<? echo CCODE::AWSS3.('/'.$dbdata['d_img'.$i].'')?>" alt="" /></li>
               <?endif;endfor;?>
             </ul>
           </div>
@@ -192,7 +192,7 @@
                 <!--item_pd-->
                 <? foreach ($PushData as $key => $value):?>
                   <ul class="item_pd">
-                    <li class="PordPHt"><a href="<? echo site_url('products/info/'.$value['d_id'].'') ?>"><img src="<? echo CCODE::DemoPrefix.'/'.$value['d_img1']?>" alt=""></a>
+                    <li class="PordPHt"><a href="<? echo site_url('products/info/'.$value['d_id'].'') ?>"><img src="<? echo CCODE::AWSS3.'/'.$value['d_img1']?>" alt=""></a>
                       <?if($value['Discount']==1):?>
                         <div class="p_discount"><em><?echo round($this->autoful->DiscountData[$value['d_id']]['type_price']/10,1);?><br>折</em></div>
                       <?elseif($value['Discount']==2): ?>
@@ -231,7 +231,7 @@
                 <!--item_pd-->
                 <? foreach ($WatchData as $key => $value):?>
                   <ul class="item_pd">
-                    <li class="PordPHt"><a href="<? echo site_url('products/info/'.$value['d_id'].'') ?>"><img src="<? echo CCODE::DemoPrefix.'/'.$value['d_img1']?>" alt=""></a>
+                    <li class="PordPHt"><a href="<? echo site_url('products/info/'.$value['d_id'].'') ?>"><img src="<? echo CCODE::AWSS3.'/'.$value['d_img1']?>" alt=""></a>
                       <?if($value['Discount']==1):?>
                         <div class="p_discount"><em><?echo round($this->autoful->DiscountData[$value['d_id']]['type_price']/10,1);?><br>折</em></div>
                       <?elseif($value['Discount']==2): ?>
@@ -271,7 +271,7 @@
                 <!--item_pd-->
                 <? foreach ($TodayWatchData as $key => $value):?>
                   <ul class="item_pd">
-                    <li class="PordPHt"><a href="<? echo site_url('products/info/'.$value['d_id'].'') ?>"><img src="<? echo CCODE::DemoPrefix.'/'.$value['d_img1']?>" alt=""></a>
+                    <li class="PordPHt"><a href="<? echo site_url('products/info/'.$value['d_id'].'') ?>"><img src="<? echo CCODE::AWSS3.'/'.$value['d_img1']?>" alt=""></a>
                       <?if($value['Discount']==1):?>
                         <div class="p_discount"><em><?echo round($this->autoful->DiscountData[$value['d_id']]['type_price']/10,1);?><br>折</em></div>
                       <?elseif($value['Discount']==2): ?>
