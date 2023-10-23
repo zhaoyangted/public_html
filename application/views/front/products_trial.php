@@ -44,12 +44,12 @@
           <div class="left_img">
             <ul class="product-slick">
               <?for ($i=1; $i <=5 ; $i++):if(!empty($Tdata['d_img'.$i])):?>
-                <li><a data-fancybox="images" href="<? echo CCODE::DemoPrefix.('/'.$Tdata['d_img'.$i].'')?>"><img src="<? echo CCODE::DemoPrefix.('/'.$Tdata['d_img'.$i].'')?>" alt="" /></a></li>
+                <li><a data-fancybox="images" href="<? echo CCODE::DemoPrefix.('/'.$Tdata['d_img'.$i].'')?>"><img src="<? echo CCODE::AWSS3.('/'.$Tdata['d_img'.$i].'')?>" alt="" /></a></li>
               <?endif;endfor;?>
             </ul>
             <ul class="product-nav">
               <?for ($i=1; $i <=5 ; $i++):if(!empty($Tdata['d_img'.$i])):?>
-                <li><img src="<? echo CCODE::DemoPrefix.('/'.$Tdata['d_img'.$i].'')?>" alt="" /></li>
+                <li><img src="<? echo CCODE::AWSS3.('/'.$Tdata['d_img'.$i].'')?>" alt="" /></li>
               <?endif;endfor;?>
             </ul>
           </div>

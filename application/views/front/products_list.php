@@ -38,7 +38,7 @@
               <div class="pd">
                   <? foreach ($dbdata['dbdata'] as $key => $value):?>
                       <ul>
-                          <li class="PordPHt"><a href="<? echo site_url('products/info/'.$value['d_id'].'') ?>"><img src="<? echo CCODE::DemoPrefix.'/'.$value['d_img1']?>" alt=""></a>
+                          <li class="PordPHt"><a href="<? echo site_url('products/info/'.$value['d_id'].'') ?>"><img src="<? echo CCODE::AWSS3.'/'.$value['d_img1']?>" alt=""></a>
                           <?if($value['Discount']==1):?>
                             <div class="p_discount"><em><?echo round($this->autoful->DiscountData[$value['d_id']]['type_price']/10,1);?><br>折</em></div>
                           <?elseif($value['Discount']==2): ?>

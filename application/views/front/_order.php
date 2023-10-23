@@ -40,7 +40,7 @@
                 <ul>
                   <div class="namebox">
                     <div class="name">
-                      <dd><img src="<? echo CCODE::DemoPrefix.'/'.$value['d_img']?>" /></dd>
+                      <dd><img src="<? echo CCODE::AWSS3.'/'.$value['d_img']?>" /></dd>
                       <dt>
                         <div class="tt"><?echo $value['d_title'].(($value['d_status']==3||$value['d_status']==4)?' <span style="color:red">(退貨商品)</span>':'');?></div>
                         <div class="sbox">
@@ -96,7 +96,7 @@
                 <ul>
                   <div class="namebox">
                     <div class="name">
-                      <dd><img src="<? echo CCODE::DemoPrefix.'/'.$value['d_img']?>" /></dd>
+                      <dd><img src="<? echo CCODE::AWSS3.'/'.$value['d_img']?>" /></dd>
                       <dt>
                         <div class="tt"><?echo $value['d_title'];?></div>
                         <div class="sbox">
@@ -150,7 +150,7 @@
                 <ul>
                   <div class="namebox">
                     <div class="name">
-                      <dd><img src="<? echo CCODE::DemoPrefix.'/'.$value['d_img']?>" /></dd>
+                      <dd><img src="<? echo CCODE::AWSS3.'/'.$value['d_img']?>" /></dd>
                       <dt>
                         <div class="tt"><?echo $value['d_title'];?></div>
                       </dt>
