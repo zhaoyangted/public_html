@@ -192,7 +192,7 @@ $WebConfigData=$this->webmodel->GetWebData();
                               <div style="overflow-y:scroll;height:200px;width:100%;">
                                 <? foreach ($this->autoful->ProductCart as $key => $value):?>
                                     <div class="IndSPContUr" >
-                                        <ul class="IndSprPHT"><img src="<? echo CCODE::DemoPrefix.'/'.$value['d_img1']?>" alt=""></ul>
+                                        <ul class="IndSprPHT"><img src="<? echo CCODE::AWSS3.'/'.$value['d_img1']?>" alt=""></ul>
                                         <ul class="IndSprTxBx">
                                             <li class="CrProdName"><? echo $value['d_title']?></li>
                                         </ul>
