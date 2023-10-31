@@ -113,7 +113,7 @@ class Member extends RestController
             
             } else {
                 $this->form_validation->set_error_delimiters('', '\n');
-                $this->response(validation_errors(),404);
+                $this->response(['msg'=>validation_errors()],404);
                 //$this->useful->AlertPage('', preg_replace("/\n/", "", validation_errors()));
             }
         }

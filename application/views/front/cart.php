@@ -32,7 +32,7 @@
                   <?php endif; ?>
                   <div class="namebox">
                     <div class="name">
-                      <dd><a href="<? echo site_url('products/info/'.$value['d_id'].'') ?>"><img src="<? echo CCODE::DemoPrefix.'/'.$value['d_img']?>" alt=""></a></dd>
+                      <dd><a href="<? echo site_url('products/info/'.$value['d_id'].'') ?>"><img src="<? echo CCODE::AWSS3.'/'.$value['d_img']?>" alt=""></a></dd>
                       <dt>
                         <div class="tt"><a href="<? echo site_url('products/info/'.$value['d_id'].'') ?>"><?echo $value['d_title'];?></a></div>
                         <div class="sbox">
@@ -84,7 +84,7 @@
                 <ul>
                   <div class="namebox">
                     <div class="name">
-                      <dd><img src="<? echo CCODE::DemoPrefix.'/'.$value['d_img']?>" alt=""></dd>
+                      <dd><img src="<? echo CCODE::AWSS3.'/'.$value['d_img']?>" alt=""></dd>
                       <dt>
                         <div class="tt"><?echo $value['d_title'];?></div>
                         <div class="sbox">
@@ -118,7 +118,7 @@
                     <?php endif; ?>
                     <div class="namebox">
                       <div class="name">
-                        <dd><img src="<? echo CCODE::DemoPrefix.'/'.$value['d_img']?>" alt=""></dd>
+                        <dd><img src="<? echo CCODE::AWSS3.'/'.$value['d_img']?>" alt=""></dd>
                         <dt>
                           <div class="tt"><?echo $value['d_title'];?></div>
                           <div class="sbox">
@@ -163,7 +163,7 @@
                       <!--item_pd-->
                       <?foreach ($Mdata as $key => $value):?>
                         <ul class="item_pd">
-                            <li class="PordPHt"><img src="<? echo CCODE::DemoPrefix.'/'.$value['d_img']?>" alt=""></li>
+                            <li class="PordPHt"><img src="<? echo CCODE::AWSS3.'/'.$value['d_img']?>" alt=""></li>
                             <li class="PordTxs"><span class="PordTxsB"><?echo $value['d_title'];?></span></li>
                             <li class="TicPystxc02">加購價：NT$.<?echo number_format($value['d_price']);?></li>
                             <ul class="bantBOX">

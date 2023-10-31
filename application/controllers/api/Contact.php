@@ -42,11 +42,11 @@ class Contact extends RestController
 	}
 
 	// 聯絡我們寫入
-	public function addContact_post() {
+	public function addcontact_post() {
 		$this->load->library('form_validation');
 		$post = $this->input->post(null, true);
 		if ($this->form_validation->run('contact') == true) {
-			if ($_SESSION['contact']['VcodeNum'] != $post['d_captcha']) {
+			if ($_SESSION[CCODE::MEMBER]['VcodeNum'] != $post['d_captcha']) {
 				$this->useful->AlertPage('', '驗證碼輸入錯誤');
 				exit();
 			}
@@ -56,10 +56,10 @@ class Contact extends RestController
 			if (!empty($msg)) {
 				$this->Sendmail($post);
 				//$this->useful->AlertPage('index', '已提交相關人員，我們將盡快回覆您');
-                $this->response(['msg'=>'已提交相關人員，我們將盡快回覆您'],200)
+                $this->response(['msg'=>'已提交相關人員，我們將盡快回覆您'],200);
 			} else {
 				//$this->useful->AlertPage('contact', '提交失敗，請重新輸入');
-                $this->response(['msg'=>'提交失敗，請重新輸入'],404)
+                $this->response(['msg'=>'提交失敗，請重新輸入'],404);
 			}
 		}
 		$this->form_validation->set_error_delimiters('', '\n');

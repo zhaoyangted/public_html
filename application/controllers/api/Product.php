@@ -55,10 +55,10 @@ class Product extends RestController
 		$data['dbdata'] = $Pdata;
 		$data['Menudata'] = $this->MenuData;
 		$data['Menu']=$this->Menu;
-		if ($data) {
+		if ($data['dbdata']!=[]) {
 			$this->response($data,200);
 			} else {
-				$this->response(Null,404);
+				$this->response($data,404);
 			}
 	}
 	public function plist_get($TID = '')
@@ -113,14 +113,16 @@ class Product extends RestController
 			$data['dbdata'] = $Pdata;
 			$data['Menudata'] = $this->MenuData;
 			$data['Menu']=$this->Menu;} else {
-				$data=[];
+				$data['Menudata'] = $this->MenuData;
+				$data['Menu']=$this->Menu;
+				$data['dbdata']=[];
 			}
 		}
 		// print_r($Pdata);
-		if ($data) {
+		if ($data['dbdata']!=[]) {
 		$this->response($data,200);
 		} else {
-			$this->response(Null,404);
+			$this->response($data,404);
 		}
 	}
 	public function index_get($d_id = '')
@@ -442,11 +444,11 @@ class Product extends RestController
 		//$data['dbdata'] = $Pdata;
 		//$data['Menudata'] = $this->MenuData;
 		//$data['Menu']=$this->Menu;
-		if ($data['dbdata']) {
+		if ($data['dbdata']!=[]) {
 			//$this->AddVisit($d_id);
 			$this->response($data, 200);
 		} else {
-			$this->response(NULL, 404);
+			$this->response($data, 404);
 		}
 		//$this->load->view('front/products_blist', $data);
 	}
@@ -564,11 +566,11 @@ class Product extends RestController
 		$Pdata['dbdata'] = $this->autoful->GetProductPrice($Pdata['dbdata']);
 		$data['dbdata'] = $Pdata;
 		// print_r($Pdata);
-		if ($data['dbdata']) {
+		if ($data['dbdata']!=[]) {
 			//$this->AddVisit($d_id);
 			$this->response($data, 200);
 		} else {
-			$this->response(NULL, 404);
+			$this->response($data, 404);
 		}
 		//$this->load->view('front/products_search', $data);
 	}

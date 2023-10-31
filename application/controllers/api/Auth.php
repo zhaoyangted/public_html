@@ -173,7 +173,7 @@ class Auth extends RestController
 		//if(!empty($user)){
 			if(isset($_SESSION[CCODE::MEMBER]['IsLogin']) &&$_SESSION[CCODE::MEMBER]['IsLogin'] == 'Y'){
 			//print_r($_SESSION[CCODE::MEMBER]['LID']);
-			$this->db->select('member.d_id,member.d_account,member.d_phone,member.d_pname,member.d_lv,member.d_password,member.d_chked,member.TID,member.TID1,member.d_user_type,member.d_enable,member.d_chked,member_lv.d_title');
+			$this->db->select('member.d_id,member.d_account,member.d_phone,member.d_pname,member.d_lv,member.d_password,member.d_chked,member.d_county,member.d_district,member.d_address,member.d_zipcode,member.TID,member.TID1,member.d_user_type,member.d_enable,member.d_chked,member_lv.d_title');
 			$this->db->from('member');
 			$this->db->join('member_lv','member.d_lv=member_lv.d_id','left');
 			$this->db->where('member.d_id',$_SESSION[CCODE::MEMBER]['LID']);
