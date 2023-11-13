@@ -511,9 +511,11 @@ class Member extends RestController
                         聯絡電話 : ' . stripslashes($dbdata['d_phone']) . '<br>
                         詢問內容 : ' . stripslashes($dbdata['d_content']) . '<br>';
                         $this->tableful->Sendmail($CMail, '美麗平台會員-訂單' . $query['OID'] . '詢問', $Message);
-                        $this->useful->AlertPage('member/orders', '您已成功提交訂單詢問！');
+                        $this->response(['msg'=>'已提交相關人員，我們將盡快回覆您'],200);
+                        //$this->useful->AlertPage('member/orders', '您已成功提交訂單詢問！');
                     } else {
-                        $this->useful->AlertPage('', '詢問訂單失敗，請重新輸入！');
+                        $this->response(['msg'=>'提交失敗，請重新輸入'],404);
+                        //$this->useful->AlertPage('', '詢問訂單失敗，請重新輸入！');
                     }
                     break;
 
@@ -537,9 +539,11 @@ class Member extends RestController
                             聯絡電話 : ' . stripslashes($dbdata['d_cancel_phone']) . '<br>
                             取消訂單原因 : ' . stripslashes($dbdata['d_cancel_content']) . '<br>';
                             $this->tableful->Sendmail($CMail, '美麗平台會員-訂單' . $query['OID'] . '取消', $Message);
-                            $this->useful->AlertPage('member/orders', '您已成功提交訂單取消！');
+                            $this->response(['msg'=>'您已成功提交訂單取消！'],200);
+                            //$this->useful->AlertPage('member/orders', '您已成功提交訂單取消！');
                         } else {
-                            $this->useful->AlertPage('', '詢問訂單失敗，請重新輸入！');
+                            $this->response(['msg'=>'詢問訂單失敗，請重新輸入！'],404);
+                            //$this->useful->AlertPage('', '詢問訂單失敗，請重新輸入！');
                         }
                     }
                     break;
@@ -556,9 +560,11 @@ class Member extends RestController
                             $CMail = $this->webmodel->BaseConfig('12'); // 管理者信箱
                             $Message = "訂單編號：" . $query['OID'] . "已回覆匯款，請至管理系統確認！";
                             $this->tableful->Sendmail($CMail, '美麗平台會員-訂單' . $query['OID'] . '匯款', $Message);
-                            $this->useful->AlertPage('member/orders', '您已成功填寫匯款回覆！');
+                            $this->response(['msg'=>'您已成功填寫匯款回覆！'],200);
+                            //$this->useful->AlertPage('member/orders', '您已成功填寫匯款回覆！');
                         } else {
-                            $this->useful->AlertPage('', '填寫匯款回覆失敗，請重新輸入！');
+                            $this->response(['msg'=>'填寫匯款回覆失敗，請重新輸入！'],404);
+                            //$this->useful->AlertPage('', '填寫匯款回覆失敗，請重新輸入！');
                         }
                     }
                     break;
@@ -580,9 +586,11 @@ class Member extends RestController
                             $CMail = $this->webmodel->BaseConfig('12');
                             $Message = "訂單編號：" . $query['OID'] . "已申請退貨，請至管理系統確認！";
                             $this->tableful->Sendmail($CMail, '美麗平台會員-訂單' . $query['OID'] . '退貨', $Message);
-                            $this->useful->AlertPage('member/orders', '您已成功申請退貨！');
+                            $this->response(['msg'=>'您已成功申請退貨！'],200);
+                            //$this->useful->AlertPage('member/orders', '您已成功申請退貨！');
                         } else {
-                            $this->useful->AlertPage('', '申請退貨失敗，請重新輸入！');
+                            $this->response(['msg'=>'申請退貨失敗，請重新輸入！'],404);
+                            //$this->useful->AlertPage('', '申請退貨失敗，請重新輸入！');
                         }
                     }
                     break;

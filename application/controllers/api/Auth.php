@@ -35,6 +35,8 @@ class Auth extends RestController
     public function join_get() {
 		if (!empty($_SESSION[CCODE::MEMBER]['IsLogin'])) {
 			//$this->useful->AlertPage('member', '');
+			$this->response(['msg'=>'請先登出目前用戶。'],404);
+			exit();
 		}
 		$data = array(
 			'Member_rules' => $this->mymodel->GetCkediter(3),
@@ -71,6 +73,7 @@ class Auth extends RestController
 /* 		if ($this->form_validation->run('login') == true) {
 			$this->_chk_Captcha($post['d_captcha'],'login'); */
 		if(!empty($post)){
+			$this->_chk_Captcha($post['d_captcha'],'login');
 			// $dbdata = $this->mymodel->WriteSQL('select m.d_id,m.d_account,m.d_phone,m.d_pname,m.d_lv,m.d_password,m.d_chked,m.TID,m.TID1,m.d_user_type,m.d_enable,m.d_chked,lv.d_title from member as m left join member_lv as lv on m.d_lv=lv.d_id where m.d_account="' . trim($post['d_account']) . '"', '1');
 			//$this->user->getUserByAccount(trim($post['d_account']));
 			//print_r($post);
@@ -97,14 +100,14 @@ class Auth extends RestController
 						[
 							'msg'=>'帳號或密碼錯誤'
 						]
-						,500);
+						,404);
 					exit();
 				} else if ($dbdata['d_enable'] == 'N') {
 					$this->response(
 						[
 							'msg'=>'您的帳號停權中，請洽管理員'
 						]
-						,500);
+						,404);
 					exit();
 				}
 				if ($dbdata['d_chked']==4) {
@@ -112,7 +115,7 @@ class Auth extends RestController
 						[
 							'msg'=>'此帳號尚未驗證，請先到設定的信箱點選驗證網址'
 						]
-						,500);
+						,404);
 					exit();
 				}
 				unset($_SESSION[CCODE::MEMBER]['VcodeNum']);
@@ -141,13 +144,13 @@ class Auth extends RestController
 				exit(); */
 
 			} else {
-                $this->response(['msg'=>'no registration'],404);
+                $this->response(['msg'=>'帳號未註冊！'],404);
 				/* $this->useful->AlertPage($ErrorUrl, '帳號或密碼錯誤');*/
 				exit(); 
 			}
 			}
 			else {
-				$this->response(['msg'=>'No post data'],500);
+				$this->response(['msg'=>'沒有此會員'],401);
 				exit();
 			}
 		/* } else {
@@ -164,7 +167,62 @@ class Auth extends RestController
 
     }
     public function registration_post(){
+		$post = $_POST;
 
+		if (empty($post['chkok'])) {
+			//$this->useful->AlertPage('', '請勾選我已詳細閱讀<會員條款>');
+			$this->response(['msg'=>'請勾選我已詳細閱讀<會員條款>。'],401);
+			exit();
+		}
+		if ($this->form_validation->run('register') == true) {
+			$this->_chk_Captcha($post['d_captcha']);
+			$post['d_chked'] = 4; // 會員審核
+			if ($post['d_user_type'] == 2) {
+				$post['d_chked'] = 4; // 會員審核
+				if(!empty($post['d_operate_service']))
+					$post['d_operate_service'] = (!empty($post['d_operate_service'])?json_encode($post['d_operate_service'], JSON_UNESCAPED_UNICODE | JSON_UNESCAPED_SLASHES):''); // 服務項目
+				$post['TID1'] = (!empty($post['TID1'])?implode('@#', $post['TID1']):''); // 會員分類
+			}
+
+			if (!empty($post['FID'])) {
+				$chkFID = $this->mymodel->OneSearchSql('member_friend', 'd_id', array('d_id' => $post['FID'], 'd_enable' => "Y"));
+				empty($chkFID)?$post['FID'] = '':'';
+			}
+			$dbdata = $this->useful->DB_Array($post, '', '', '1');
+			//加密
+			$this->load->library('encryption');
+			$dbdata['d_password'] = $this->encryption->encrypt($post['d_password']);
+			$dbdata['d_newsletter'] = (!empty($post['d_newsletter']) ? 'Y' : 'N'); // 電子信
+			$dbdata['d_lv'] = 1; // 會員等級
+
+			// 會員代碼
+	        $Mdata=$this->mymodel->WriteSql('select substr(d_mcode,-6) as d_mcode from member order by d_id desc limit 0,1','1');
+
+	        if(!empty($Mdata))
+	            $Mcode='BG'.substr('000000'.($Mdata['d_mcode']+1),-6);
+	        else
+	            $Mcode='BG000001';
+	        $dbdata['d_mcode']=$Mcode;
+
+			$dbdata = $this->useful->UnsetArray($dbdata, array('d_repassword', 'chkok', 'd_captcha'));
+
+			if (!empty($this->mymodel->InsertData('member', $dbdata))) {
+				if (!empty($dbdata['FID'])) {
+					$this->mymodel->UpdateData('member_friend', array('d_enable' => "N", 'd_upadte_time' => date('Y-m-d H:i:s')), 'where d_id =' . $dbdata['FID']);
+				}
+				// 寄驗證信給帳號人員
+				$this->SendVri($dbdata['d_account']);
+				$this->response(['msg'=>'註冊成功，請至註冊信箱進行驗證。'],200);
+				$this->useful->AlertPage('index', '註冊成功，請至註冊信箱進行驗證');
+			} else {
+				$this->response(['msg'=>'註冊失敗，請重新註冊。'],401);
+				//$this->useful->AlertPage('login/join', '註冊失敗，請重新註冊');
+			}
+		} else {
+			$this->form_validation->set_error_delimiters('', '\n');
+			$this->useful->AlertPage('', preg_replace("/\n/", "", validation_errors()));
+			exit();
+		}
 	}
 	public function user_get(){
 		//$user = array ();
@@ -239,14 +297,14 @@ class Auth extends RestController
 			$this->_chk_Captcha($post['d_captcha']);
 			$dbdata = $this->mymodel->OneSearchSql('member', 'd_password', array('d_account' => $post['d_account']));
 			if (empty($dbdata)) {
-				$this->response(['change failed!'], 400);
+				$this->response(['msg'=>'change failed!'], 404);
 				//$this->useful->AlertPage('', '無此會員');
 				exit();
 			}
 			$this->load->library('encryption');
 			$this->tableful->Sendmail($post['d_account'], '美麗平台-忘記密碼通知信', '您好，您的密碼是' . $this->encryption->decrypt($dbdata['d_password']));
 			$this->useful->AlertPage('index', '已將資料寄到您當初所填的信箱。');
-			$this->response(['change success!'], 200);
+			$this->response(['msg'=>'已將資料寄到您當初所填的信箱。'], 200);
 			exit();
 		} else {
 			$this->form_validation->set_error_delimiters('', '\n');
@@ -258,7 +316,8 @@ class Auth extends RestController
 	//檢查驗證碼
 	private function _chk_Captcha($code,$url='') {
 		if ($_SESSION[CCODE::MEMBER]['VcodeNum'] != $code) {
-			$this->useful->AlertPage($url, '驗證碼輸入錯誤');
+			$this->response(['msg'=>'驗證碼輸入錯誤'],404);
+			//$this->useful->AlertPage($url, '驗證碼輸入錯誤');
 			exit();
 		}
 	}
