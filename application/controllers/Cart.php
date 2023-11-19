@@ -362,7 +362,7 @@ class Cart extends CI_Controller
 
             $Message = $this->load->view('front/_webatm', array('account' => $Account, 'total' => $CartProduct['AllTotal']), true);
 
-            $this->tableful->Sendmail($OrderData['d_email'], '美麗平台訂單-WebATM轉帳資訊', $Message);
+            $this->tableful->Sendmail($OrderData['d_email'], '千冠莉訂單-WebATM轉帳資訊', $Message);
         }
         // 假設整筆訂單全以紅利折抵完，直接狀態變更為已付款
         if ($CartProduct['AllTotal'] == 0) {

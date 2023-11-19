@@ -7,7 +7,7 @@ class About extends CI_Controller {
 		parent::__construct();
         $this->autoful->FrontConfig();
         // 網頁標題
-        $this->NetTitle='關於美麗平台';
+        $this->NetTitle='關於千冠莉';
 	}
     // 列表
     public function Index(){

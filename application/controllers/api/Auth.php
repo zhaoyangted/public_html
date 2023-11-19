@@ -167,13 +167,13 @@ class Auth extends RestController
 
     }
     public function registration_post(){
-		$post = $_POST;
-
-		if (empty($post['chkok'])) {
+		$post = $this->input->post(null, true);
+		print_r($post);
+		/* if (empty($post['chkok'])) {
 			//$this->useful->AlertPage('', '請勾選我已詳細閱讀<會員條款>');
 			$this->response(['msg'=>'請勾選我已詳細閱讀<會員條款>。'],401);
 			exit();
-		}
+		} */
 		if ($this->form_validation->run('register') == true) {
 			$this->_chk_Captcha($post['d_captcha']);
 			$post['d_chked'] = 4; // 會員審核

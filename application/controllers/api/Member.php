@@ -385,7 +385,7 @@ class Member extends RestController
                     $mail_content = array('account' => $Account, 'total' => $dbdata['d_total']);
                     $Message = $this->load->view('front/_webatm', compact('mail_content'), true);
 
-                    $this->tableful->Sendmail($dbdata['d_mail'], '美麗平台訂單-WebATM轉帳資訊', $Message);
+                    $this->tableful->Sendmail($dbdata['d_mail'], '千冠莉訂單-WebATM轉帳資訊', $Message);
                 } else {
                     $this->mymodel->UpdateData('orders', array('d_orderstatus' => 1), ' where d_id=' . $dbdata['d_id'] . '');
                     $this->useful->AlertPage('cart/order_completed/' . $dbdata['OID'] . '', '訂單建立成功，將導向詳細頁');

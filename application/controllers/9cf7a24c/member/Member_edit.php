@@ -200,7 +200,7 @@ class Member_edit extends CI_Controller {
 					if (!empty($Mdata)) {
 						$url=site_url('/login/Cheackaccount?').$this->useful->encrypt('acc='.$Mdata['d_account'].'&type=1','jddtshin');
 						$Message ="請點選下面連結已完成驗證:<br><a href='".$url."' target='_blank'>" . $url . "</a><br>謝謝！";
-						$this->tableful->Sendmail($Mdata['d_account'], '美麗平台會員-會員驗證信', $Message);
+						$this->tableful->Sendmail($Mdata['d_account'], '千冠莉會員-會員驗證信', $Message);
 						$_SESSION[CCODE::ADMIN]['ReSendVri'.$MID] = true;
 						echo "OK";
 						exit();

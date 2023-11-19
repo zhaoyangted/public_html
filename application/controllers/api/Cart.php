@@ -61,7 +61,7 @@ class Cart extends RestController
             $this->response(
 				[
 					'msg'=>'no found'
-				],500
+				],404
 			);
         }
     }
@@ -375,7 +375,9 @@ class Cart extends RestController
         }
         // 訂單內含有特殊運費之商品，先訂單保留，待管理者評估完運費
         if ($CartProduct['Special'] == true) {
+            
             $this->useful->AlertPage('cart/order_completed/' . $OID . '', '您好，訂購的商品中包含特殊運費商品，因此訂單尚未建立完成。\\n待運費報價後，方可繼續進行付款作業。\\n現在為您導向訂單詳細頁面。');
+            $this->response($data,404,['msg'=>'您好，訂購的商品中包含特殊運費商品，因此訂單尚未建立完成。\\n待運費報價後，方可繼續進行付款作業。\\n現在為您導向訂單詳細頁面。']);
             exit();
         } else if ($OrderData['d_pay'] == 2 && $CartProduct['AllTotal'] > 0) { // id=2  刷卡
             $config['lidm'] = $OID;
@@ -384,7 +386,8 @@ class Cart extends RestController
             $this->load->library('Cash_flow', $config);
             // 傳送至金流
             $data = $this->cash_flow->creditCard_getForm();
-            echo $data;
+            $this->response($data,200,['msg'=>'請通過連結付款。']);
+            //echo $data;
             exit();
         } else if ($OrderData['d_pay'] == 4 && $CartProduct['AllTotal'] > 0) { // id=4 , WebATM
             $config['lidm'] = $OID;
@@ -396,7 +399,7 @@ class Cart extends RestController
 
             $Message = $this->load->view('front/_webatm', array('account' => $Account, 'total' => $CartProduct['AllTotal']), true);
 
-            $this->tableful->Sendmail($OrderData['d_email'], '美麗平台訂單-WebATM轉帳資訊', $Message);
+            $this->tableful->Sendmail($OrderData['d_email'], '千冠莉訂單-WebATM轉帳資訊', $Message);
         }
         // 假設整筆訂單全以紅利折抵完，直接狀態變更為已付款
         if ($CartProduct['AllTotal'] == 0) {

@@ -211,7 +211,7 @@ class Member extends CI_Controller {
 							E-mail : <br>'.stripslashes($dbdata['d_email']).'<br>
 							聯絡電話 : <br>'.stripslashes($dbdata['d_phone']).'<br>
 							詢問內容 : <br>'.stripslashes($dbdata['d_content']).'<br>';
-					$this->tableful->Sendmail($this->webmodel->BaseConfig('12'), '美麗平台會員-訂單詢問-編號 ' . $query['OID'], $Message);
+					$this->tableful->Sendmail($this->webmodel->BaseConfig('12'), '千冠莉會員-訂單詢問-編號 ' . $query['OID'], $Message);
 					$this->useful->AlertPage('member/orders', '您已成功提交訂單詢問！');
 				} else {
 					$this->useful->AlertPage('', '詢問訂單失敗，請重新輸入！');
