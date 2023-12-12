@@ -386,7 +386,7 @@ class Cart extends RestController
             $this->load->library('Cash_flow', $config);
             // 傳送至金流
             $data = $this->cash_flow->creditCard_getForm();
-            $this->response($data,200,['msg'=>'請通過連結付款。']);
+            $this->response([$data,'msg'=>'請通過連結付款。'],200);
             //echo $data;
             exit();
         } else if ($OrderData['d_pay'] == 4 && $CartProduct['AllTotal'] > 0) { // id=4 , WebATM
@@ -405,15 +405,15 @@ class Cart extends RestController
         if ($CartProduct['AllTotal'] == 0) {
             $this->mymodel->UpdateData('orders', array('d_paystatus' => 2, 'd_orderstatus' => 1), ' where d_id=' . $NewID . '');
         }
-       // if (!empty($data)){
-            $this->response($data,200,['msg'=>'訂單建立成功！']);
-       // }else{
-        //    $this->response(
-		//		[
-		//			'msg'=>'no found'
-		//		],500
-		//	);
-       // }
+        if (!empty($data)){
+            $this->response([$data,'msg'=>'訂單建立成功！'],200);
+        }else{
+            $this->response(
+				[
+					'msg'=>'no found'
+				],404
+			);
+        }
        // $this->useful->AlertPage('cart/order_completed/' . $OID . '', '訂單建立成功，將導向詳細頁');
     }
     // 完成訂單
