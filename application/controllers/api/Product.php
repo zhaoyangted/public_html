@@ -655,6 +655,37 @@ class Product extends RestController
 		// print_r($Pdata);
 		//$this->load->view('front/products_sales', $data);
 	}
+	//批量添加產品
+	public function productsMore_get($d_id)
+	{
+		if (empty($d_id)) {
+			$this->useful->AlertPage('', '操作錯誤');
+			exit();
+		}
+		$data = array();
+		// print_r($_COOKIE['BeautyCart']);
+
+		// 撈取產品
+		$data['Pdata'] = $this->mymodel->OneSearchSql('products', 'd_id,TID,TTID,TTTID,d_img1', array('d_id' => $d_id));
+
+		// 撈取標題
+		// $data['Menutitle']=$this->GetMenutitle($Pdata);
+
+		// 撈取規格
+		$Spec = $this->mymodel->WriteSql('select PID from products_allspec where d_enable="Y" and (PID like "' . $d_id . '@#%" or PID like "%@#' . $d_id . '" or PID like "%@#' . $d_id . '@#%" or PID=' . $d_id . ')', '1');
+		$Pro_spec = str_replace('@#', ',', $Spec['PID']);
+		$Pro_spec = empty($Pro_spec) ? $d_id : $d_id . ',' . $Pro_spec;
+		$data['dbdata'] = $this->mymodel->WriteSql('select d_id,d_title,d_img1,d_model,d_stock,d_price1,d_price2,d_price3,d_price4,d_dprice,d_sprice,concat(TID,",",TTID,",",TTTID) as TID,MTID from products where d_enable="Y" and d_id in (' . $Pro_spec . ')');
+		// 根據會員等級顯示金額
+		$data['dbdata'] = $this->autoful->GetProductPrice($data['dbdata']);
+		if ($data) {
+			//$this->AddVisit($d_id);
+			$this->response($data, 200);
+		} else {
+			$this->response(NULL, 404);
+		}
+		//$this->load->view('front/products_more', $data);
+	}
 	private function GetProductsType($TID = '')
 	{
 		$Menu = array();
