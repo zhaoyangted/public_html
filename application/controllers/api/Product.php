@@ -666,10 +666,10 @@ class Product extends RestController
 		// print_r($_COOKIE['BeautyCart']);
 
 		// 撈取產品
-		$data['Pdata'] = $this->mymodel->OneSearchSql('products', 'd_id,TID,TTID,TTTID,d_img1', array('d_id' => $d_id));
+		$data['Pdata'] = $this->mymodel->OneSearchSql('products', 'd_id,TID,TTID,TTTID,d_img1,d_title', array('d_id' => $d_id));
 
 		// 撈取標題
-		// $data['Menutitle']=$this->GetMenutitle($Pdata);
+		 $data['Menutitle']=$this->GetMenutitle($data['Pdata']);
 
 		// 撈取規格
 		$Spec = $this->mymodel->WriteSql('select PID from products_allspec where d_enable="Y" and (PID like "' . $d_id . '@#%" or PID like "%@#' . $d_id . '" or PID like "%@#' . $d_id . '@#%" or PID=' . $d_id . ')', '1');
