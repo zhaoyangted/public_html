@@ -69,6 +69,19 @@ class Cash_flow
 
         return $form;
     }
+    public function creditCard_getForm_data()
+    {
+        $form['gateway'] = $this->gateway ;
+        $form ['merID']=  $this->merID ;
+        $form ['MerchantID']= $this->MerchantID ; //<!--商店代號-->
+        $form ['TerminalID']= $this->TerminalID ; //<!--機台代號-->
+        $form ['customize']= $this->customize ; //<!--網頁辨識碼-->
+        $form ['lidm']= $this->lidm ; //<!--訂單編號--->
+        $form ['purchAmt']= floor($this->purchAmt) ; //<!--訂單金額-->
+        $form ['AuthRestURL']= $this->AuthResURL ; //<!--交易結果回傳網址-->
+
+        return $form;
+    }
     // 虛擬ATM
     public function webATM()
     {

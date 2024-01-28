@@ -66,9 +66,15 @@ class Product extends RestController
 		$Pages=$this->get('page');
 		$Limit=$this->get('limit');
 		$Order=$this->get('order');
+		$Color=$this->get('color');
 		if (empty($TID)) {
 			$this->useful->AlertPage('', '操作錯誤');
 			exit();
+		}
+		if (!empty($Color)) {
+			$var=' and p.d_varcolor='.$Color;
+		} else {
+			$var="";
 		}
 		$data = array();
 		// 判斷此分類是第幾層
@@ -102,28 +108,31 @@ class Product extends RestController
 			if (!empty($TypeData['TTID'])) {
 				// 產品撈取
 				$Pdata = $this->mymodel->APISelectPage('products p left join products_brand pb on pb.d_id=p.BID
-				left join freight f on f.d_id=p.FID', 'p.*,pb.d_id as pbid,pb.d_title as pbtitle,f.d_free,f.d_freight,f.d_title as ftitle,f.d_id as fid,concat(TID,",",TTID,",",TTTID) as TID,MTID', 'where p.d_enable="Y" and (p.TID like "' . $TypeData['TID'] . '@#%" or p.TID like "%@#' . $TypeData['TID'] . '" or p.TID like "%@#' . $TypeData['TID'] . '@#%" or p.TID=' . $TypeData['TID'] . ') and (p.TTID like "' . $TypeData['TTID'] . '@#%" or p.TTID like "%@#' . $TypeData['TTID'] . '" or p.TTID like "%@#' . $TypeData['TTID'] . '@#%" or p.TTID=' . $TypeData['TTID'] . ') and (p.TTTID like "' . $TID . '@#%" or p.TTTID like "%@#' . $TID . '" or p.TTTID like "%@#' . $TID . '@#%" or p.TTTID=' . $TID . ')', $Order, $Pages,$Limit );
+				left join freight f on f.d_id=p.FID', 'p.*,pb.d_id as pbid,pb.d_title as pbtitle,f.d_free,f.d_freight,f.d_title as ftitle,f.d_id as fid,concat(TID,",",TTID,",",TTTID) as TID,MTID', 'where p.d_enable="Y" and (p.TID like "' . $TypeData['TID'] . '@#%" or p.TID like "%@#' . $TypeData['TID'] . '" or p.TID like "%@#' . $TypeData['TID'] . '@#%" or p.TID=' . $TypeData['TID'] . ') and (p.TTID like "' . $TypeData['TTID'] . '@#%" or p.TTID like "%@#' . $TypeData['TTID'] . '" or p.TTID like "%@#' . $TypeData['TTID'] . '@#%" or p.TTID=' . $TypeData['TTID'] . ') and (p.TTTID like "' . $TID . '@#%" or p.TTTID like "%@#' . $TID . '" or p.TTTID like "%@#' . $TID . '@#%" or p.TTTID=' . $TID . ')'. $var , $Order, $Pages,$Limit );
 			} else {
 				// 產品撈取
 				$Pdata = $this->mymodel->APISelectPage('products p left join products_brand pb on pb.d_id=p.BID
-				left join freight f on f.d_id=p.FID', 'p.*,pb.d_id as pbid,pb.d_title as pbtitle,f.d_free,f.d_freight,f.d_title as ftitle,f.d_id as fid,concat(TID,",",TTID,",",TTTID) as TID,MTID', 'where p.d_enable="Y" and (p.TID like "' . $TypeData['TID'] . '@#%" or p.TID like "%@#' . $TypeData['TID'] . '" or p.TID like "%@#' . $TypeData['TID'] . '@#%" or p.TID=' . $TypeData['TID'] . ') and (p.TTID like "' . $TID . '@#%" or p.TTID like "%@#' . $TID . '" or p.TTID like "%@#' . $TID . '@#%" or p.TTID=' . $TID . ')', $Order, $Pages, $Limit);
+				left join freight f on f.d_id=p.FID', 'p.*,pb.d_id as pbid,pb.d_title as pbtitle,f.d_free,f.d_freight,f.d_title as ftitle,f.d_id as fid,concat(TID,",",TTID,",",TTTID) as TID,MTID', 'where p.d_enable="Y" and (p.TID like "' . $TypeData['TID'] . '@#%" or p.TID like "%@#' . $TypeData['TID'] . '" or p.TID like "%@#' . $TypeData['TID'] . '@#%" or p.TID=' . $TypeData['TID'] . ') and (p.TTID like "' . $TID . '@#%" or p.TTID like "%@#' . $TID . '" or p.TTID like "%@#' . $TID . '@#%" or p.TTID=' . $TID . ')'.$var, $Order, $Pages, $Limit);
 			}
 			// 根據會員等級顯示金額
-			if (!empty($Pdata['dbdata'])) {$Pdata['dbdata'] = $this->autoful->GetProductPrice($Pdata['dbdata']);
+			if (!empty($Pdata['dbdata'])) 
+			{
+			$Pdata['dbdata'] = $this->autoful->GetProductPrice($Pdata['dbdata']);
 			$data['dbdata'] = $Pdata;
 			$data['Menudata'] = $this->MenuData;
-			$data['Menu']=$this->Menu;} else {
-				$data['Menudata'] = $this->MenuData;
-				$data['Menu']=$this->Menu;
-				$data['dbdata']=[];
+			$data['Menu']=$this->Menu;
+			} else {
+			$data['Menudata'] = $this->MenuData;
+			$data['Menu']=$this->Menu;
+			$data['dbdata']=$Pdata['dbdata'];
 			}
 		}
-		// print_r($Pdata);
-		if ($data['dbdata']!=[]) {
+		//print_r($Pdata['dbdata']);
+		//if ($data['dbdata']!=[]) {
 		$this->response($data,200);
-		} else {
-			$this->response($data,404);
-		}
+		//} else {
+		//	$this->response($data,200);
+		//}
 	}
 	public function index_get($d_id = '')
 	{
