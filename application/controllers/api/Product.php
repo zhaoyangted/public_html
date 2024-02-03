@@ -35,9 +35,16 @@ class Product extends RestController
 	public function toplist_get($TID = ''){
 		$Pages=$this->get('page');
 		$Limit=$this->get('limit');
+		$Order=$this->get('order');
+		$Color=$this->get('color');
 		if (empty($TID)) {
 			$this->useful->AlertPage('', '操作錯誤');
 			exit();
+		}
+		if (!empty($Color)) {
+			$var=' and p.d_varcolor='.$Color;
+		} else {
+			$var="";
 		}
 		$data = array();
 		// 分類撈取
@@ -46,9 +53,20 @@ class Product extends RestController
 		$this->NetTitle = (!empty($this->MenuData['d_stitle']) ? $this->MenuData['d_stitle'] : $this->NetTitle);
 		$this->Seokeywords = (!empty($this->MenuData['d_skeywords']) ? $this->MenuData['d_skeywords'] : '');
 		$this->Seodescription = (!empty($this->MenuData['d_sdescription']) ? $this->MenuData['d_sdescription'] : '');
+		$data['Orderid'] = $Orderid = (!empty($Order) ? $Order : '1');
+		$Order = 'd_update_time desc';
+		if ($Orderid == 2) {
+			$Order = 'd_update_time';
+		} elseif ($Orderid == 3) {
+			$Order = 'd_price1 ';
+		} elseif ($Orderid == 4) {
+			$Order = 'd_price1 desc';
+		} elseif ($Orderid == 5) {
+			$Order = 'd_view desc';
+		}
 		// 產品撈取
 		$Pdata = $this->mymodel->APISelectPage('products p left join products_brand pb on pb.d_id=p.BID
-		left join freight f on f.d_id=p.FID', 'p.*,pb.d_id as pbid,pb.d_title as pbtitle,f.d_free,f.d_freight,f.d_title as ftitle,f.d_id as fid,concat(TID,",",TTID,",",TTTID) as TID,MTID', 'where p.d_enable="Y" and (p.TID like "%' . $TID . '@#%" or p.TID like "%@#' . $TID . '%" or TID like "%@#' . $TID . '@#%" or TID=' . $TID . ')', 'd_update_time desc',  $Pages,$Limit);
+		left join freight f on f.d_id=p.FID', 'p.*,pb.d_id as pbid,pb.d_title as pbtitle,f.d_free,f.d_freight,f.d_title as ftitle,f.d_id as fid,concat(TID,",",TTID,",",TTTID) as TID,MTID', 'where p.d_enable="Y" and (p.TID like "%' . $TID . '@#%" or p.TID like "%@#' . $TID . '%" or TID like "%@#' . $TID . '@#%" or TID=' . $TID . ')'. $var , $Order, $Pages,$Limit);
 		// 根據會員等級顯示金額
 		$Pdata['dbdata'] = $this->autoful->GetProductPrice($Pdata['dbdata']);
 		// print_r($Pdata);
@@ -386,12 +404,17 @@ class Product extends RestController
 		$Pages=$this->get('page');
 		$Limit=$this->get('limit');
 		$Order=$this->get('order');
+		$Color=$this->get('color');
 		if (empty($BID)) {
 			$this->useful->AlertPage('', '操作錯誤');
 			exit();
 		}
 		$data = array();
-
+		if (!empty($Color)) {
+			$var=' and p.d_varcolor='.$Color;
+		} else {
+			$var="";
+		}
 		// 排序
 		$data['OrderArray'] = $OrderArray = array('1' => '依上架時間：新至舊', '2' => '依上架時間：舊至新', '3' => '依價格排序：低至高', '4' => '依價格排序：高至低');
 		$data['Orderid'] = $Orderid = (!empty($Order) ? $Order : '1');
@@ -406,7 +429,7 @@ class Product extends RestController
 
 		// 產品撈取
 		$Pdata = $this->mymodel->APISelectPage('products p left join products_brand pb on pb.d_id=p.BID
-		left join freight f on f.d_id=p.FID', 'p.*,pb.d_id as pbid,pb.d_title as pbtitle,f.d_free,f.d_freight,f.d_title as ftitle,f.d_id as fid,concat(TID,",",TTID,",",TTTID) as TID,MTID,TID as GTID,concat(TTID,",",TTTID) as GTTID ', 'where p.d_enable="Y" and p.BID=' . $BID, $Order, $Pages,$Limit);
+		left join freight f on f.d_id=p.FID', 'p.*,pb.d_id as pbid,pb.d_title as pbtitle,f.d_free,f.d_freight,f.d_title as ftitle,f.d_id as fid,concat(TID,",",TTID,",",TTTID) as TID,MTID,TID as GTID,concat(TTID,",",TTTID) as GTTID ', 'where p.d_enable="Y" and p.BID=' . $BID. $var, $Order, $Pages,$Limit);
 
 		/* $Pdata = $this->mymodel->FrontSelectPage('products', 'd_id,d_title,d_img1,d_price1,d_price2,d_price3,d_price4,d_dprice,d_sprice,concat(TID,",",TTID,",",TTTID) as TID,MTID,TID as GTID,concat(TTID,",",TTTID) as GTTID', 'where d_enable="Y" and BID=' . $BID, $Order, '12'); */
 		/* $query = $db->query('SELECT d_id,d_title,d_img1,d_price1,d_price2,d_price3,d_price4,d_dprice,d_sprice,concat(TID,",",TTID,",",TTTID) as TID,MTID,TID as GTID,concat(TTID,",",TTTID) as GTTID FROM products WHERE d_enable="Y" and BID=$BID $Order'); */
@@ -448,17 +471,18 @@ class Product extends RestController
 			$data['Menu']=$this->Menu;
 		} else {
 				$data['dbdata']=[];
+				$data['Menu']=$this->Menu;
 			}
 		//$Pdata['dbdata'] = $this->autoful->GetProductPrice($Pdata['dbdata']);
 		//$data['dbdata'] = $Pdata;
 		//$data['Menudata'] = $this->MenuData;
 		//$data['Menu']=$this->Menu;
-		if ($data['dbdata']!=[]) {
+		//if ($data['dbdata']!=[]) {
 			//$this->AddVisit($d_id);
 			$this->response($data, 200);
-		} else {
-			$this->response($data, 404);
-		}
+		//} else {
+		//	$this->response($data, );
+		//}
 		//$this->load->view('front/products_blist', $data);
 	}
 	/* function contacts_get() {
@@ -493,6 +517,12 @@ class Product extends RestController
 		$Pages=$this->post('page');
 		$Limit=$this->post('limit');
 		$Order=$this->post('order');
+		$Color=$this->post('color');
+		if (!empty($Color)) {
+			$var=' and d_varcolor='.$Color;
+		} else {
+			$var="";
+		}
 		if (empty($keyword)) {	// 2020/05/06 可以不輸入文字搜尋
 			// $this->useful->AlertPage('','請輸入搜尋文字');
 			// exit();
@@ -531,18 +561,19 @@ class Product extends RestController
 
 		// 排序
 		$data['OrderArray'] = $OrderArray = array('1' => '依上架時間：新至舊', '2' => '依上架時間：舊至新', '3' => '依價格排序：低至高', '4' => '依價格排序：高至低');
-		$data['Orderid'] = $Orderid = (!empty($_POST['Orderby']) ? $_POST['Orderby'] : '1');
+		$data['Orderid'] = $Orderid = (!empty($_POST['order']) ? $_POST['order'] : '1');
 		$Order = 'd_update_time desc';
-		if ($Orderid == 2) {
+		if ($Orderid == "2") {
 			$Order = 'd_update_time';
-		} elseif ($Orderid == 3) {
+		} elseif ($Orderid == "3") {
 			$Order = 'd_price1 ';
-		} elseif ($Orderid == 4) {
+		} elseif ($Orderid == "4") {
 			$Order = 'd_price1 desc';
 		}
 
 		// 產品撈取
-		$Pdata = $this->mymodel->APISelectPage('products', 'd_id,d_title,d_img1,d_price1,d_price2,d_price3,d_price4,d_dprice,d_sprice,concat(TID,",",TTID,",",TTTID) as TID,MTID', 'where d_enable="Y" ' . $Search . ' and TID!=""', $Order,$Pages,'12');
+		$Pdata = $this->mymodel->APISelectPage('products', 'd_id,d_title,d_img1,d_price1,d_price2,d_price3,d_price4,d_dprice,d_sprice,concat(TID,",",TTID,",",TTTID) as TID,MTID', 'where d_enable="Y" '. $var ." ". $Search . ' and TID!=""', $Order,$Pages,$Limit);
+		//print_r($Pdata['dbdata']);
 		// if($this->autoful->Mtype!='1'){
 		$Mtype = explode(',', str_replace('@#', ',', $this->autoful->Mtype));
 
@@ -573,14 +604,19 @@ class Product extends RestController
 		}
 		// 根據會員等級顯示金額
 		$Pdata['dbdata'] = $this->autoful->GetProductPrice($Pdata['dbdata']);
-		$data['dbdata'] = $Pdata;
+		if (empty($Pdata)) {
+			$data['dbdata']=[];
+		}else{
+			$data['dbdata'] = $Pdata;
+
+		}
 		// print_r($Pdata);
-		if ($data['dbdata']!=[]) {
+		//if ($data['dbdata']!=[]) {
 			//$this->AddVisit($d_id);
 			$this->response($data, 200);
-		} else {
-			$this->response($data, 404);
-		}
+		//} else {
+		//	$this->response($data, 404);
+		//}
 		//$this->load->view('front/products_search', $data);
 	}
 	public function allvarofproduct_get($d_id)
