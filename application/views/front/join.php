@@ -16,10 +16,10 @@
           <p class="title01-ps">
           ‧為保護沙龍店家權益，加入會員時請選擇企業用戶，資格審核通過後，將取得沙龍價資格。<br>
 <br>
-‧台灣千冠莉採用人工審核會員資格，工作時間約1-3工作天。加入官方line帳號：@hzb4006k，提供店家資料可加快審核。
+‧台灣千冠莉採用人工審核會員資格，工作時間約1-3工作天。加入官方line帳號：@ckltw，提供店家資料可加快審核。
 <br>
 <br>
-‧會員加入教學請參考：<a href="https://bit.ly/3yPxJkb" target="_blank" rel="noopener">https://bit.ly/3yPxJkb</a>
+‧會員加入教學請參考：<a href="/news/info/115" target="_blank" rel="noopener">/news/info/115</a>
 <br>
 <br>
 如造成不便敬請見諒。<br><br>

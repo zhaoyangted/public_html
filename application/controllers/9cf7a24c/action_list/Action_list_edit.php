@@ -89,6 +89,6 @@ class Action_list_edit extends CI_Controller {
             'r_width'=>'287',
             'r_height'=>'197'
         );
-        $this->autoful->DefaultUpload($_FILES,$Config);
+        $this->autoful->addImages($_FILES,$Config);
     }
 }

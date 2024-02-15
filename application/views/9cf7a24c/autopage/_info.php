@@ -115,7 +115,7 @@
                                 <span id="UploadFile_<?=$fvalue['d_fname']?>"></span>
                                 <? if(!empty($dbdata[$fvalue['d_fname']])):?>
                                     <a href="<?php echo CCODE::DemoPrefix.'/'.(!empty($dbdata[$fvalue['d_fname']])?$dbdata[$fvalue['d_fname']]:'');?>" target="_BALNK">
-                                    <img src="<?php echo CCODE::DemoPrefix.'/'.(!empty($dbdata[$fvalue['d_fname']])?$dbdata[$fvalue['d_fname']]:'');?>" width="10%" >
+                                    <img src="<?php echo CCODE::AWSS3.'/'.(!empty($dbdata[$fvalue['d_fname']])?$dbdata[$fvalue['d_fname']]:'');?>" width="10%" >
                                     </a>
                                     <div class="toolbar fileBar">
                                         <a href="javascript:void(0)" id="DownPic" rel="<?=$fvalue['d_fname']?>" class="toolbar-btn enable file-btn">下載</a>

@@ -88,7 +88,7 @@
             ?>
               <td><?=(!empty($AutoValue['Config'][$dbval[$AutoValue['d_fname']]])?$AutoValue['Config'][$dbval[$AutoValue['d_fname']]]:'無資料');?></td>
             <?php elseif($AutoValue['d_type']==8): ?>
-              <td><img src="<?=CCODE::DemoPrefix.'/'.$dbval[$AutoValue['d_fname']]?>" style="max-width: 10%" ></td>
+              <td><img src="<?=CCODE::AWSS3.'/'.$dbval[$AutoValue['d_fname']]?>" style="max-width: 10%" ></td>
             <?php elseif($AutoValue['d_type']==10): ?>
               <td><?=date("Y-m-d", strtotime($dbval[$AutoValue['d_fname']]));?></td>
             <?else:?>
