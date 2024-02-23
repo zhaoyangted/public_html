@@ -120,7 +120,18 @@ class Tableful {
     // 不同的資料表處理函式
     public function TableTreat($TableId,$SqlWhere='',$Filed='d_title'){
         $dbname=$this->Menu[$TableId]['d_config'];
+        if ($TableId==31) {
+            //獲取顏色
+            $Typedata=$this->CI->mymodel->SelectSearch($dbname,'','d_id,'.$Filed.'','where d_enable="Y" and variant_id=1'.$SqlWhere.'');
+        } else if ($TableId==32) {
+            //獲取尺寸
+            $Typedata=$this->CI->mymodel->SelectSearch($dbname,'','d_id,'.$Filed.'','where d_enable="Y" and variant_id=3'.$SqlWhere.'');
+        } else if ($TableId==33) {
+            //獲取材質
+            $Typedata=$this->CI->mymodel->SelectSearch($dbname,'','d_id,'.$Filed.'','where d_enable="Y" and variant_id=2'.$SqlWhere.'');
+        } else {
         $Typedata=$this->CI->mymodel->SelectSearch($dbname,'','d_id,'.$Filed.'','where d_enable="Y" '.$SqlWhere.'');
+        }
         if(!empty($Typedata)){
             foreach ($Typedata as $key => $value) {
                 $Tconfig[$value['d_id']]=$value[''.$Filed.''];

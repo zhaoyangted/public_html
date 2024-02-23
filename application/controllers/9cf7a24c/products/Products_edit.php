@@ -25,6 +25,9 @@ class Products_edit extends CI_Controller {
             $this->tableful->TableTreat(2);
             $this->tableful->TableTreat(4);
             $this->tableful->TableTreat(7);
+            $this->tableful->TableTreat(31);
+            $this->tableful->TableTreat(32);
+            $this->tableful->TableTreat(33);
             $this->tableful->TableTreat(24,'and d_id!='.$d_id.'','d_model');
             $this->tableful->TableTreat(25,'and d_id!='.$d_id.'','d_model');
 
@@ -32,7 +35,15 @@ class Products_edit extends CI_Controller {
             $data['Subtype']=$this->mymodel->SelectSearch('products_type','','d_id,d_title,TID','where TID!=0 and TTID =0','d_sort');
             // 次次分類撈取
             $data['SubSubtype']=$this->mymodel->SelectSearch('products_type','','d_id,d_title,TTID','where TTID!=0','d_sort');
-
+            /* $data['varcolor'] = $this->mymodel->WriteSQL('SELECT v.variant_id,v.variant,vv.d_id,vv.d_title from variants v
+            INNER JOIN variant_value vv on 
+            vv.variant_id=v.variant_id WHERE v.variant_id=1');
+            $data['varmar'] = $this->mymodel->WriteSQL('SELECT v.variant_id,v.variant,vv.d_id,vv.d_title from variants v
+            INNER JOIN variant_value vv on 
+            vv.variant_id=v.variant_id WHERE v.variant_id=2');
+            $data['varsize'] = $this->mymodel->WriteSQL('SELECT v.variant_id,v.variant,vv.d_id,vv.d_title from variants v
+            INNER JOIN variant_value vv on 
+            vv.variant_id=v.variant_id WHERE v.variant_id=3'); */
             $data['d_id']=$d_id;
             $dbdata=$this->mymodel->OneSearchSql($this->DBname,$this->tableful->SqlList.',TTID,TTTID',array('d_id'=>$d_id));
 
@@ -41,7 +52,10 @@ class Products_edit extends CI_Controller {
             // 產品QR code
             $this->GetQrcode($d_id,$dbdata['d_model']);
 
-            // print_r($Adata);
+            /* if (!empty($data['var']) )
+                {
+                    print_r($data['var']) ;
+                } */
 
              // $this->load->view(''.$this->AdminName.'/autopage/_info',$data);
             $this->load->view(''.$this->AdminName.'/'.$this->DBname.'/_info',$data);

@@ -20,7 +20,9 @@
                   <ul class="form_wrap">
                 <?php if(!empty($this->tableful->Menu)):
                     $Disabled=($this->autoful->EditView==3)?'disabled':'';
+                    //print_r($dbdata);
                     foreach ($this->tableful->Menu as $fvalue):
+                    //print_r($dbdata[$fvalue['d_varcolor']]);
                     $Star=(!empty($fvalue['d_search']))?'<span style="color:RED;">*</span>':'';
                 ?>
 
