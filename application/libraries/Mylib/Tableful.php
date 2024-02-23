@@ -122,13 +122,13 @@ class Tableful {
         $dbname=$this->Menu[$TableId]['d_config'];
         if ($TableId==31) {
             //獲取顏色
-            $Typedata=$this->CI->mymodel->SelectSearch($dbname,'','d_id,'.$Filed.'',''.$SqlWhere.'');
+            $Typedata=$this->CI->mymodel->SelectSearch($dbname,'','d_id,'.$Filed.'','where d_enable="Y" '.$SqlWhere.'');
         } else if ($TableId==32) {
             //獲取尺寸
-            $Typedata=$this->CI->mymodel->SelectSearch($dbname,'','d_id,'.$Filed.'',''.$SqlWhere.'');
+            $Typedata=$this->CI->mymodel->SelectSearch($dbname,'','d_id,'.$Filed.'','where d_enable="Y" '.$SqlWhere.'');
         } else if ($TableId==33) {
             //獲取材質
-            $Typedata=$this->CI->mymodel->SelectSearch($dbname,'','d_id,'.$Filed.'',''.$SqlWhere.'');
+            $Typedata=$this->CI->mymodel->SelectSearch($dbname,'','d_id,'.$Filed.'','where d_enable="Y" '.$SqlWhere.'');
         } else {
         $Typedata=$this->CI->mymodel->SelectSearch($dbname,'','d_id,'.$Filed.'','where d_enable="Y" '.$SqlWhere.'');
         }
