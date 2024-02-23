@@ -25,9 +25,9 @@ class Products_edit extends CI_Controller {
             $this->tableful->TableTreat(2);
             $this->tableful->TableTreat(4);
             $this->tableful->TableTreat(7);
-            $this->tableful->TableTreat(31);
-            $this->tableful->TableTreat(32);
-            $this->tableful->TableTreat(33);
+            //$this->tableful->TableTreat(31);
+            //$this->tableful->TableTreat(32);
+            //$this->tableful->TableTreat(33);
             $this->tableful->TableTreat(24,'and d_id!='.$d_id.'','d_model');
             $this->tableful->TableTreat(25,'and d_id!='.$d_id.'','d_model');
 
